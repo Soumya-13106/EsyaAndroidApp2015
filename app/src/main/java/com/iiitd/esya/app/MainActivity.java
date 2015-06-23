@@ -1,9 +1,11 @@
 package com.iiitd.esya.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -45,10 +47,28 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 //         update the main content by replacing fragments
+
+        Fragment objFragment = null;
+        switch(position) {
+            case 0:
+                objFragment = new CategoryListFragment();
+                break;
+            case 1:
+                objFragment = new AboutEsyaFragment();
+                break;
+            case 2:
+                objFragment = new AboutUsFragment();
+                break;
+            case 3:
+                objFragment = new ContactUsFragment();
+                break;
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, objFragment)
                 .commit();
+
     }
 
     public void onSectionAttached(int number) {
@@ -61,6 +81,9 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
+                break;
+            case 4:
+                mTitle = getString(R.string.title_section4);
                 break;
         }
     }
