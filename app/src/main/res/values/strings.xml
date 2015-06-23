@@ -12,5 +12,8 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_test">TestActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="category">Categories!</string>
+    <string name="event">Events!</string>
+    <string name="title_activity_categories">CategoriesActivity</string>
+    <string name="title_activity_event">EventActivity</string>
 </resources>
