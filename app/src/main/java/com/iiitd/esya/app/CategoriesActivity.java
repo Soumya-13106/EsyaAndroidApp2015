@@ -40,7 +40,6 @@ public class CategoriesActivity extends ActionBarActivity {
     }
 
     @Override
-    
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, 0);
