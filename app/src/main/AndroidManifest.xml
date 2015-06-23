@@ -21,7 +21,7 @@
             android:label="@string/title_activity_test" >
         </activity>
         <activity
-            android:name=".CategoriesActivity"
+            android:name=".EventListActivity"
             android:label="@string/title_activity_categories"
             android:parentActivityName=".MainActivity" >
             <meta-data

@@ -7,19 +7,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class CategoriesActivity extends ActionBarActivity {
+public class EventListActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_categories);
+        setContentView(R.layout.activity_event_list);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_categories, menu);
+        getMenuInflater().inflate(R.menu.menu_event_list, menu);
         return true;
     }
 
@@ -37,11 +37,5 @@ public class CategoriesActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, 0);
     }
 }
