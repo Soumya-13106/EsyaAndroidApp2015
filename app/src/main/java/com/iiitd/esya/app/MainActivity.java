@@ -1,7 +1,6 @@
 package com.iiitd.esya.app;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,9 +45,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 //         update the main content by replacing fragments
-        if (position == 2) startActivity(new Intent(this, TestActivity.class).setFlags(
-                Intent.FLAG_ACTIVITY_NO_ANIMATION
-        ));
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
