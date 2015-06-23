@@ -2,10 +2,11 @@ package com.iiitd.esya.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -31,7 +32,16 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean logged_in = prefs.getBoolean(getString(R.string.pref_logged_in), false);
+        if (!logged_in){
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+
         setContentView(R.layout.activity_main);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -48,26 +58,27 @@ public class MainActivity extends ActionBarActivity
     public void onNavigationDrawerItemSelected(int position) {
 //         update the main content by replacing fragments
 
-        Fragment objFragment = null;
-        switch(position) {
-            case 0:
-                objFragment = new CategoryListFragment();
-                break;
-            case 1:
-                objFragment = new AboutEsyaFragment();
-                break;
-            case 2:
-                objFragment = new AboutUsFragment();
-                break;
-            case 3:
-                objFragment = new ContactUsFragment();
-                break;
-        }
+//        Fragment objFragment = null;
+//        switch(position) {
+//            case 0:
+//                objFragment = new CategoryListFragment();
+//                break;
+//            case 1:
+//                objFragment = new AboutEsyaFragment();
+//                break;
+//            case 2:
+//                objFragment = new AboutUsFragment();
+//                break;
+//            case 3:
+//                objFragment = new ContactUsFragment();
+//                break;
+//        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, objFragment)
-                .commit();
+//        fragmentManager.beginTransaction().replace(R.id.container, objFragment)
+//                .commit();
+        fragmentManager.beginTransaction().replace(R.id.container,
+                PlaceholderFragment.newInstance(position+1));
 
     }
 
@@ -163,5 +174,4 @@ public class MainActivity extends ActionBarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
 }
