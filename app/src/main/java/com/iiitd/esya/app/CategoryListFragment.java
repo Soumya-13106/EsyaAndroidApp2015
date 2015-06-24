@@ -55,7 +55,11 @@ public class CategoryListFragment extends Fragment{
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String category = categoryListAdapter.getItem(position);
                 Toast.makeText(getActivity(), category, Toast.LENGTH_SHORT).show();
-
+                //startActivity(new Intent(this, EventActivity.class).setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                Intent startEventListActivityIntent = new Intent(getActivity(), EventListActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                        .putExtra(Intent.EXTRA_TEXT, category);
+                startActivity(startEventListActivityIntent);
             }
         });
 
