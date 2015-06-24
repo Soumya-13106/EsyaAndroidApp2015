@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -56,30 +57,27 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-//         update the main content by replacing fragments
 
-//        Fragment objFragment = null;
-//        switch(position) {
-//            case 0:
-//                objFragment = new CategoryListFragment();
-//                break;
-//            case 1:
-//                objFragment = new AboutEsyaFragment();
-//                break;
-//            case 2:
-//                objFragment = new AboutUsFragment();
-//                break;
-//            case 3:
-//                objFragment = new ContactUsFragment();
-//                break;
-//        }
+        Fragment objFragment = null;
+        switch (position) {
+            case 0:
+                objFragment = new CategoryListFragment();
+                break;
+            case 1:
+                objFragment = new AboutUsFragment();
+                break;
+            case 2:
+                objFragment = new AboutEsyaFragment();
+                break;
+            case 3:
+                objFragment = new ContactUsFragment();
+                break;
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.container, objFragment)
-//                .commit();
-        fragmentManager.beginTransaction().replace(R.id.container,
-                PlaceholderFragment.newInstance(position+1));
-
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, objFragment)
+                .commit();
     }
 
     public void onSectionAttached(int number) {
@@ -109,7 +107,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        if (mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
