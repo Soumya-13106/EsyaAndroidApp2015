@@ -60,7 +60,7 @@ public class EventListActivity extends ActionBarActivity {
             Intent intent = getActivity().getIntent();
             if(intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
                 String eventStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-                ((TextView) rootView.findViewById(R.id.event_list_text))
+                ((TextView) rootView.findViewById(R.id.list_item_event_textview))
                         .setText(eventStr);
             }
             return rootView;
