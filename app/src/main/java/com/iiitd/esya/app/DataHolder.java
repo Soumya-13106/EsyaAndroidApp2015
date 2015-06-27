@@ -9,13 +9,32 @@ import java.util.HashMap;
  */
 public class DataHolder {
 
-    public static final String[] CATEGORIES = {
+    public static String[] CATEGORIES = {
             "CSE",
             "ECE",
             "Workshop",
             "School",
             "All"
     };
+
+    public static final String ELIGIBILITY_RESPONSE = "eligibilty";
+    public static final String JUDGING_RESPONSE =  "judging";
+    public static final String PRIZES_RESPONSE =  "prizes";
+    public static final String RULES_RESPONSE =  "rules";
+    public static final String VENUE_RESPONSE =  "venue";
+    public static final String DESCRIPTION_RESPONSE =  "description";
+    public static final String TEAM_SIZE_RESPONSE =  "team_size";
+    public static final String CONTACT_RESPONSE =  "contact";
+
+    public static final String ELIGIBILITY_DEFAULT = "No specific eligibility criteria";
+    public static final String JUDGING_DEFAULT =  "Judging criteria not decided yet.";
+    public static final String PRIZES_DEFAULT =  "Prizes have not been decided yet.";
+    public static final String RULES_DEFAULT =  "Rules have not been decided yet.";
+    public static final String VENUE_DEFAULT =  "IIIT - D";
+    public static final String DESCRIPTION_DEFAULT =  null;
+    public static final int TEAM_SIZE_DEFAULT =  1;
+    public static final String CONTACT_DEFAULT =  "events.esya@iiitd.ac.in";
+
     public static final HashMap<String, String[]> CATEGORY_TO_EVENTS = new HashMap<>();
     public static final HashMap<String, String[]> EVENT_TO_DETAILS = new HashMap<>();
     // in the form of image_name, description, person_to_contact;

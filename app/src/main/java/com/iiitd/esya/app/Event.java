@@ -1,5 +1,9 @@
 package com.iiitd.esya.app;
 
+import android.util.Log;
+
+import java.lang.reflect.Field;
+
 /**
  * Created by darkryder on 28/6/15.
  */
@@ -11,7 +15,6 @@ public class Event {
 
     // Let's create everything public. !!
 
-    // Format is name:email:phone
     public String[] contact;
 
     public String eligibility;
@@ -35,5 +38,22 @@ public class Event {
 
     public String toString(){
         return this.id + ": " + this.name + " -> " + this.category;
+    }
+
+    public String debuggableToString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getClass().getName());
+        stringBuilder.append(": ");
+        for (Field f: getClass().getDeclaredFields() ){
+            stringBuilder.append(f.getName());
+            stringBuilder.append("=");
+            try {
+                stringBuilder.append(f.get(this));
+            } catch (IllegalAccessException e) {
+                Log.e("Error printing event", this.toString());
+            }
+            stringBuilder.append(", ");
+        }
+        return stringBuilder.toString();
     }
 }

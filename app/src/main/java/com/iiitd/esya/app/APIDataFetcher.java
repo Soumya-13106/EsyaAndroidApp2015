@@ -72,6 +72,60 @@ public class APIDataFetcher {
         return eventsJsonResponse;
     }
 
+
+    private static String fetchEventJsonNetworkWorker(int pk)
+    {
+        final String LOG_TAG = "FETCH_EVENT_WRK";
+        String eventJsonResponse = null;
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
+
+        try
+        {
+            final String resource = "events";
+            final String format = "json";
+
+            Uri callableUri = Uri.parse(API_URL).buildUpon().
+                    appendPath(resource).
+                    appendPath(Integer.toString(pk) + "." + format).
+                    build();
+
+            URL url = new URL(callableUri.toString());
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) return null;
+
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line = null;
+            while((line = reader.readLine()) != null){
+                buffer.append(line + "\n");
+            }
+            if (buffer.length() == 0) return null;
+
+            eventJsonResponse = buffer.toString();
+
+        } catch (IOException e){
+            Log.e(LOG_TAG, e.toString());
+        } finally {
+            if (urlConnection != null){
+                urlConnection.disconnect();
+            }
+            if (reader != null){
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "Could not close stream" +
+                            e.toString());
+                }
+            }
+        }
+        return eventJsonResponse;
+    }
+
     /**
      * @return array of events with basic data inbuilt.
      */
@@ -83,6 +137,8 @@ public class APIDataFetcher {
 
         try{
             JSONArray mainArray = new JSONArray(jsonResponseString);
+            if (mainArray.length() == 0) return null;
+
             for(int i = 0; i < mainArray.length(); i++){
                 JSONObject jsonEvent = mainArray.getJSONObject(i);
                 events.add(new Event(
@@ -102,6 +158,57 @@ public class APIDataFetcher {
             return null;
         }
     }
+
+    public static Event fetchEventDetails(int pk){
+        String jsonResponseString = fetchEventJsonNetworkWorker(pk);
+        if (jsonResponseString == null) return null;
+
+        try{
+            Event event = null;
+            JSONObject jsonEvent = new JSONObject(jsonResponseString);
+
+            event = new Event(
+                    jsonEvent.getInt("id"),
+                    jsonEvent.getString("name"),
+                    Category.resolveToCategory(jsonEvent.getString("category")),
+                    jsonEvent.getJSONObject("photo").
+                            getJSONObject("photo").
+                            getString("url")
+            );
+
+
+            event.eligibility = jsonEvent.optString(DataHolder.ELIGIBILITY_RESPONSE, DataHolder.ELIGIBILITY_DEFAULT);
+            event.judging = jsonEvent.optString(DataHolder.JUDGING_RESPONSE, DataHolder.JUDGING_DEFAULT);
+            event.prizes = jsonEvent.optString(DataHolder.PRIZES_RESPONSE, DataHolder.PRIZES_DEFAULT);
+            event.rules = jsonEvent.optString(DataHolder.RULES_RESPONSE, DataHolder.RULES_DEFAULT);
+            event.venue = jsonEvent.optString(DataHolder.VENUE_RESPONSE, DataHolder.VENUE_DEFAULT);
+            event.description = jsonEvent.optString(DataHolder.DESCRIPTION_RESPONSE, DataHolder.DESCRIPTION_DEFAULT);
+            event.team_size = jsonEvent.optInt(DataHolder.TEAM_SIZE_RESPONSE, DataHolder.TEAM_SIZE_DEFAULT);
+
+            if (event.eligibility.equals("")) event.eligibility = DataHolder.ELIGIBILITY_DEFAULT;
+            if (event.judging.equals("")) event.judging = DataHolder.JUDGING_DEFAULT;
+            if (event.prizes.equals("")) event.prizes = DataHolder.PRIZES_DEFAULT;
+            if (event.rules.equals("")) event.rules = DataHolder.RULES_DEFAULT;
+            if (event.venue.equals("")) event.venue = DataHolder.VENUE_DEFAULT;
+
+            // TODO: get this fixed in the API. It's not being sent as of now.
+//            if ((event.description != null) && event.description.equals("")) event.description = DataHolder.DESCRIPTION_DEFAULT;
+
+            String temp_contact = jsonEvent.optString(DataHolder.CONTACT_RESPONSE, DataHolder.CONTACT_DEFAULT);
+
+            ArrayList<String> temp_contact_list = new ArrayList<>();
+            for(String c: temp_contact.split("<br>")){
+                temp_contact_list.add(c);
+            }
+            event.contact = temp_contact_list.toArray(new String[temp_contact_list.size()]);
+
+            return event;
+
+        } catch (JSONException e){
+            Log.e("ParseExeption", e.toString());
+            return null;
+        }
+    }
 }
 
 /**
@@ -114,7 +221,24 @@ abstract class FetchAllEventsTask extends AsyncTask<Void, Void, Event[]>
     final String LOG_TAG = "FETCH_ALL_EVENTS";
     @Override
     protected Event[] doInBackground(Void... voids) {
-        Log.v(LOG_TAG, "Fetching tasks started");
+        Log.v(LOG_TAG, "Fetching events task started");
         return APIDataFetcher.fetchBasicAllEvents();
+    }
+}
+
+/**
+ * This is an abstract class so that you have
+ * to override the onPostExecuteMethod as and when
+ * needed by creating an anonymous class.
+ */
+abstract class FetchSpecificEventTask extends AsyncTask<Integer, Void, Event>
+{
+    final String LOG_TAG = "FETCH_EVENT";
+    @Override
+    protected Event doInBackground(Integer... integers) {
+        if (integers.length != 1) return null;
+        int pk = integers[0];
+        Log.v(LOG_TAG, "Fetching event " + pk + " task started.");
+        return APIDataFetcher.fetchEventDetails(pk);
     }
 }
