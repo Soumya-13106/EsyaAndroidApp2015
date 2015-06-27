@@ -1,6 +1,7 @@
 package com.iiitd.esya.app;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -23,6 +24,7 @@ public class APIDataFetcher {
 
     private static String fetchAllEventsJsonNetworkWorker()
     {
+        final String LOG_TAG = "FETCH_ALL_EVENTS_WRK";
         String eventsJsonResponse = null;
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -53,7 +55,7 @@ public class APIDataFetcher {
             eventsJsonResponse = buffer.toString();
 
         } catch (IOException e){
-            Log.e("Error", e.toString());
+            Log.e(LOG_TAG, e.toString());
         } finally {
             if (urlConnection != null){
                 urlConnection.disconnect();
@@ -62,7 +64,7 @@ public class APIDataFetcher {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    Log.e("fetchAllEventsJsNetWork", "Could not close stream" +
+                    Log.e(LOG_TAG, "Could not close stream" +
                             e.toString());
                 }
             }
@@ -99,5 +101,20 @@ public class APIDataFetcher {
             Log.e("ParseException", e.toString());
             return null;
         }
+    }
+}
+
+/**
+ * This is an abstract class so that you have
+ * to override the onPostExecuteMethod as and when
+ * needed.
+ */
+abstract class FetchAllEventsTask extends AsyncTask<Void, Void, Event[]>
+{
+    final String LOG_TAG = "FETCH_ALL_EVENTS";
+    @Override
+    protected Event[] doInBackground(Void... voids) {
+        Log.v(LOG_TAG, "Fetching tasks started");
+        return APIDataFetcher.fetchBasicAllEvents();
     }
 }

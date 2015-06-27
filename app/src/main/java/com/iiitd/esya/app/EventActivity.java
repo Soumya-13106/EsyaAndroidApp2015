@@ -1,45 +1,17 @@
 package com.iiitd.esya.app;
 
-import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.Arrays;
-
 
 public class EventActivity extends ActionBarActivity {
-
-
-    private void tempMethod(){
-
-        class FetchBasicEventDetails extends AsyncTask<Void, Void, Event[]>{
-            @Override
-            protected void onPostExecute(Event[] events) {
-//                super.onPostExecute(events);
-                Log.v("EVENTS FETCHED: ", Arrays.deepToString(events));
-            }
-
-            @Override
-            protected Event[] doInBackground(Void... voids) {
-                Log.v("Task", "Fetching task started");
-                return APIDataFetcher.fetchBasicAllEvents();
-            }
-        }
-
-        FetchBasicEventDetails fetchBasicEventDetails = new FetchBasicEventDetails();
-        fetchBasicEventDetails.execute();
-    }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        this.tempMethod();
     }
 
 

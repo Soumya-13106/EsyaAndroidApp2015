@@ -9,7 +9,8 @@ public enum Category {
     FLAGSHIP("Flagship"),
     NON_TECH("Non Tech"),
     SCHOOL("School"),
-    WORKSHOP("Workshop");
+    WORKSHOP("Workshop"),
+    ALL("All");
 
     String naturalName;
     private Category(String naturalName){
