@@ -51,4 +51,6 @@ public class DataHolder {
             EVENT_TO_DETAILS.put(ev, temp_details);
         }
     };
+
+    public static HashMap<Integer, Event> EVENTS;
 }

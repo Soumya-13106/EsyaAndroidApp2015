@@ -17,10 +17,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TestActivity"
-            android:label="@string/title_activity_test" >
-        </activity>
-        <activity
             android:name=".EventListActivity"
             android:label="@string/title_activity_categories"
             android:parentActivityName=".MainActivity" >
@@ -37,5 +33,6 @@
             android:label="@string/title_activity_login" >
         </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
