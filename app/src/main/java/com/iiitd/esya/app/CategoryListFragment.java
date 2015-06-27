@@ -30,13 +30,8 @@ public class CategoryListFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_category_list, container, false);
 
-        String[] data = {
-                "CSE Events",
-                "ECE Events",
-                "Workshops",
-                "School Events",
-                "All Events"
-        };
+        String[] data = DataHolder.CATEGORIES;
+
         List<String> categoryListData = new ArrayList<String>(Arrays.asList(data));
 
         categoryListAdapter =

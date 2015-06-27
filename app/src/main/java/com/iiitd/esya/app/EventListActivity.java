@@ -66,4 +66,10 @@ public class EventListActivity extends ActionBarActivity {
             return rootView;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.overridePendingTransition(0, 0);
+    }
 }

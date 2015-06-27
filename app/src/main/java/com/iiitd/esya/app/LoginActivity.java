@@ -47,6 +47,10 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     @Override
+    /* To prevent people from pressing back and going back
+    to the main page.
+    TODO: pressing back twice kills the app.
+     */
     public void onBackPressed() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!prefs.getBoolean(getString(R.string.pref_logged_in), false)) return;
