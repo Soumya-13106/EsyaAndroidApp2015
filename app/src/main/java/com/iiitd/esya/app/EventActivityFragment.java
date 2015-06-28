@@ -15,7 +15,8 @@ import android.widget.Toast;
  */
 public class EventActivityFragment extends Fragment {
 
-    public EventActivityFragment() {
+    public EventActivityFragment()
+    {
     }
 
     @Override
@@ -32,7 +33,7 @@ public class EventActivityFragment extends Fragment {
             @Override
             protected void onPostExecute(Event event) {
                 if (event == null){
-                    Toast.makeText(getActivity(), "Network error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Network error.", Toast.LENGTH_SHORT).show();
                     textView.setText(old_event.debuggableToString());
                     Log.e(LOG_TAG, "Could not fetch event data from server");
                     return;
@@ -48,6 +49,6 @@ public class EventActivityFragment extends Fragment {
         String details = old_event.debuggableToString();
 
         textView.setText(details);
-        return  view;
+        return view;
     }
 }
