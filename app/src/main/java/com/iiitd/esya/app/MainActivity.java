@@ -40,6 +40,7 @@ public class MainActivity extends ActionBarActivity
         boolean logged_in = prefs.getBoolean(getString(R.string.pref_logged_in), false);
         if (!logged_in){
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
 
         setContentView(R.layout.activity_main);

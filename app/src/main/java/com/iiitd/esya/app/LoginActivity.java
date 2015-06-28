@@ -1,10 +1,9 @@
 package com.iiitd.esya.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -46,14 +45,4 @@ public class LoginActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    /* To prevent people from pressing back and going back
-    to the main page.
-    TODO: pressing back twice kills the app.
-     */
-    public void onBackPressed() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.getBoolean(getString(R.string.pref_logged_in), false)) return;
-        super.onBackPressed();
-    }
 }
