@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,9 +29,10 @@ public class CategoryListFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_category_list, container, false);
 
-        String[] data = DataHolder.CATEGORIES;
-
-        List<String> categoryListData = new ArrayList<String>(Arrays.asList(data));
+        List<String> categoryListData = new ArrayList<String>();
+        for(Category c: Category.values()){
+            categoryListData.add(c.naturalName);
+        }
 
         categoryListAdapter =
                 new ArrayAdapter<String>(

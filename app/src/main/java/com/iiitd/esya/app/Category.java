@@ -28,7 +28,7 @@ public enum Category {
                 return c;
             }
         }
-        return null;
+        return CSE;
     }
 
 }

@@ -56,4 +56,12 @@ public class Event {
         }
         return stringBuilder.toString();
     }
+
+    public void copyFrom(Event freshEvent){
+        Event f = freshEvent;
+        id = f.id; name = f.name; category = f.category; image = f.image;
+        contact = f.contact; eligibility = f.eligibility; judging = f.judging;
+        prizes = f.prizes; rules = f.rules; team_size = f.team_size;
+        venue = f.venue; description = f.description;
+    }
 }

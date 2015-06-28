@@ -1,6 +1,9 @@
 package com.iiitd.esya.app;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -8,14 +11,7 @@ import java.util.HashMap;
  * As of now, this is a temporary class to hold the category/event/details data
  */
 public class DataHolder {
-
-    public static String[] CATEGORIES = {
-            "CSE",
-            "ECE",
-            "Workshop",
-            "School",
-            "All"
-    };
+    public static final String LOG_TAG = DataHolder.class.getSimpleName();
 
     public static final String ELIGIBILITY_RESPONSE = "eligibilty";
     public static final String JUDGING_RESPONSE =  "judging";
@@ -35,41 +31,42 @@ public class DataHolder {
     public static final int TEAM_SIZE_DEFAULT =  1;
     public static final String CONTACT_DEFAULT =  "events.esya@iiitd.ac.in";
 
-    public static final HashMap<String, String[]> CATEGORY_TO_EVENTS = new HashMap<>();
-    public static final HashMap<String, String[]> EVENT_TO_DETAILS = new HashMap<>();
-    // in the form of image_name, description, person_to_contact;
+    public static final HashMap<Category, ArrayList<Event>> CATEGORY_TO_EVENTS = new HashMap<>();
 
-    private static boolean initialised = false;
+    public static boolean initialised = false;
 
     public static void init(){
         if (initialised) return;
-        else initialised = true;
 
-        String[] CSE_EVENTS = {"Hackon", "Hack.IIIT", "Prosort", "Toast To Code"};
-        String[] ECE_EVENTS = {"Aeronuts", "Hardware Hackathon"};
-        String[] WORKSHOP_EVENTS = {"Open Source", "GO language"};
-        String[] SCHOOL_EVENTS = {"Teach CSS", "Teach Python"};
-        String[][] _collections = {CSE_EVENTS, ECE_EVENTS, WORKSHOP_EVENTS, SCHOOL_EVENTS};
-        ArrayList<String> temp_all_events = new ArrayList<>();
-
-        for (String[] cat: _collections){
-            for(String ev: cat){
-                temp_all_events.add(ev);
-            }
+        for(Category c: Category.values()){
+            CATEGORY_TO_EVENTS.put(c, new ArrayList<Event>());
         }
-        String[] ALL_EVENTS = (String[]) temp_all_events.toArray(new String[temp_all_events.size()]);
 
-        CATEGORY_TO_EVENTS.put("CSE", CSE_EVENTS);
-        CATEGORY_TO_EVENTS.put("ECE", ECE_EVENTS);
-        CATEGORY_TO_EVENTS.put("Workshop", WORKSHOP_EVENTS);
-        CATEGORY_TO_EVENTS.put("School", SCHOOL_EVENTS);
-        CATEGORY_TO_EVENTS.put("All", ALL_EVENTS);
-
-        String[] temp_details = {"image1.jpg", "Coming Soon", "a@b.com"};
-        for(String ev: ALL_EVENTS){
-            EVENT_TO_DETAILS.put(ev, temp_details);
-        }
+        InitialDataFetcher task = new InitialDataFetcher();
+        task.execute();
     };
 
-    public static HashMap<Integer, Event> EVENTS;
+    public static HashMap<Integer, Event> EVENTS = new HashMap<>();
+}
+
+class InitialDataFetcher extends FetchAllEventsTask
+{
+
+    public static final String ERROR_TOAST = "No network connection";
+    public static final String LOG_TAG = InitialDataFetcher.class.getSimpleName();
+
+    @Override
+    protected void onPostExecute(Event[] events) {
+        if (events == null){
+            Log.e(LOG_TAG, "Could not fetch initial Data. No connection");
+            return;
+        }
+        Log.v(LOG_TAG, "Fetched all events: " + Arrays.deepToString(events));
+        for(Event ev: events){
+            DataHolder.CATEGORY_TO_EVENTS.get(ev.category).add(ev);
+            DataHolder.CATEGORY_TO_EVENTS.get(Category.ALL).add(ev);
+            DataHolder.EVENTS.put(ev.id, ev);
+        };
+        DataHolder.initialised = true;
+    }
 }

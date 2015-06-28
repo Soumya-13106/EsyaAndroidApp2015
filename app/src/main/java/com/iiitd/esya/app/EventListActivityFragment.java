@@ -11,8 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 
 /**
@@ -31,21 +30,30 @@ public class EventListActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
         String categoryStr = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
 
-        String[] data = DataHolder.CATEGORY_TO_EVENTS.get(categoryStr);
-        List<String> e = new ArrayList<>(Arrays.asList(data));
+        Category category = Category.resolveToCategory(categoryStr);
+
+        ArrayList<Event> category_events = DataHolder.CATEGORY_TO_EVENTS.get(category);
+        ArrayList<String> event_names = new ArrayList<>();
+        final HashMap<String, Integer> temp_name_to_event_map = new HashMap<>();
+        for(Event ev: category_events){
+            event_names.add(ev.name);
+            temp_name_to_event_map.put(ev.name, ev.id);
+        }
+
         mEventsAdapter = new ArrayAdapter(getActivity(), R.layout.list_item_event,
-                R.id.list_item_event_textview, e);
+                R.id.list_item_event_textview, event_names);
         ListView listview_events = (ListView)rootView.findViewById(R.id.listview_event);
         listview_events.setAdapter(mEventsAdapter);
 
         listview_events.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String event = mEventsAdapter.getItem(i);
+                String eventName = mEventsAdapter.getItem(i);
+                Event event = DataHolder.EVENTS.get(temp_name_to_event_map.get(eventName));
                 // Toast.makeText(getActivity(), event, Toast.LENGTH_SHORT).show();
                 // Toast.makeText(getActivity(), DataHolder.EVENT_TO_DETAILS.get(event)[0], Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), EventActivity.class).
-                        putExtra(Intent.EXTRA_TEXT, event).
+                        putExtra("pk", event.id).
                         setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
             }
