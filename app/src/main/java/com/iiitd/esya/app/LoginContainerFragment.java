@@ -14,9 +14,9 @@ import android.widget.Toast;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class LoginActivityFragment extends Fragment {
+public class LoginContainerFragment extends Fragment {
 
-    public LoginActivityFragment() {
+    public LoginContainerFragment() {
     }
 
     @Override
@@ -32,7 +32,7 @@ public class LoginActivityFragment extends Fragment {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean(getString(R.string.pref_logged_in), true);
                 editor.commit();
-                Toast.makeText(getActivity(), "Logging you in.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Logging in you in.", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getActivity(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
