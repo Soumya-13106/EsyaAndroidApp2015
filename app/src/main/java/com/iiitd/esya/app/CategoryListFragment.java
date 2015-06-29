@@ -23,8 +23,6 @@ public class CategoryListFragment extends Fragment{
     public CategoryListFragment() {
 
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_category_list, container, false);
