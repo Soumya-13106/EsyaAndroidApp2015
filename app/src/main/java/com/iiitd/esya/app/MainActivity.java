@@ -8,19 +8,16 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity {
@@ -76,16 +73,21 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_item_0:
                         Snackbar.make(mContentFrame, "Events", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 0;
+                        break;
                     case R.id.navigation_item_1:
                         Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 1;
+                        break;
                     case R.id.navigation_item_2:
                         Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 2;
+                        break;
                     case R.id.navigation_item_3:
                         Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 3;
+                        break;
                 }
+                mDrawerLayout.closeDrawer(GravityCompat.START);
                 return changeFragment(mCurrentSelectedPosition);
             }
         });
