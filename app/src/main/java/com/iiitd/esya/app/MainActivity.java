@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout mContentFrame;
     private int mCurrentSelectedPosition;
 
-
-
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */

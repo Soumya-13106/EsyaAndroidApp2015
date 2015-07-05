@@ -34,6 +34,7 @@ public class LoginActivityFragment extends Fragment {
                 editor.commit();
                 Toast.makeText(getActivity(), "Logging you in.", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getActivity(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                getActivity().finish();
             }
         });
         return view;

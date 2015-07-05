@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * Created by darkryder on 27/6/15.
  */
 public class APIDataFetcher {
-    private static final String API_URL = "http://esya.iiitd.edu.in/";
+    private static final String API_URL = "http://esya.iiitd.edu.in/m/";
 
     private static String fetchAllEventsJsonNetworkWorker()
     {
@@ -145,9 +145,7 @@ public class APIDataFetcher {
                         jsonEvent.getInt("id"),
                         jsonEvent.getString("name"),
                         Category.resolveToCategory(jsonEvent.getString("category")),
-                        jsonEvent.getJSONObject("photo").
-                                getJSONObject("photo").
-                                getString("url")
+                        jsonEvent.getString("url")
                 ));
             }
 
