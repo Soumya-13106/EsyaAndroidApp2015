@@ -3,6 +3,7 @@ package com.iiitd.esya.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -18,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,9 +31,6 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout mContentFrame;
     private int mCurrentSelectedPosition;
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
     private CharSequence mTitle;
 
     @Override
@@ -56,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbar();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow(); // in Activity's onCreate() for instance
+            w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
 
         setUpNavDrawer();
 
@@ -93,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpNavDrawer() {
-        if (mToolbar != null) {
+        if (mToolbar != null && getSupportActionBar()!=null) {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             mToolbar.setNavigationIcon(R.drawable.ic_drawer);
@@ -108,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
         }
@@ -210,8 +216,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
+            return inflater.inflate(R.layout.fragment_main, container, false);
         }
 
         @Override

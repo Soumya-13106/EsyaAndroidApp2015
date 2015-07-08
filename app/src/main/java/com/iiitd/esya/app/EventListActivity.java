@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 public class EventListActivity extends AppCompatActivity {
 
+    private Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +26,8 @@ public class EventListActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.nav_contentframe, new EventListFragment());
         }
+        setUpToolbar();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,5 +75,24 @@ public class EventListActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         this.overridePendingTransition(0, 0);
+    }
+
+    private void setUpToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setToolbarTitle();
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+        }
+    }
+
+    private void setToolbarTitle() {
+        Intent intent = getIntent();
+        if(intent!=null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+            String eventStr = intent.getStringExtra(Intent.EXTRA_TEXT);
+            mToolbar.setTitle(eventStr);
+            mToolbar.setSubtitle("Events");
+        }else{
+            mToolbar.setTitle("Events");
+        }
     }
 }
