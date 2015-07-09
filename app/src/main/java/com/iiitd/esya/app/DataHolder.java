@@ -1,5 +1,6 @@
 package com.iiitd.esya.app;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -12,7 +13,7 @@ import java.util.HashMap;
  * As of now, this is a temporary class to hold the category/event/details data
  */
 public class DataHolder {
-    public static final String LOG_TAG = DataHolder.class.getSimpleName();
+    private static final String LOG_TAG = DataHolder.class.getSimpleName();
 
     public static final String ELIGIBILITY_RESPONSE = "eligibilty";
     public static final String JUDGING_RESPONSE =  "judging";
@@ -36,14 +37,14 @@ public class DataHolder {
 
     public static boolean initialised = false;
 
-    public static void init(){
+    public static void init(Context context){
         if (initialised) return;
 
         for(Category c: Category.values()){
             CATEGORY_TO_EVENTS.put(c, new ArrayList<Event>());
         }
 
-        InitialDataFetcher task = new InitialDataFetcher();
+        InitialDataFetcher task = new InitialDataFetcher(context);
         task.execute();
     };
 
@@ -52,6 +53,11 @@ public class DataHolder {
 
 class InitialDataFetcher extends FetchAllEventsTask
 {
+    Context context;
+    public InitialDataFetcher(Context context)
+    {
+        this.context = context;
+    }
 
     public static final String ERROR_TOAST = "No network connection";
     public static final String LOG_TAG = InitialDataFetcher.class.getSimpleName();
@@ -71,12 +77,11 @@ class InitialDataFetcher extends FetchAllEventsTask
         };
         DataHolder.initialised = true;
 
-        InitialImagesFetcher task = new InitialImagesFetcher();
+        InitialImagesFetcher task = new InitialImagesFetcher(context);
         String[] event_image_urls = new String[events.length];
         for(int i = 0; i < events.length; i++)
         {
-            // TODO change this to events[i].image_url after getting api endpoint changed.
-            event_image_urls[i] = "http://esya.iiitd.edu.in/uploads/event/photo/1/prosort.jpg";
+            event_image_urls[i] = events[i].image_url;
         }
         task.execute(event_image_urls);
 
@@ -85,6 +90,11 @@ class InitialDataFetcher extends FetchAllEventsTask
 
 class InitialImagesFetcher extends FetchImagesTask
 {
+    public InitialImagesFetcher(Context context)
+    {
+        super(context);
+    }
+
     public static final String ERROR_TOAST = "No network connection";
     public static final String LOG_TAG =InitialImagesFetcher.class.getSimpleName();
 

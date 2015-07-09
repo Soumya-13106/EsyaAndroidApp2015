@@ -1,5 +1,6 @@
 package com.iiitd.esya.app;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -144,11 +145,13 @@ public class APIDataFetcher {
 
             for(int i = 0; i < mainArray.length(); i++){
                 JSONObject jsonEvent = mainArray.getJSONObject(i);
+                String temp_image_url = jsonEvent.getJSONObject("photo").
+                        getJSONObject("photo").getString("url");
                 events.add(new Event(
                         jsonEvent.getInt("id"),
                         jsonEvent.getString("name"),
                         Category.resolveToCategory(jsonEvent.getString("category")),
-                        jsonEvent.getString("url")
+                        temp_image_url.equals("null") ? null : temp_image_url
                 ));
             }
 
@@ -168,13 +171,14 @@ public class APIDataFetcher {
             Event event = null;
             JSONObject jsonEvent = new JSONObject(jsonResponseString);
 
+            String temp_image_url = jsonEvent.getJSONObject("photo").
+                                        getJSONObject("photo").getString("url");
+
             event = new Event(
                     jsonEvent.getInt("id"),
                     jsonEvent.getString("name"),
                     Category.resolveToCategory(jsonEvent.getString("category")),
-                    jsonEvent.getJSONObject("photo").
-                            getJSONObject("photo").
-                            getString("url")
+                    temp_image_url.equals("null") ? null : temp_image_url
             );
 
 
@@ -261,6 +265,11 @@ abstract class FetchSpecificEventTask extends AsyncTask<Integer, Void, Event>
 
 abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
 {
+    protected Context context;
+    public FetchImagesTask(Context context)
+    {
+        this.context = context;
+    }
 
     private String LOG_TAG = FetchImagesTask.class.getSimpleName();
     @Override
@@ -273,14 +282,15 @@ abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
 
         for(int i = 0; i < strings.length; i++)
         {
+            Bitmap image;
             String url = strings[i];
             boolean isEventPhoto = false;
             Event event = null;
+
+            if ((url == null) || url.isEmpty()) continue;
+
             // gotta come up with something better
             if (url.contains("/uploads/event/photo/")) isEventPhoto = true;
-
-            Bitmap image = APIDataFetcher.getImageFromURL(url);
-            if (image == null) return null;
 
             //  check if it's an event. whether I know how to cache the image_url
             if (isEventPhoto)
@@ -288,11 +298,26 @@ abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
                 // extract event id
                 // http://esya.iiitd.edu.in/uploads/event/photo/10/Hackon.png
                 // 0    1 2                  3        4    5    6   7
-                int id = Integer.parseInt(url.split("/")[6]);
+                String[] url_parts = url.split("/");
+                int id = Integer.parseInt(url_parts[6]);
                 event = DataHolder.EVENTS.get(id);
-                event.image = image;
+                String name = Event.getImageNameFromUrl(url);
+                if (event.isImageInCache(name, context))
+                {
+                    image = event.getCacheImage(name, context);
+                    Log.v(LOG_TAG, "found image " + name + " in cache");
+                }
+                else{
+                    image = APIDataFetcher.getImageFromURL(url);
+                    if (image != null) event.setCacheImage(image, name, context);
+                    Log.v(LOG_TAG, "fetched image for: " + event.name);
+                }
             }
-            Log.v(LOG_TAG, "fetch image for: " + event.name);
+            else
+            {
+                image = APIDataFetcher.getImageFromURL(url);
+            }
+            Log.v(LOG_TAG, "fetched image from: " + url);
             result[i] = image;
         }
         return result;

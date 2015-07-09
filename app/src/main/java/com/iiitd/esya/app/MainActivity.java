@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        DataHolder.init();
+        DataHolder.init(this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean logged_in = prefs.getBoolean(getString(R.string.pref_logged_in), false);

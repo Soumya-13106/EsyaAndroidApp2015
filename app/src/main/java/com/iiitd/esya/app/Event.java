@@ -1,9 +1,16 @@
 package com.iiitd.esya.app;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 /**
  * Created by darkryder on 28/6/15.
@@ -27,8 +34,51 @@ public class Event {
     public String venue;
     // Datetime registration_deadline
     public String description;
-    public Bitmap image;
+    private Bitmap image;
     // TODO: set a default image
+
+    public boolean isImageInCache(String uri, Context context)
+    {
+        return Arrays.asList(context.fileList()).contains(uri);
+    }
+
+    public static String getImageNameFromUrl(String url)
+    {
+        // http://esya.iiitd.edu.in/uploads/event/photo/10/Hackon.png
+        // 0    1 2                  3        4    5    6   7
+        String[] split = url.split("/");
+//        if (split.length != 8) return null;
+        return split[7];
+    }
+
+    public void setCacheImage(Bitmap bmp, String uri, Context context)
+    {
+        try
+        {
+            FileOutputStream fileOutputStream = context.openFileOutput(uri,
+                    Context.MODE_PRIVATE);
+
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            Log.v("saveImage", "Saved image of " + this.name + ": " + uri);
+        } catch (IOException e)
+        {
+            Log.e("saveImage", "Error writing while saving image of " + this.name + ": " + e.toString());
+        }
+    }
+
+    public Bitmap getCacheImage(String uri, Context context)
+    {
+        try
+        {
+            FileInputStream fileInputStream = new FileInputStream(context.getFileStreamPath(uri));
+            return BitmapFactory.decodeStream(fileInputStream);
+        } catch (FileNotFoundException e){
+            Log.e("getImage", "Could not find image in cache of" + this.name + ": " + e.toString());
+            return null;
+        }
+    }
 
 
     public Event(int id, String name, Category category, String image_url)
