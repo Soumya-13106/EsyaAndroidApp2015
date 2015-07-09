@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.HashMap;
  */
 public class EventListActivityFragment extends Fragment {
 
-    ArrayAdapter<String> mEventsAdapter;
+    EventCardListAdapter mEventsAdapter;
 
     public EventListActivityFragment() {
     }
@@ -40,16 +39,15 @@ public class EventListActivityFragment extends Fragment {
             temp_name_to_event_map.put(ev.name, ev.id);
         }
 
-        mEventsAdapter = new ArrayAdapter(getActivity(), R.layout.list_item_event,
-                R.id.list_item_event_textview, event_names);
+        mEventsAdapter = new EventCardListAdapter(getActivity(), category_events);
+
         ListView listview_events = (ListView)rootView.findViewById(R.id.listview_event);
         listview_events.setAdapter(mEventsAdapter);
 
         listview_events.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String eventName = mEventsAdapter.getItem(i);
-                Event event = DataHolder.EVENTS.get(temp_name_to_event_map.get(eventName));
+                Event event = (Event)mEventsAdapter.getItem(i);
                 // Toast.makeText(getActivity(), event, Toast.LENGTH_SHORT).show();
                 // Toast.makeText(getActivity(), DataHolder.EVENT_TO_DETAILS.get(event)[0], Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), EventActivity.class).

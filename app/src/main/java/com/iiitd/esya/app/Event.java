@@ -1,5 +1,6 @@
 package com.iiitd.esya.app;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.lang.reflect.Field;
@@ -10,7 +11,7 @@ import java.lang.reflect.Field;
 public class Event {
     public String name;
     public Category category;
-    public String image;
+    public String image_url;
     public int id;
 
     // Let's create everything public. !!
@@ -26,14 +27,17 @@ public class Event {
     public String venue;
     // Datetime registration_deadline
     public String description;
+    public Bitmap image;
+    // TODO: set a default image
 
 
-    public Event(int id, String name, Category category, String image)
+    public Event(int id, String name, Category category, String image_url)
     {
         this.id = id;
         this.name = name;
         this.category = category;
-        this.image = image;
+        this.image_url = image_url;
+        this.image = null;
     }
 
     public String toString(){
@@ -59,7 +63,7 @@ public class Event {
 
     public void copyFrom(Event freshEvent){
         Event f = freshEvent;
-        id = f.id; name = f.name; category = f.category; image = f.image;
+        id = f.id; name = f.name; category = f.category; image_url = f.image_url;
         contact = f.contact; eligibility = f.eligibility; judging = f.judging;
         prizes = f.prizes; rules = f.rules; team_size = f.team_size;
         venue = f.venue; description = f.description;

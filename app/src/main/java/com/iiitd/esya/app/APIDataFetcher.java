@@ -1,5 +1,7 @@
 package com.iiitd.esya.app;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -15,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by darkryder on 27/6/15.
@@ -207,6 +210,21 @@ public class APIDataFetcher {
             return null;
         }
     }
+
+    public static Bitmap getImageFromURL(String url)
+    {
+        Log.v("getImageFromURL", "Started image download from " + url);
+        String LOG_TAG = "FETCH_IMAGE";
+        try
+        {
+            InputStream in = new URL(url).openStream();
+            return BitmapFactory.decodeStream(in);
+        } catch (IOException e)
+        {
+            Log.e(LOG_TAG, e.toString());
+        }
+        return null;
+    }
 }
 
 /**
@@ -239,4 +257,44 @@ abstract class FetchSpecificEventTask extends AsyncTask<Integer, Void, Event>
         Log.v(LOG_TAG, "Fetching event " + pk + " task started.");
         return APIDataFetcher.fetchEventDetails(pk);
     }
+}
+
+abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
+{
+
+    private String LOG_TAG = FetchImagesTask.class.getSimpleName();
+    @Override
+    protected Bitmap[] doInBackground(String[]... strings_temp) {
+        String[] strings = strings_temp[0];
+        Log.v(LOG_TAG, "Starting FetchImagesTask with args: " + Arrays.deepToString(strings));
+
+        if(strings.length == 0) return null;
+        Bitmap[] result = new Bitmap[strings.length];
+
+        for(int i = 0; i < strings.length; i++)
+        {
+            String url = strings[i];
+            boolean isEventPhoto = false;
+            Event event = null;
+            // gotta come up with something better
+            if (url.contains("/uploads/event/photo/")) isEventPhoto = true;
+
+            Bitmap image = APIDataFetcher.getImageFromURL(url);
+            if (image == null) return null;
+
+            //  check if it's an event. whether I know how to cache the image_url
+            if (isEventPhoto)
+            {
+                // extract event id
+                // http://esya.iiitd.edu.in/uploads/event/photo/10/Hackon.png
+                // 0    1 2                  3        4    5    6   7
+                int id = Integer.parseInt(url.split("/")[6]);
+                event = DataHolder.EVENTS.get(id);
+                event.image = image;
+            }
+            Log.v(LOG_TAG, "fetch image for: " + event.name);
+            result[i] = image;
+        }
+        return result;
+   }
 }

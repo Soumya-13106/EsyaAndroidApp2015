@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="This is the About IIIT page the image to be placed above should be just IIIT logo, square sized, with the background same as this background. Preferably the logo should be inside a light blue circle."
+        android:text="This is the About IIIT page the image_url to be placed above should be just IIIT logo, square sized, with the background same as this background. Preferably the logo should be inside a light blue circle."
         android:id="@+id/about_iiit"
         android:layout_below="@+id/displayPic"
         android:layout_alignParentStart="true" />

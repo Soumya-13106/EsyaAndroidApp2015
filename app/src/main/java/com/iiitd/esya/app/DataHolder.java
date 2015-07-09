@@ -1,5 +1,6 @@
 package com.iiitd.esya.app;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -69,5 +70,26 @@ class InitialDataFetcher extends FetchAllEventsTask
             DataHolder.EVENTS.put(ev.id, ev);
         };
         DataHolder.initialised = true;
+
+        InitialImagesFetcher task = new InitialImagesFetcher();
+        String[] event_image_urls = new String[events.length];
+        for(int i = 0; i < events.length; i++)
+        {
+            // TODO change this to events[i].image_url after getting api endpoint changed.
+            event_image_urls[i] = "http://esya.iiitd.edu.in/uploads/event/photo/1/prosort.jpg";
+        }
+        task.execute(event_image_urls);
+
+    }
+}
+
+class InitialImagesFetcher extends FetchImagesTask
+{
+    public static final String ERROR_TOAST = "No network connection";
+    public static final String LOG_TAG =InitialImagesFetcher.class.getSimpleName();
+
+    @Override
+    protected void onPostExecute(Bitmap[] bitmaps) {
+        Log.v(LOG_TAG, "FETCHED ALL IMAGES");
     }
 }
