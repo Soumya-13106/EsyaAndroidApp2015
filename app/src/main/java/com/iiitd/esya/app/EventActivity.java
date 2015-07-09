@@ -1,6 +1,5 @@
 package com.iiitd.esya.app;
 
-import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ public class EventActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     CollapsingToolbarLayout collapsingToolbar;
+    private Event mEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +28,20 @@ public class EventActivity extends AppCompatActivity {
         collapsingToolbar.setTitle("Event Name here");
         ImageView header = (ImageView) findViewById(R.id.header);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.logo);
+        mEvent = DataHolder.EVENTS.get(getIntent().getIntExtra("pk", 1));
+        Bitmap bitmap = null;
+
+        if (mEvent.image_url != null)
+        {
+            bitmap = mEvent.getCacheImage(Event.getImageNameFromUrl(mEvent.image_url), this);
+        }
+        if (bitmap == null) {
+            bitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.logo);
+        }
+
+        ((ImageView)findViewById(R.id.header)).setImageBitmap(bitmap);
+
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
