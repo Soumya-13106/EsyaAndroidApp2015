@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:elevation="8dp"
     >
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,7 +22,7 @@
             android:layout_alignRight="@id/event_card_image"
             android:layout_alignBottom="@id/event_card_image"
             android:clickable="true"
-            android:background="@drawable/touch_feedback"
+            android:background="@android:drawable/list_selector_background"
             />
         <TextView
             android:layout_width="match_parent"
@@ -35,6 +36,7 @@
             android:paddingRight="0dp"
             android:paddingEnd="0dp"
             android:background="#400000ff"
+            android:textColor="@android:color/white"
             android:id="@+id/list_item_event_textview"
             android:text="Palash"
             />
@@ -44,8 +46,8 @@
             android:layout_alignEnd="@id/event_card_image"
             android:layout_alignRight="@id/event_card_image"
             android:layout_alignBottom="@id/event_card_image"
-            android:layout_margin="8dp"/>
-            <!--android:background="@drawable/ic_arrow_forward_white_24dp"/>-->
+            android:layout_margin="8dp"
+            android:background="@drawable/ic_forward_white_24dp"/>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

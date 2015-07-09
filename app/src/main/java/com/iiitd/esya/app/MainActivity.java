@@ -99,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpNavDrawer() {
         if (mToolbar != null && getSupportActionBar()!=null) {
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mToolbar.setNavigationIcon(R.drawable.ic_drawer);
+            mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -6,12 +6,7 @@
 
     <include layout="@layout/toolbar"
         android:id = "@+id/toolbar"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@drawable/shadow"
-        android:layout_below="@+id/toolbar"
-        />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,11 +15,18 @@
         android:dividerHeight="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="16dp"
+        android:paddingTop="0dp"
         android:paddingBottom="0dp"
-        android:divider="@android:color/white"
-        android:background="@android:color/white">
-
+        android:divider="@android:color/transparent"
+        android:drawSelectorOnTop="true"
+        >
     </ListView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/shadow"
+        android:layout_below="@+id/toolbar"
+        />
 
 </RelativeLayout>

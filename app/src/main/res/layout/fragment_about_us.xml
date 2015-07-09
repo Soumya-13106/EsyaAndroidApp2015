@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#3BACA8">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/displayPic"
+        android:src="@drawable/logo"
+        android:scaleType="fitXY"/>
 
     <TextView
-        android:text="About Us"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="This is the About IIIT page the image to be placed above should be just IIIT logo, square sized, with the background same as this background. Preferably the logo should be inside a white circle."
+        android:id="@+id/about_iiit"
+        android:layout_below="@+id/displayPic"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:id="@+id/arrowFwd"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_forward_white_24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

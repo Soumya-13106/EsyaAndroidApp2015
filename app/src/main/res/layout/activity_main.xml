@@ -15,19 +15,18 @@
 
         <include layout="@layout/toolbar"
             android:id = "@+id/toolbar"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@drawable/shadow"
-            android:layout_below="@+id/toolbar"
-            />
 
         <FrameLayout
             android:id="@+id/nav_contentframe"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="?attr/actionBarSize"
-            android:background="@android:color/white"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@drawable/shadow"
+            android:layout_below="@+id/toolbar"
             />
     </RelativeLayout>
 

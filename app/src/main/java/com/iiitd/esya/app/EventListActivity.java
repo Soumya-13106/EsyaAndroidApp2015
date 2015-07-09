@@ -27,6 +27,8 @@ public class EventListActivity extends AppCompatActivity {
                     .add(R.id.nav_contentframe, new EventListFragment());
         }
         setUpToolbar();
+        if(getSupportActionBar()!=null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

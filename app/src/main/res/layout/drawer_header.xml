@@ -8,14 +8,14 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:src="@drawable/logo"
         android:scaleType="centerCrop" />
     <TextView
-        style="@style/TextAppearance.AppCompat.Subhead"
+        style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:text="Your Name Here"
+        android:text="No text will be here and esya logo in place of this img the img. should be transparent background"
         android:textColor="@android:color/white" />
 </FrameLayout>
