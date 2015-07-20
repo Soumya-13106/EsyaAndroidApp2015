@@ -189,23 +189,21 @@ public class APIDataFetcher {
             event.venue = jsonEvent.optString(DataHolder.VENUE_RESPONSE, DataHolder.VENUE_DEFAULT);
             event.description = jsonEvent.optString(DataHolder.DESCRIPTION_RESPONSE, DataHolder.DESCRIPTION_DEFAULT);
             event.team_size = jsonEvent.optInt(DataHolder.TEAM_SIZE_RESPONSE, DataHolder.TEAM_SIZE_DEFAULT);
+            event.contact = jsonEvent.optString(DataHolder.CONTACT_RESPONSE, DataHolder.CONTACT_DEFAULT);
 
             if (event.eligibility.equals("")) event.eligibility = DataHolder.ELIGIBILITY_DEFAULT;
             if (event.judging.equals("")) event.judging = DataHolder.JUDGING_DEFAULT;
             if (event.prizes.equals("")) event.prizes = DataHolder.PRIZES_DEFAULT;
             if (event.rules.equals("")) event.rules = DataHolder.RULES_DEFAULT;
             if (event.venue.equals("")) event.venue = DataHolder.VENUE_DEFAULT;
+            if (event.contact.equals("")) event.contact = DataHolder.CONTACT_DEFAULT;
 
             // TODO: get this fixed in the API. It's not being sent as of now.
 //            if ((event.description != null) && event.description.equals("")) event.description = DataHolder.DESCRIPTION_DEFAULT;
 
-            String temp_contact = jsonEvent.optString(DataHolder.CONTACT_RESPONSE, DataHolder.CONTACT_DEFAULT);
-
-            ArrayList<String> temp_contact_list = new ArrayList<>();
-            for(String c: temp_contact.split("<br>")){
-                temp_contact_list.add(c);
-            }
-            event.contact = temp_contact_list.toArray(new String[temp_contact_list.size()]);
+            event.registered = jsonEvent.optInt(DataHolder.REGISTERED_RESPONSE, DataHolder.REGISTERED_DEFAULT) == 0 ? false: true;
+            event.team_event = jsonEvent.optBoolean(DataHolder.TEAM_EVENT_RESPONSE, DataHolder.TEAME_EVENT_DEFAULT);
+            event.team_id = jsonEvent.optInt(DataHolder.TEAM_ID_RESPONSE, DataHolder.TEAM_ID_DEFAULT);
 
             return event;
 

@@ -1,5 +1,7 @@
 package com.iiitd.esya.app;
 
+import android.util.Log;
+
 /**
  * Created by darkryder on 28/6/15.
  */
@@ -23,12 +25,14 @@ public enum Category {
     }
 
     public static Category resolveToCategory(String what){
+        // Creating a map might not be justifiable for such a small input. Array linear search
+        // is efficient enough.
         for(Category c: values()){
             if (what.equals(c.toString())){
                 return c;
             }
         }
+        Log.v("resolveToCategory", "No category found for " + what +". Reverting back to CSE");
         return CSE;
     }
-
 }

@@ -23,10 +23,14 @@ public class Event {
 
     // Let's create everything public. !!
 
-    public String[] contact;
+    public String contact;
+    public boolean registered;
+    public boolean team_event;
+    public int team_id;
+    // Datetime event_date_time;
+    // Datetime registration_deadline
 
     public String eligibility;
-    // Datetime date_time;
     public String judging;
     public String prizes;
     public String rules;
@@ -116,6 +120,8 @@ public class Event {
         id = f.id; name = f.name; category = f.category; image_url = f.image_url;
         contact = f.contact; eligibility = f.eligibility; judging = f.judging;
         prizes = f.prizes; rules = f.rules; team_size = f.team_size;
-        venue = f.venue; description = f.description;
+        venue = f.venue; description = f.description; registered = f.registered;
+        team_event = f.team_event; team_id = f.team_id;
+
     }
 }
