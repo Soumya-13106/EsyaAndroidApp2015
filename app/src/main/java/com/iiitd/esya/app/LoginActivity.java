@@ -9,19 +9,22 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 
-public class LoginActivity extends FragmentActivity {
+public class LoginActivity extends FragmentActivity{
 
     FragmentPagerAdapter mFragmentPagerAdapter;
     ViewPager mViewPager;
 
+    private String TAG = LoginActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
                 getString(R.string.pref_logged_in), false
         )){
             startActivity(new Intent(this, MainActivity.class));
-            return;
+            finish();
         }
         setContentView(R.layout.fragment_login_container);
 

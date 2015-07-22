@@ -17,7 +17,7 @@ import java.util.Arrays;
  */
 public class Event {
     public String name;
-    public Category category;
+    public Category[] categories;
     public String image_url;
     public int id;
 
@@ -85,17 +85,17 @@ public class Event {
     }
 
 
-    public Event(int id, String name, Category category, String image_url)
+    public Event(int id, String name, Category[] categories, String image_url)
     {
         this.id = id;
         this.name = name;
-        this.category = category;
+        this.categories = categories;
         this.image_url = image_url;
         this.image = null;
     }
 
     public String toString(){
-        return this.id + ": " + this.name + " -> " + this.category;
+        return this.id + ": " + this.name + " -> " + Arrays.toString(this.categories);
     }
 
     public String debuggableToString(){
@@ -117,7 +117,7 @@ public class Event {
 
     public void copyFrom(Event freshEvent){
         Event f = freshEvent;
-        id = f.id; name = f.name; category = f.category; image_url = f.image_url;
+        id = f.id; name = f.name; categories = f.categories; image_url = f.image_url;
         contact = f.contact; eligibility = f.eligibility; judging = f.judging;
         prizes = f.prizes; rules = f.rules; team_size = f.team_size;
         venue = f.venue; description = f.description; registered = f.registered;
