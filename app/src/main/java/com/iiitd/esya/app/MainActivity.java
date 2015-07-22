@@ -1,9 +1,7 @@
 package com.iiitd.esya.app;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,16 +23,15 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks {
+public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
@@ -44,117 +41,43 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private CharSequence mTitle;
     private static String TAG = MainActivity.class.getSimpleName();
-
-
-    private static final int RC_SIGN_IN = 0;
-    private static GoogleApiClient mGoogleApiClient;
-    private static boolean mIsResolving = false;
-    private static boolean mShouldResolve = false;
-
-    public static void onSignInClicked(Context context) {
-        // User clicked the sign-in button, so begin the sign-in process and automatically
-        // attempt to resolve any errors that occur.
-        mShouldResolve = true;
-        mGoogleApiClient.connect();
-
-        // Show a message to the user that we are signing in.
-        Toast.makeText(context, "Logging you in.", Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult:" + requestCode + ":" + resultCode + ":" + data);
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            // If the error resolution was not successful we should not resolve further.
-            if (resultCode != RESULT_OK) {
-                mShouldResolve = false;
-            }
-
-            mIsResolving = false;
-            mGoogleApiClient.connect();
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        // onConnected indicates that an account was selected on the device, that the selected
-        // account has granted any requested permissions to our app and that we were able to
-        // establish a service connection to Google Play services.
-        Log.d(TAG, "onConnected: " + bundle);
-        mShouldResolve = false;
-
-        // Show the signed-in UI
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.pref_logged_in), true);
-        editor.commit();
-        Toast.makeText(this, "Logged in.", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-        finish();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(TAG, "OnConnectionSuspended");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!mGoogleApiClient.isConnected())
-        {
-            mGoogleApiClient.connect();
-        }
-    }
-
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        // Could not connect to Google Play Services.  The user needs to select an account,
-        // grant permissions or resolve an error in order to sign in. Refer to the javadoc for
-        // ConnectionResult to see possible error codes.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
-
-        if (!mIsResolving && mShouldResolve) {
-            if (connectionResult.hasResolution()) {
-                try {
-//                    startIntentSenderForResult(connectionResult.getResolution().getIntentSender(),
-//                            RC_SIGN_IN, null, 0, 0, 0);
-                    connectionResult.startResolutionForResult(this, RC_SIGN_IN);
-                    mIsResolving = true;
-                } catch (IntentSender.SendIntentException e) {
-                    Log.e(TAG, "Could not resolve ConnectionResult.", e);
-                    mIsResolving = false;
-                    mGoogleApiClient.connect();
-                }
-            } else {
-                // Could not resolve the connection result, show the user an
-                // error dialog.
-                Toast.makeText(this, "Connection error.", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            // Show the signed-out UI
-            Toast.makeText(this, "Logged out.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(new Scope(Scopes.PLUS_LOGIN))
-                .addScope(new Scope(Scopes.PLUS_ME))
-                .build();
 
         DataHolder.init(this);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Plus.API)
+                .addScope(new Scope(Scopes.PROFILE))
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(Bundle bundle) {
+                        Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+                        String personName = currentPerson.getDisplayName();
+                        Person.Image personPhoto = currentPerson.getImage();
+                        String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+                        String personGooglePlusProfile = currentPerson.getUrl();
+                        Log.d(TAG,"Google Plus user Details :"+"\nPerson Name :"+personName+"\nEmail :"+email+"\npersonGooglePlusProfile:"+personGooglePlusProfile);
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        Log.d("asg", "did");
+                    }
+                }).
+                addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(ConnectionResult connectionResult) {
+                        Log.d("Failed", "failed" + connectionResult);
+                    }
+                })
+                .addScope(new Scope(Scopes.PLUS_ME))
+                .build();
+        mGoogleApiClient.connect();
+
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean logged_in = prefs.getBoolean(getString(R.string.pref_logged_in), false);
@@ -279,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             if (mGoogleApiClient.isConnected()) {
                 Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
                 mGoogleApiClient.disconnect();
+                mGoogleApiClient = null;
             }
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);

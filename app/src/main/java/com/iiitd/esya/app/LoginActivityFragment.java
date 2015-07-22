@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.SignInButton;
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -16,11 +18,10 @@ public class LoginActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        View login_button = (View) view.findViewById(R.id.login_button);
-        login_button.setOnClickListener(new View.OnClickListener() {
+        ((SignInButton) view.findViewById(R.id.login_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.onSignInClicked(getActivity());
+                ((LoginActivity) getActivity()).onSignInClicked();
             }
         });
         return view;
