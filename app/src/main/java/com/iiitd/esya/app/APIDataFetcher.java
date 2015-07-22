@@ -147,10 +147,16 @@ public class APIDataFetcher {
                 JSONObject jsonEvent = mainArray.getJSONObject(i);
                 String temp_image_url = jsonEvent.getJSONObject("photo").
                         getJSONObject("photo").getString("url");
+                ArrayList<Category> categories = new ArrayList<>();
+                JSONArray json_categories = jsonEvent.getJSONArray("categories");
+                for(int j = 0; j < json_categories.length(); j++)
+                {
+                    categories.add(Category.resolveToCategory(((JSONObject)json_categories.get(j)).getInt("id")));
+                }
                 events.add(new Event(
                         jsonEvent.getInt("id"),
                         jsonEvent.getString("name"),
-                        Category.resolveToCategory(jsonEvent.getString("category")),
+                        categories.toArray(new Category[categories.size()]),
                         temp_image_url.equals("null") ? null : temp_image_url
                 ));
             }
@@ -174,10 +180,16 @@ public class APIDataFetcher {
             String temp_image_url = jsonEvent.getJSONObject("photo").
                                         getJSONObject("photo").getString("url");
 
+            ArrayList<Category> categories = new ArrayList<>();
+            JSONArray json_categories = jsonEvent.getJSONArray("categories");
+            for(int j = 0; j < json_categories.length(); j++)
+            {
+                categories.add(Category.resolveToCategory(((JSONObject)json_categories.get(j)).getInt("id")));
+            }
             event = new Event(
                     jsonEvent.getInt("id"),
                     jsonEvent.getString("name"),
-                    Category.resolveToCategory(jsonEvent.getString("category")),
+                    categories.toArray(new Category[categories.size()]),
                     temp_image_url.equals("null") ? null : temp_image_url
             );
 

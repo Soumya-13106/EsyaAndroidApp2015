@@ -2,6 +2,7 @@ package com.iiitd.esya.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,17 +73,12 @@ public class EventActivityFragment extends Fragment {
                     return;
                 }
                 old_event.copyFrom(event);
-                textView.setText(old_event.debuggableToString());
+                textView.setText(Html.fromHtml(old_event.debuggableToString()));
                 Log.v(LOG_TAG, "Fetched fresh data of event " +
                         event.id + ": " + event.debuggableToString());
             }
         };
         fetchTaskDetails.execute(eventPk);
-
-        String details = old_event.debuggableToString();
-
-        textView.setText(details);
-
 
         return view;
     }

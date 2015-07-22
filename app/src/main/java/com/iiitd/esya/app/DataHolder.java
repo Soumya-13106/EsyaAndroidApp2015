@@ -77,7 +77,10 @@ class InitialDataFetcher extends FetchAllEventsTask
         Log.v(LOG_TAG, "Fetched all events: " + Arrays.deepToString(events));
         if (DataHolder.initialised == true) return;
         for(Event ev: events){
-            DataHolder.CATEGORY_TO_EVENTS.get(ev.category).add(ev);
+            for(Category category: ev.categories)
+            {
+                DataHolder.CATEGORY_TO_EVENTS.get(category).add(ev);
+            }
             DataHolder.CATEGORY_TO_EVENTS.get(Category.ALL).add(ev);
             DataHolder.EVENTS.put(ev.id, ev);
         };
