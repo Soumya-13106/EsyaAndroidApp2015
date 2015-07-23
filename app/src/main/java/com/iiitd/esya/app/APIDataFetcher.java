@@ -388,7 +388,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
         try {
             idToken =  GoogleAuthUtil.getToken(context, accountName, scopes);
             sharedPref.edit().putString(
-                    context.getString(R.string.login_user_id), idToken).commit();
+                    context.getString(R.string.login_user_id), idToken).apply();
 
         } catch (IOException e) {
             Log.e(TAG, "Error retrieving ID token.", e);
