@@ -53,7 +53,6 @@ public class CategoryListFragment extends Fragment{
                 startActivity(startEventListActivityIntent);
             }
         });
-
         return rootView;
     }
 

@@ -34,7 +34,7 @@ import java.util.Arrays;
 public class APIDataFetcher {
     private static final String API_URL = "http://esya.iiitd.edu.in/m/";
 
-    private static String fetchAllEventsJsonNetworkWorker()
+    private static String fetchAllEventsJsonNetworkWorker(String api_token)
     {
         final String LOG_TAG = "FETCH_ALL_EVENTS_WRK";
         String eventsJsonResponse = null;
@@ -50,6 +50,7 @@ public class APIDataFetcher {
 
             URL url = new URL(callableUri.toString());
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Authorization", api_token);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
@@ -85,7 +86,7 @@ public class APIDataFetcher {
     }
 
 
-    private static String fetchEventJsonNetworkWorker(int pk)
+    private static String fetchEventJsonNetworkWorker(int pk, String api_token)
     {
         final String LOG_TAG = "FETCH_EVENT_WRK";
         String eventJsonResponse = null;
@@ -104,6 +105,7 @@ public class APIDataFetcher {
 
             URL url = new URL(callableUri.toString());
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Authorization", api_token);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
@@ -141,8 +143,8 @@ public class APIDataFetcher {
     /**
      * @return array of events with basic data inbuilt.
      */
-    public static Event[] fetchBasicAllEvents(){
-        String jsonResponseString = fetchAllEventsJsonNetworkWorker();
+    public static Event[] fetchBasicAllEvents(String api_token){
+        String jsonResponseString = fetchAllEventsJsonNetworkWorker(api_token);
         if (jsonResponseString == null) return null;
 
         ArrayList<Event> events = new ArrayList<>();
@@ -177,8 +179,8 @@ public class APIDataFetcher {
         }
     }
 
-    public static Event fetchEventDetails(int pk){
-        String jsonResponseString = fetchEventJsonNetworkWorker(pk);
+    public static Event fetchEventDetails(int pk, String api_token){
+        String jsonResponseString = fetchEventJsonNetworkWorker(pk, api_token);
         if (jsonResponseString == null) return null;
 
         try{
@@ -221,7 +223,7 @@ public class APIDataFetcher {
             // TODO: get this fixed in the API. It's not being sent as of now.
 //            if ((event.description != null) && event.description.equals("")) event.description = DataHolder.DESCRIPTION_DEFAULT;
 
-            event.registered = jsonEvent.optInt(DataHolder.REGISTERED_RESPONSE, DataHolder.REGISTERED_DEFAULT) == 0 ? false: true;
+            event.registered = jsonEvent.optInt(DataHolder.REGISTERED_RESPONSE, DataHolder.REGISTERED_DEFAULT)!= 0;
             event.team_event = jsonEvent.optBoolean(DataHolder.TEAM_EVENT_RESPONSE, DataHolder.TEAME_EVENT_DEFAULT);
             event.team_id = jsonEvent.optInt(DataHolder.TEAM_ID_RESPONSE, DataHolder.TEAM_ID_DEFAULT);
 
@@ -257,10 +259,23 @@ public class APIDataFetcher {
 abstract class FetchAllEventsTask extends AsyncTask<Void, Void, Event[]>
 {
     final String LOG_TAG = "FETCH_ALL_EVENTS";
+    protected String api_token;
+
+    public FetchAllEventsTask(String api_token)
+    {
+        this.api_token = api_token;
+    }
+
+    public FetchAllEventsTask(Context context){
+        this(PreferenceManager.getDefaultSharedPreferences(context).getString(
+                context.getString(R.string.api_auth_token), "nope"
+        ));
+    }
+
     @Override
     protected Event[] doInBackground(Void... voids) {
         Log.v(LOG_TAG, "Fetching events task started");
-        return APIDataFetcher.fetchBasicAllEvents();
+        return APIDataFetcher.fetchBasicAllEvents(this.api_token);
     }
 }
 
@@ -271,13 +286,18 @@ abstract class FetchAllEventsTask extends AsyncTask<Void, Void, Event[]>
  */
 abstract class FetchSpecificEventTask extends AsyncTask<Integer, Void, Event>
 {
+    public FetchSpecificEventTask(String api_token)
+    {
+        this.api_token = api_token;
+    }
+    protected  String api_token;
     final String LOG_TAG = "FETCH_EVENT";
     @Override
     protected Event doInBackground(Integer... integers) {
         if (integers.length != 1) return null;
         int pk = integers[0];
         Log.v(LOG_TAG, "Fetching event " + pk + " task started.");
-        return APIDataFetcher.fetchEventDetails(pk);
+        return APIDataFetcher.fetchEventDetails(pk, api_token);
     }
 }
 
