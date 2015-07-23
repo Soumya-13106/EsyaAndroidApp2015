@@ -40,6 +40,8 @@ public enum Category {
         Category result;
         switch (id)
         {
+            case 0:
+                result = ALL; break;
             case 1:
                 result = CSE; break;
             case 2:
