@@ -85,6 +85,11 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                 String idToken;
                 try {
                     idToken =  GoogleAuthUtil.getToken(getApplicationContext(), accountName, scopes);
+
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("ID_TOKEN", idToken);
+                    editor.commit();
                 } catch (IOException e) {
                     Log.e(TAG, "Error retrieving ID token.", e);
                     return null;
