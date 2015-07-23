@@ -385,11 +385,8 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
         String scopes = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
         String idToken;
 
-
-
         try {
             idToken =  GoogleAuthUtil.getToken(context, accountName, scopes);
-
             sharedPref.edit().putString(
                     context.getString(R.string.login_user_id), idToken).commit();
 
@@ -428,7 +425,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
                 throw new JSONException("EmptyResponse" + jsonResponse);
             }
 
-            sharedPref.edit().putString(context.getString(R.string.api_auth_token), auth_token);
+            sharedPref.edit().putString(context.getString(R.string.api_auth_token), auth_token).commit();
             Log.e("SendToken", "Received api auth: " + auth_token + " for loginToken " + idToken);
         } catch (IOException e){
             Log.e("SendToken", e.toString());

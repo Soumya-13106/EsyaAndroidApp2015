@@ -44,24 +44,24 @@ public class RegistrationIntentService extends IntentService {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             sharedPref.edit().putString(getString(R.string.pref_GCM_token), token).commit();
 
-            sendRegistrationTokenToServer(token);
+            sendGCMTokenToServer(token);
 
         } catch (Exception e){
             Log.d(TAG, "Failed to complete token refresh", e);
         }
     }
 
-    private void sendRegistrationTokenToServer(String token)
+    private void sendGCMTokenToServer(String token)
     {
         final String API_URL = getString(R.string.URL_register_GCM_token);
 
-        String userId = PreferenceManager.getDefaultSharedPreferences(this).
+        String api_token = PreferenceManager.getDefaultSharedPreferences(this).
                                             getString(getString(R.string.api_auth_token), "0");
         try
         {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(API_URL);
-            httppost.addHeader("Authorization", userId);
+            httppost.addHeader("Authorization", api_token);
 
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 

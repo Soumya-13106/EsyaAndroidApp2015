@@ -121,7 +121,6 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
             }
         } else {
             // Show the signed-out UI
-            Toast.makeText(this, "Logged out.", Toast.LENGTH_SHORT).show();
         }
     }
 
