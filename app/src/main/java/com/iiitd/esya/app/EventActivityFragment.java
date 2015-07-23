@@ -2,6 +2,7 @@ package com.iiitd.esya.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
@@ -38,6 +39,9 @@ public class EventActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event, container, false);
+        String auth_token = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                                .getString(getString(R.string.api_auth_token), "nope");
+
 
         List<String> categoryListData = new ArrayList<>();
         categoryListData.add("Palsh");
@@ -63,7 +67,7 @@ public class EventActivityFragment extends Fragment {
 
         final Event old_event = DataHolder.EVENTS.get(eventPk);
 
-        FetchSpecificEventTask fetchTaskDetails = new FetchSpecificEventTask() {
+        FetchSpecificEventTask fetchTaskDetails = new FetchSpecificEventTask(auth_token) {
             @Override
             protected void onPostExecute(Event event) {
                 if (event == null){
