@@ -51,7 +51,6 @@ public class Event {
         // http://esya.iiitd.edu.in/uploads/event/photo/10/Hackon.png
         // 0    1 2                  3        4    5    6   7
         String[] split = url.split("/");
-//        if (split.length != 8) return null;
         return split[7];
     }
 

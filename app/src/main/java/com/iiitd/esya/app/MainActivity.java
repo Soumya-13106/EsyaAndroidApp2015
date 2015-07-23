@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -30,7 +31,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,34 +52,29 @@ public class MainActivity extends AppCompatActivity {
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(Bundle bundle) {
-                        Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-                        String personName = currentPerson.getDisplayName();
-                        Person.Image personPhoto = currentPerson.getImage();
-                        String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-                        String personGooglePlusProfile = currentPerson.getUrl();
-                        Log.d(TAG,"Google Plus user Details :"+"\nPerson Name :"+personName+"\nEmail :"+email+"\npersonGooglePlusProfile:"+personGooglePlusProfile);
-
-
-
                         if (checkPlayServices()) {
                             // Start IntentService to register this application with GCM.
-                            Log.d(TAG, "starting registration service");
-                            Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
+                            Intent intent = new Intent(getApplicationContext(),
+                                    RegistrationIntentService.class);
                             startService(intent);
-                        } else {Log.d(TAG, "PLAYSERVICES ERROR");}
+                        } else {
+                            Log.d(TAG, "Playservices not available.");
+                            Toast.makeText(getApplicationContext(),
+                                    "Could not register with services", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        Log.d("asg", "did");
+                        Log.d("onConnectionSuspended", i + "");
                     }
-                }).
-                        addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                             @Override
                             public void onConnectionFailed(ConnectionResult connectionResult) {
-                                Log.d("Failed", "failed" + connectionResult);
-                            }
-                        })
+                        Log.d("Failed", "failed" + connectionResult);
+                    }
+                })
                 .addScope(new Scope(Scopes.PLUS_ME))
                 .build();
         mGoogleApiClient.connect();
@@ -213,16 +208,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.logout_settings){
-            if (mGoogleApiClient.isConnected()) {
+            if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                 Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
                 mGoogleApiClient.disconnect();
                 mGoogleApiClient = null;
             }
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean(getString(R.string.pref_logged_in), false);
-            editor.commit();
+            sharedPref.edit().putBoolean(getString(R.string.pref_logged_in), false).commit();
 
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -257,8 +250,7 @@ public class MainActivity extends AppCompatActivity {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Log.i(TAG, "This device is not supported.");
-                finish();
+                Log.d(TAG, "This device is not supported.");
             }
             return false;
         }

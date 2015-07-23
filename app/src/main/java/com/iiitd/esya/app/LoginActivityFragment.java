@@ -21,7 +21,7 @@ public class LoginActivityFragment extends Fragment {
         ((SignInButton) view.findViewById(R.id.login_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((LoginActivity) getActivity()).onSignInClicked();
+                ((LoginActivity) getActivity()).onSignInClicked(view);
             }
         });
         return view;

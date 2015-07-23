@@ -15,8 +15,6 @@ import java.util.HashMap;
 public class DataHolder {
     private static final String LOG_TAG = DataHolder.class.getSimpleName();
 
-    public static final String GCM_APP_SERVER_SENDER_ID = "1061233994676";
-
     public static final String ELIGIBILITY_RESPONSE = "eligibilty";
     public static final String JUDGING_RESPONSE =  "judging";
     public static final String PRIZES_RESPONSE =  "prizes";
@@ -64,6 +62,7 @@ class InitialDataFetcher extends FetchAllEventsTask
     Context context;
     public InitialDataFetcher(Context context)
     {
+        super(context);
         this.context = context;
     }
 
@@ -106,7 +105,6 @@ class InitialImagesFetcher extends FetchImagesTask
         super(context);
     }
 
-    public static final String ERROR_TOAST = "No network connection";
     public static final String LOG_TAG =InitialImagesFetcher.class.getSimpleName();
 
     @Override

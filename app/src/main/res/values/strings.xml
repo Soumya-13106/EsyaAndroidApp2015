@@ -10,8 +10,24 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_example">Example action</string>
-    
+
+
+
     <string name="pref_logged_in">pref_logged_in</string>
+    <string name="pref_GCM_token">PREF_GCM_TOKEN</string>
+
+
+
+    <string name="login_user_id">login_user_id</string>
+    <string name="api_auth_token">api_auth_token</string>
+    <string name="GCM_app_server_sender_id">1061233994676</string>
+
+
+    <string name="api_response_key_auth_token">auth_token</string>
+
+
+    <string name="URL_register_GCM_token">http://esya.iiitd.edu.in/m/registerGCMToken</string>
+    <string name="URL_register_user_id">http://esya.iiitd.edu.in/m/registerUserToken</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_test">TestActivity</string>
