@@ -15,6 +15,8 @@ import java.util.HashMap;
 public class DataHolder {
     private static final String LOG_TAG = DataHolder.class.getSimpleName();
 
+    public static final String GCM_APP_SERVER_SENDER_ID = "1061233994676";
+
     public static final String ELIGIBILITY_RESPONSE = "eligibilty";
     public static final String JUDGING_RESPONSE =  "judging";
     public static final String PRIZES_RESPONSE =  "prizes";

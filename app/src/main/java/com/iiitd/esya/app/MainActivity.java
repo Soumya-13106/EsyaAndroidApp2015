@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
@@ -43,12 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private static String TAG = MainActivity.class.getSimpleName();
     private GoogleApiClient mGoogleApiClient;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        DataHolder.init(this);
-
+    private void attachToGoogleLoginApiClient()
+    {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Plus.API)
                 .addScope(new Scope(Scopes.PROFILE))
@@ -61,6 +58,15 @@ public class MainActivity extends AppCompatActivity {
                         String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
                         String personGooglePlusProfile = currentPerson.getUrl();
                         Log.d(TAG,"Google Plus user Details :"+"\nPerson Name :"+personName+"\nEmail :"+email+"\npersonGooglePlusProfile:"+personGooglePlusProfile);
+
+
+
+                        if (checkPlayServices()) {
+                            // Start IntentService to register this application with GCM.
+                            Log.d(TAG, "starting registration service");
+                            Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
+                            startService(intent);
+                        } else {Log.d(TAG, "PLAYSERVICES ERROR");}
                     }
 
                     @Override
@@ -68,16 +74,24 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("asg", "did");
                     }
                 }).
-                addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult connectionResult) {
-                        Log.d("Failed", "failed" + connectionResult);
-                    }
-                })
+                        addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                            @Override
+                            public void onConnectionFailed(ConnectionResult connectionResult) {
+                                Log.d("Failed", "failed" + connectionResult);
+                            }
+                        })
                 .addScope(new Scope(Scopes.PLUS_ME))
                 .build();
         mGoogleApiClient.connect();
+    }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        DataHolder.init(this);
+
+        attachToGoogleLoginApiClient();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean logged_in = prefs.getBoolean(getString(R.string.pref_logged_in), false);
@@ -233,6 +247,24 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    private boolean checkPlayServices()
+    {
+        int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * A placeholder fragment containing a simple view.
