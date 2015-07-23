@@ -1,11 +1,19 @@
 package com.iiitd.esya.app;
 
+import android.accounts.Account;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -332,4 +340,81 @@ abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
         }
         return result;
    }
+}
+
+abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
+    private Context context;
+    private String API_URL;
+    private SharedPreferences sharedPref;
+    private GoogleApiClient mGoogleApiClient;
+
+    private static String TAG = GetAndSendIdTokenTask.class.getSimpleName();
+
+    public GetAndSendIdTokenTask(Context context, GoogleApiClient googleApiClient)
+    {
+        mGoogleApiClient = googleApiClient;
+        this.context = context;
+        API_URL = context.getString(R.string.URL_register_user_id);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+        String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+        Account account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+        String scopes = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
+        String idToken;
+
+
+
+        try {
+            idToken =  GoogleAuthUtil.getToken(context, accountName, scopes);
+
+            sharedPref.edit().putString(
+                    context.getString(R.string.login_user_id), idToken).commit();
+
+        } catch (IOException e) {
+            Log.e(TAG, "Error retrieving ID token.", e);
+            return null;
+        } catch (GoogleAuthException e) {
+            Log.e(TAG, "Error retrieving ID token.", e);
+            return null;
+        }
+
+        try
+        {
+            URL url = new URL(API_URL + "&token=" + idToken);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) throw new IOException("InputStream was null");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line = null;
+            while((line = reader.readLine()) != null){
+                buffer.append(line + "\n");
+            }
+            if (buffer.length() == 0) return null;
+
+            JSONObject jsonResponse = new JSONObject(buffer.toString());
+
+            String auth_token = jsonResponse.getString(
+                    context.getString(R.string.api_response_key_auth_token));
+            if (auth_token == null || auth_token.isEmpty() || auth_token.equals("null"))
+            {
+                throw new JSONException("EmptyResponse" + jsonResponse);
+            }
+
+            sharedPref.edit().putString(context.getString(R.string.api_auth_token), auth_token);
+            Log.e("SendToken", "Received api auth: " + auth_token + " for loginToken " + idToken);
+        } catch (IOException e){
+            Log.e("SendToken", e.toString());
+        } catch (JSONException e){
+            Log.e("SendToken ParsingError", e.toString());
+        }
+        return null;
+    }
 }
