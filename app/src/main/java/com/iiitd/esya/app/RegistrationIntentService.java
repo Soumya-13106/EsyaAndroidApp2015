@@ -35,39 +35,36 @@ public class RegistrationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d(TAG, "in onHandleRequest" + intent);
         try{
             InstanceID instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken(DataHolder.GCM_APP_SERVER_SENDER_ID,
+            String token = instanceID.getToken(getString(R.string.GCM_app_server_sender_id),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             Log.i(TAG, "GCM Registration Token: " + token);
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("GCM_TOKEN", token);
-            editor.commit();
+            sharedPref.edit().putString(getString(R.string.pref_GCM_token), token).apply();
 
-            sendRegistrationTokenToServer(token);
+            sendGCMTokenToServer(token);
 
         } catch (Exception e){
             Log.d(TAG, "Failed to complete token refresh", e);
         }
     }
 
-    private void sendRegistrationTokenToServer(String token)
+    private void sendGCMTokenToServer(String token)
     {
+        final String API_URL = getString(R.string.URL_register_GCM_token);
 
-        final String API_URL = "http://esya.iiitd.edu.in/m/registerGCMToken";
-
-        String userId = PreferenceManager.getDefaultSharedPreferences(this).
-                                            getString("ID_TOKEN", "0");
+        String api_token = PreferenceManager.getDefaultSharedPreferences(this).
+                                            getString(getString(R.string.api_auth_token), "0");
         try
         {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(API_URL);
+            httppost.addHeader("Authorization", api_token);
 
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("userId", userId));
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+
             nameValuePairs.add(new BasicNameValuePair("gcm_token", token));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
             HttpResponse response = httpclient.execute(httppost);

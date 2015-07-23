@@ -1,5 +1,6 @@
 package com.iiitd.esya.app;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -25,11 +26,12 @@ public class EventActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         setSupportActionBar(toolbar);
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("Event Name here");
         ImageView header = (ImageView) findViewById(R.id.header);
 
-        mEvent = DataHolder.EVENTS.get(getIntent().getIntExtra("pk", 1));
+        mEvent = DataHolder.EVENTS.get(getIntent().getIntExtra(Intent.EXTRA_UID, 1));
         Bitmap bitmap = null;
+
+        collapsingToolbar.setTitle(mEvent.name);
 
         if (mEvent.image_url != null)
         {

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,7 @@ public class CategoryListFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_category_list, container, false);
 
         List<String> categoryListData = new ArrayList<String>();
+
         for(Category c: Category.values()){
             categoryListData.add(c.naturalName);
         }
@@ -46,16 +46,13 @@ public class CategoryListFragment extends Fragment{
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String category = categoryListAdapter.getItem(position);
-                Toast.makeText(getActivity(), category, Toast.LENGTH_SHORT).show();
-                //startActivity(new Intent(this, EventActivity.class).setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                Category category = Category.resolveToCategory(categoryListAdapter.getItem(position));
                 Intent startEventListActivityIntent = new Intent(getActivity(), EventListActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                        .putExtra(Intent.EXTRA_TEXT, category);
+                        .putExtra(Intent.EXTRA_UID, category.id);
                 startActivity(startEventListActivityIntent);
             }
         });
-
         return rootView;
     }
 

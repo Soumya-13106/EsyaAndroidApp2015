@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -27,17 +26,12 @@ public class EventListActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
-        String categoryStr = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
+        int categoryCode = getActivity().getIntent().getIntExtra(Intent.EXTRA_UID, 0);
 
-        Category category = Category.resolveToCategory(categoryStr);
+        Category category = Category.resolveToCategory(categoryCode);
 
         ArrayList<Event> category_events = DataHolder.CATEGORY_TO_EVENTS.get(category);
         ArrayList<String> event_names = new ArrayList<>();
-        final HashMap<String, Integer> temp_name_to_event_map = new HashMap<>();
-        for(Event ev: category_events){
-            event_names.add(ev.name);
-            temp_name_to_event_map.put(ev.name, ev.id);
-        }
 
         mEventsAdapter = new EventCardListAdapter(getActivity(), category_events);
 
@@ -48,10 +42,8 @@ public class EventListActivityFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Event event = (Event)mEventsAdapter.getItem(i);
-                // Toast.makeText(getActivity(), event, Toast.LENGTH_SHORT).show();
-                // Toast.makeText(getActivity(), DataHolder.EVENT_TO_DETAILS.get(event)[0], Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), EventActivity.class).
-                        putExtra("pk", event.id).
+                        putExtra(Intent.EXTRA_UID, event.id).
                         setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
             }

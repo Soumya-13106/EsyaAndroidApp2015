@@ -1,11 +1,19 @@
 package com.iiitd.esya.app;
 
+import android.accounts.Account;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +34,7 @@ import java.util.Arrays;
 public class APIDataFetcher {
     private static final String API_URL = "http://esya.iiitd.edu.in/m/";
 
-    private static String fetchAllEventsJsonNetworkWorker()
+    private static String fetchAllEventsJsonNetworkWorker(String api_token)
     {
         final String LOG_TAG = "FETCH_ALL_EVENTS_WRK";
         String eventsJsonResponse = null;
@@ -42,6 +50,7 @@ public class APIDataFetcher {
 
             URL url = new URL(callableUri.toString());
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Authorization", api_token);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
@@ -77,7 +86,7 @@ public class APIDataFetcher {
     }
 
 
-    private static String fetchEventJsonNetworkWorker(int pk)
+    private static String fetchEventJsonNetworkWorker(int pk, String api_token)
     {
         final String LOG_TAG = "FETCH_EVENT_WRK";
         String eventJsonResponse = null;
@@ -96,6 +105,7 @@ public class APIDataFetcher {
 
             URL url = new URL(callableUri.toString());
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Authorization", api_token);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
@@ -133,8 +143,8 @@ public class APIDataFetcher {
     /**
      * @return array of events with basic data inbuilt.
      */
-    public static Event[] fetchBasicAllEvents(){
-        String jsonResponseString = fetchAllEventsJsonNetworkWorker();
+    public static Event[] fetchBasicAllEvents(String api_token){
+        String jsonResponseString = fetchAllEventsJsonNetworkWorker(api_token);
         if (jsonResponseString == null) return null;
 
         ArrayList<Event> events = new ArrayList<>();
@@ -169,8 +179,8 @@ public class APIDataFetcher {
         }
     }
 
-    public static Event fetchEventDetails(int pk){
-        String jsonResponseString = fetchEventJsonNetworkWorker(pk);
+    public static Event fetchEventDetails(int pk, String api_token){
+        String jsonResponseString = fetchEventJsonNetworkWorker(pk, api_token);
         if (jsonResponseString == null) return null;
 
         try{
@@ -213,7 +223,7 @@ public class APIDataFetcher {
             // TODO: get this fixed in the API. It's not being sent as of now.
 //            if ((event.description != null) && event.description.equals("")) event.description = DataHolder.DESCRIPTION_DEFAULT;
 
-            event.registered = jsonEvent.optInt(DataHolder.REGISTERED_RESPONSE, DataHolder.REGISTERED_DEFAULT) == 0 ? false: true;
+            event.registered = jsonEvent.optInt(DataHolder.REGISTERED_RESPONSE, DataHolder.REGISTERED_DEFAULT)!= 0;
             event.team_event = jsonEvent.optBoolean(DataHolder.TEAM_EVENT_RESPONSE, DataHolder.TEAME_EVENT_DEFAULT);
             event.team_id = jsonEvent.optInt(DataHolder.TEAM_ID_RESPONSE, DataHolder.TEAM_ID_DEFAULT);
 
@@ -249,10 +259,23 @@ public class APIDataFetcher {
 abstract class FetchAllEventsTask extends AsyncTask<Void, Void, Event[]>
 {
     final String LOG_TAG = "FETCH_ALL_EVENTS";
+    protected String api_token;
+
+    public FetchAllEventsTask(String api_token)
+    {
+        this.api_token = api_token;
+    }
+
+    public FetchAllEventsTask(Context context){
+        this(PreferenceManager.getDefaultSharedPreferences(context).getString(
+                context.getString(R.string.api_auth_token), "nope"
+        ));
+    }
+
     @Override
     protected Event[] doInBackground(Void... voids) {
         Log.v(LOG_TAG, "Fetching events task started");
-        return APIDataFetcher.fetchBasicAllEvents();
+        return APIDataFetcher.fetchBasicAllEvents(this.api_token);
     }
 }
 
@@ -263,13 +286,18 @@ abstract class FetchAllEventsTask extends AsyncTask<Void, Void, Event[]>
  */
 abstract class FetchSpecificEventTask extends AsyncTask<Integer, Void, Event>
 {
+    public FetchSpecificEventTask(String api_token)
+    {
+        this.api_token = api_token;
+    }
+    protected  String api_token;
     final String LOG_TAG = "FETCH_EVENT";
     @Override
     protected Event doInBackground(Integer... integers) {
         if (integers.length != 1) return null;
         int pk = integers[0];
         Log.v(LOG_TAG, "Fetching event " + pk + " task started.");
-        return APIDataFetcher.fetchEventDetails(pk);
+        return APIDataFetcher.fetchEventDetails(pk, api_token);
     }
 }
 
@@ -332,4 +360,78 @@ abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
         }
         return result;
    }
+}
+
+abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
+    private Context context;
+    private String API_URL;
+    private SharedPreferences sharedPref;
+    private GoogleApiClient mGoogleApiClient;
+
+    private static String TAG = GetAndSendIdTokenTask.class.getSimpleName();
+
+    public GetAndSendIdTokenTask(Context context, GoogleApiClient googleApiClient)
+    {
+        mGoogleApiClient = googleApiClient;
+        this.context = context;
+        API_URL = context.getString(R.string.URL_register_user_id);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+        String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+        Account account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+        String scopes = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
+        String idToken;
+
+        try {
+            idToken =  GoogleAuthUtil.getToken(context, accountName, scopes);
+            sharedPref.edit().putString(
+                    context.getString(R.string.login_user_id), idToken).apply();
+
+        } catch (IOException e) {
+            Log.e(TAG, "Error retrieving ID token.", e);
+            return null;
+        } catch (GoogleAuthException e) {
+            Log.e(TAG, "Error retrieving ID token.", e);
+            return null;
+        }
+
+        try
+        {
+            URL url = new URL(API_URL + "&token=" + idToken);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) throw new IOException("InputStream was null");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line = null;
+            while((line = reader.readLine()) != null){
+                buffer.append(line + "\n");
+            }
+            if (buffer.length() == 0) return null;
+
+            JSONObject jsonResponse = new JSONObject(buffer.toString());
+
+            String auth_token = jsonResponse.getString(
+                    context.getString(R.string.api_response_key_auth_token));
+            if (auth_token == null || auth_token.isEmpty() || auth_token.equals("null"))
+            {
+                throw new JSONException("EmptyResponse" + jsonResponse);
+            }
+
+            sharedPref.edit().putString(context.getString(R.string.api_auth_token), auth_token).commit();
+            Log.e("SendToken", "Received api auth: " + auth_token + " for loginToken " + idToken);
+        } catch (IOException e){
+            Log.e("SendToken", e.toString());
+        } catch (JSONException e){
+            Log.e("SendToken ParsingError", e.toString());
+        }
+        return null;
+    }
 }

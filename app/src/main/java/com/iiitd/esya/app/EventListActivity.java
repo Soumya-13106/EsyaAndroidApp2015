@@ -3,7 +3,6 @@ package com.iiitd.esya.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -89,9 +88,9 @@ public class EventListActivity extends AppCompatActivity {
 
     private void setToolbarTitle() {
         Intent intent = getIntent();
-        if(intent!=null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            String eventStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-            mToolbar.setTitle(eventStr);
+        if(intent!=null && intent.hasExtra(Intent.EXTRA_UID)) {
+            Category category = Category.resolveToCategory(intent.getIntExtra(Intent.EXTRA_UID, 0));
+            mToolbar.setTitle(category.naturalName);
             mToolbar.setSubtitle("Events");
         }else{
             mToolbar.setTitle("Events");
