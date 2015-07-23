@@ -41,7 +41,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
 
         // Show a message to the user that we are signing in.
         // TODO: check if this works
-        Snackbar.make(view, "Logging you in.", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(view, "Logging you in.", Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -81,7 +81,6 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
         task.execute();
         mShouldResolve = false;
     }
-
 
     @Override
     public void onConnectionSuspended(int i) {
