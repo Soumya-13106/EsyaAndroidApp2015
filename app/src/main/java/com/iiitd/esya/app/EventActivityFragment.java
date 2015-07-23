@@ -1,5 +1,6 @@
 package com.iiitd.esya.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 
 /**
- * TODO:
+ * TODO: ALL THIS CLASS DESIGN IS LEFT.
  * The cards are hardcoded as of now, we have to use RecyclerView othervise this wont work. The toolbar will not collapse while using ListView.
  * For recycleView Reference:  http://enoent.fr/blog/2015/01/18/recyclerview-basics/
  */
@@ -56,10 +57,9 @@ public class EventActivityFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.scrollableview);
         listView.setAdapter(categoryListAdapter);
 
-
         final TextView textView = (TextView)view.findViewById(R.id.event_text);
 
-        int eventPk = this.getActivity().getIntent().getIntExtra("pk", -1);
+        int eventPk = this.getActivity().getIntent().getIntExtra(Intent.EXTRA_UID, -1);
 
         final Event old_event = DataHolder.EVENTS.get(eventPk);
 
