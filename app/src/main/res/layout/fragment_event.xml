@@ -36,8 +36,10 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <ListView
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/scrollableview"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="16dp"
@@ -49,11 +51,10 @@
         android:drawSelectorOnTop="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/scrollableview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_event_details" />
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
