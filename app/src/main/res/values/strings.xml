@@ -22,12 +22,13 @@
     <string name="api_auth_token">api_auth_token</string>
     <string name="GCM_app_server_sender_id">1061233994676</string>
 
+    <string name="api_response_key_success">status</string>
 
-    <string name="api_response_key_auth_token">auth_token</string>
+    <string name="api_cookie_key">_esya2015_backend_session</string>
 
-
-    <string name="URL_register_GCM_token">http://esya.iiitd.edu.in/m/registerGCMToken</string>
-    <string name="URL_register_user_id">http://esya.iiitd.edu.in/m/registerUserToken</string>
+    <string name="URL_register_GCM_token">http://esya.iiitd.edu.in/m/register_gcm</string>
+    <string name="URL_register_user_id">http://esya.iiitd.edu.in/m/login</string>
+    <string name="URL_api_base">http://esya.iiitd.edu.in/</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_test">TestActivity</string>
@@ -40,5 +41,4 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="hello_world">Hello world!</string>
->>>>>>> Stashed changes
 </resources>
