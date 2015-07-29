@@ -1,10 +1,13 @@
 package com.iiitd.esya.app;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.github.florent37.materialviewpager.header.HeaderDesign;
 
 
 /**
@@ -25,13 +32,18 @@ import android.widget.Toast;
 public class EventActivityFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+//    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private MaterialViewPager mViewPager;
+//    private ViewPager viewPager;
+    private RecyclerViewMaterialAdapter mAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+//        View view = inflater.inflate(R.layout.fragment_event_detail, container, false);
         View view = inflater.inflate(R.layout.fragment_event, container, false);
         String auth_token = PreferenceManager.getDefaultSharedPreferences(getActivity())
                                 .getString(getString(R.string.api_auth_token), "nope");
@@ -39,18 +51,104 @@ public class EventActivityFragment extends Fragment {
         int eventPk = getActivity().getIntent().getIntExtra(Intent.EXTRA_UID, -1);
         final Event old_event = DataHolder.EVENTS.get(eventPk);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.scrollableview);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mViewPager = (MaterialViewPager) view.findViewById(R.id.materialViewPager);
+        mViewPager.getViewPager().setAdapter(
+                new FragmentStatePagerAdapter(getActivity().getSupportFragmentManager()) {
+                    @Override
+                    public Fragment getItem(int position) {
+                        switch (position)
+                        {
+                            case 0:
+                                return EventDetailFragment.newInstance(old_event.description);
+//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
+                            case 1:
+                                return EventDetailFragment.newInstance(old_event.contact);
+//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
+                            case 2:
+                                return EventDetailFragment.newInstance(old_event.eligibility);
+//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
+                            case 3:
+                                return EventDetailFragment.newInstance(old_event.judging);
+//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
+                            case 4:
+                                return EventDetailFragment.newInstance(old_event.rules);
+//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
+                            case 5:
+                                return EventDetailFragment.newInstance(old_event.prizes);
+//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
+                        };
+                        return null;
+                    }
+
+                    @Override
+                    public int getCount() {
+                        return 6;
+                    }
+
+                    @Override
+                    public CharSequence getPageTitle(int position) {
+                        switch (position) {
+                            case 0:
+                                return "Description";
+                            case 1:
+                                return "Contact";
+                            case 2:
+                                return "Eligibility";
+                            case 3:
+                                return "Judging";
+                            case 4:
+                                return "Rules";
+                            case 5:
+                                return "Prizes";
+                        }
+                        return "What!";
+                    }
+                });
+
+        mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
+        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+
+        mViewPager.getViewPager().setCurrentItem(0);
+
+
+        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener(){
+
+            @Override
+            public HeaderDesign getHeaderDesign(int i) {
+                Bitmap image = null;
+                if (old_event.image_url != null)
+                {
+                    image = old_event.getCacheImage(Event.getImageNameFromUrl(
+                            old_event.image_url), getActivity());
+                }
+                if (image == null)
+                {
+                    image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.logo);
+                }
+                return HeaderDesign.fromColorAndDrawable(
+                        R.color.red, new BitmapDrawable(getActivity().getResources(), image));
+            }
+        });
+
+//        mAdapter = new RecyclerViewMaterialAdapter(new EventAdapterForRecylerView(old_event.image_url));
 
 
 
+//        mRecyclerView = (RecyclerView) view.findViewById(R.id.scrollableview);
+//        mLayoutManager = new LinearLayoutManager(getActivity());
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+//
+//        mRecyclerView.setAdapter(mAdapter);
+//        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
+//
+//        PagerSlidingTabStrip strip = (PagerSlidingTabStrip) view.findViewById(R.id.materialviewpager_pagerTitleStrip);
+//        strip.setViewPager(mViewPager.getViewPager());
 
         //TODO: You'll have to create new adapters and recyclerviews for every tab,
         // with each adapter holding the data only for 1 card with that 1 card holding
         // data only for that one specific info of the event
-        mAdapter = new EventAdapterForRecylerView(old_event.image_url);
-        mRecyclerView.setAdapter(mAdapter);
+        //mAdapter = new EventAdapterForRecylerView(old_event.image_url);
+        //mRecyclerView.setAdapter(mAdapter);
 
 
 //        final TextView textView = (TextView)view.findViewById(R.id.event_text);
@@ -107,7 +205,7 @@ class EventAdapterForRecylerView extends RecyclerView.Adapter<EventAdapterForRec
         // Create a new card layout and replace this    //
         //  //  //  //  //  //  //  //  //  //  //  //  //
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_event, parent, false);
+                .inflate(R.layout.changeable_list_item_event, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
