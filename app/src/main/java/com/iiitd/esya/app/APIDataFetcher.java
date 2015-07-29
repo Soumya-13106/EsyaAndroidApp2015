@@ -451,13 +451,14 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
 
 class LoginPingTest extends AsyncTask<Void, Void, Void>
 {
-    private String API_URL = "http://192.168.64.194:3000/m/profile.json";
+    private String API_URL = null;
 
     private Context context;
 
     public LoginPingTest(Context context)
     {
         this.context = context;
+        API_URL = context.getString(R.string.URL_api_base) + "m/profile.json";
     }
 
     @Override
