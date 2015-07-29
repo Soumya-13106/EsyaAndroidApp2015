@@ -48,7 +48,7 @@ public class EventCardListAdapter extends BaseAdapter{
         Event event = (Event)getItem(i);
 
         if (view == null){
-            view = inflater.inflate(R.layout.list_item_event, null);
+            view = inflater.inflate(R.layout.changeable_list_item_event, null);
         }
 
         ((TextView) view.findViewById(R.id.list_item_event_textview)).setText(event.name);
