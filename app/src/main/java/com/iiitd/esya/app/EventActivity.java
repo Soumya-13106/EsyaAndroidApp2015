@@ -10,7 +10,6 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 
 public class EventActivity extends AppCompatActivity {
@@ -23,15 +22,17 @@ public class EventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
-        setSupportActionBar(toolbar);
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        ImageView header = (ImageView) findViewById(R.id.header);
+//        toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
+//        setSupportActionBar(toolbar);
+//        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+
+
+//        ImageView header = (ImageView) findViewById(R.id.header);
 
         mEvent = DataHolder.EVENTS.get(getIntent().getIntExtra(Intent.EXTRA_UID, 1));
         Bitmap bitmap = null;
 
-        collapsingToolbar.setTitle(mEvent.name);
+//        collapsingToolbar.setTitle(mEvent.name);
 
         if (mEvent.image_url != null)
         {
@@ -42,13 +43,13 @@ public class EventActivity extends AppCompatActivity {
                     R.drawable.logo);
         }
 
-        ((ImageView)findViewById(R.id.header)).setImageBitmap(bitmap);
+//        ((ImageView)findViewById(R.id.header)).setImageBitmap(bitmap);
 
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
                 int mutedColor = palette.getMutedColor(R.attr.colorPrimary);
-                collapsingToolbar.setContentScrimColor(mutedColor);
+//                collapsingToolbar.setContentScrimColor(mutedColor);
             }
         });
     }

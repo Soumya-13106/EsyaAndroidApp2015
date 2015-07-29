@@ -28,6 +28,9 @@ public class EventListActivity extends AppCompatActivity {
         setUpToolbar();
         if(getSupportActionBar()!=null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        LoginPingTest test = new LoginPingTest(this);
+        test.execute();
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 
@@ -382,7 +383,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
         Account account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-        String scopes = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
+        String scopes = "oauth2:" + Scopes.PLUS_LOGIN + " " + Scopes.PROFILE + " https://www.googleapis.com/auth/plus.profile.emails.read";
         String idToken;
 
         try {
@@ -400,7 +401,10 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
 
         try
         {
-            URL url = new URL(API_URL + "&token=" + idToken);
+
+            Log.v(TAG, "Sending accesstoken to server: " + idToken);
+
+            URL url = new URL(API_URL + "?token=" + idToken);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -418,8 +422,17 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
 
             JSONObject jsonResponse = new JSONObject(buffer.toString());
 
-            String auth_token = jsonResponse.getString(
-                    context.getString(R.string.api_response_key_auth_token));
+            int success =jsonResponse.getInt(context.getString(R.string.api_response_key_success));
+            if (success != 200) throw new JSONException("LoginFailed" + jsonResponse);
+
+            String session_cookie_temp = urlConnection.getHeaderField("Set-Cookie");
+            if (session_cookie_temp == null) throw new JSONException("Set-Cookie header not found");
+
+            session_cookie_temp = session_cookie_temp.split("; ")[0];
+            String auth_token = session_cookie_temp.split("=")[1];
+
+            sharedPref.edit().putString(context.getString(R.string.api_auth_token), auth_token).commit();
+
             if (auth_token == null || auth_token.isEmpty() || auth_token.equals("null"))
             {
                 throw new JSONException("EmptyResponse" + jsonResponse);
@@ -431,6 +444,49 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
             Log.e("SendToken", e.toString());
         } catch (JSONException e){
             Log.e("SendToken ParsingError", e.toString());
+        }
+        return null;
+    }
+}
+
+class LoginPingTest extends AsyncTask<Void, Void, Void>
+{
+    private String API_URL = "http://192.168.64.194:3000/m/profile.json";
+
+    private Context context;
+
+    public LoginPingTest(Context context)
+    {
+        this.context = context;
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+        try {
+            Log.v("PingTest", "starting");
+            URL url = new URL(API_URL);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
+                                context.getString(R.string.api_auth_token), "Nope");
+            urlConnection.setRequestProperty("Cookie", "_esya2015_backend_session=" + token);
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) throw new IOException("InputStream was null");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line + "\n");
+            }
+            if (buffer.length() == 0) return null;
+
+            Log.v("PingTest", buffer.toString());
+        } catch (IOException e)
+        {
+            Log.d("PingTest", e.toString());
         }
         return null;
     }
