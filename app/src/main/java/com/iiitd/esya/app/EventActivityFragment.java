@@ -24,6 +24,8 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 
+import java.util.HashMap;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -77,25 +79,34 @@ public class EventActivityFragment extends Fragment {
         final Event old_event = DataHolder.EVENTS.get(eventPk);
 
         mViewPager = (MaterialViewPager) view.findViewById(R.id.materialViewPager);
+
+        final HashMap<String, EventDetailFragment> details_to_fragments = new HashMap<>();
+
+        details_to_fragments.put("description", EventDetailFragment.newInstance(old_event.description));
+        details_to_fragments.put("contact", EventDetailFragment.newInstance(old_event.contact));
+        details_to_fragments.put("eligibility", EventDetailFragment.newInstance(old_event.eligibility));
+        details_to_fragments.put("judging", EventDetailFragment.newInstance(old_event.judging));
+        details_to_fragments.put("rules", EventDetailFragment.newInstance(old_event.rules));
+        details_to_fragments.put("prizes", EventDetailFragment.newInstance(old_event.prizes));
+
         mViewPager.getViewPager().setAdapter(
                 new FragmentStatePagerAdapter(getActivity().getSupportFragmentManager()) {
                     @Override
                     public Fragment getItem(int position) {
                         switch (position) {
                             case 0:
-                                return EventDetailFragment.newInstance(old_event.description);
+                                return details_to_fragments.get("description");
                             case 1:
-                                return EventDetailFragment.newInstance(old_event.contact);
+                                return details_to_fragments.get("contact");
                             case 2:
-                                return EventDetailFragment.newInstance(old_event.eligibility);
+                                return details_to_fragments.get("eligibility");
                             case 3:
-                                return EventDetailFragment.newInstance(old_event.judging);
+                                return details_to_fragments.get("judging");
                             case 4:
-                                return EventDetailFragment.newInstance(old_event.rules);
+                                return details_to_fragments.get("rules");
                             case 5:
-                                return EventDetailFragment.newInstance(old_event.prizes);
-                        }
-                        ;
+                                return details_to_fragments.get("prizes");
+                        };
                         return null;
                     }
 
@@ -183,12 +194,19 @@ public class EventActivityFragment extends Fragment {
             protected void onPostExecute(Event event) {
                 if (event == null){
                     Toast.makeText(getActivity(), "Network error.", Toast.LENGTH_SHORT).show();
-//                    textView.setText(old_event.debuggableToString());
                     Log.e(LOG_TAG, "Could not fetch event data from server");
                     return;
                 }
                 old_event.copyFrom(event);
-//                textView.setText(Html.fromHtml(old_event.debuggableToString()));
+
+                // Change stuff
+                details_to_fragments.get("description").updateDescription(old_event.description);
+                details_to_fragments.get("contact").updateDescription(old_event.contact);
+                details_to_fragments.get("eligibility").updateDescription(old_event.eligibility);
+                details_to_fragments.get("judging").updateDescription(old_event.judging);
+                details_to_fragments.get("rules").updateDescription(old_event.rules);
+                details_to_fragments.get("prizes").updateDescription(old_event.prizes);
+
                 Log.v(LOG_TAG, "Fetched fresh data of event " +
                         event.id + ": " + event.debuggableToString());
             }

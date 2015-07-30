@@ -29,6 +29,9 @@ public class EventDetailFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
+    private TestRecyclerViewAdapter changeableAdapter;
+
+
     private static final int ITEM_COUNT = 1;
 
     public String mDescription;
@@ -40,6 +43,11 @@ public class EventDetailFragment extends Fragment {
         return temp;
     }
 
+    public void updateDescription(String details_)
+    {
+        mDescription = details_;
+        changeableAdapter.updateDescription(details_);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -49,7 +57,8 @@ public class EventDetailFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(mDescription));
+        changeableAdapter = new TestRecyclerViewAdapter(mDescription);
+        mAdapter = new RecyclerViewMaterialAdapter(changeableAdapter);
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
@@ -70,6 +79,7 @@ class TestRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 {
 
     private String details;
+    private TextView detailsTextView;
 
     public TestRecyclerViewAdapter(String details) {
         this.details = details;
@@ -90,13 +100,22 @@ class TestRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_card_big, parent, false);
         TextView textView = (TextView)view.findViewById(R.id.event_details_text);
-        textView.setText(trimTrailingWhitespace(Html.fromHtml(details)));
-        textView.setMovementMethod(LinkMovementMethod.getInstance()); // enables anchor tags
+        detailsTextView = textView;
+
+        updateDescription(details);
+
         return new RecyclerView.ViewHolder(view){};
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    }
+
+    public void updateDescription(String details_)
+    {
+        this.details = details_;
+        detailsTextView.setText(trimTrailingWhitespace(Html.fromHtml(details)));
+        detailsTextView.setMovementMethod(LinkMovementMethod.getInstance()); // enables anchor tags
     }
 
     @Override
