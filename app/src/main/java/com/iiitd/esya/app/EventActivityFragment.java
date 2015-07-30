@@ -17,9 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
-
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -34,9 +35,12 @@ public class EventActivityFragment extends Fragment {
     private RecyclerView mRecyclerView;
 //    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
+
     private MaterialViewPager mViewPager;
 //    private ViewPager viewPager;
     private RecyclerViewMaterialAdapter mAdapter;
+    private static Fragment[] fragments = null;
 
 
     @Override
@@ -169,6 +173,9 @@ public class EventActivityFragment extends Fragment {
             }
         };
         fetchTaskDetails.execute(eventPk);
+
+        MaterialViewPagerHelper.registerScrollView(getActivity(),
+                (ObservableScrollView)view.findViewById(R.id.scrollView), null);
 
         return view;
     }

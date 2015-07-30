@@ -35,12 +35,60 @@ import java.util.Arrays;
 public class APIDataFetcher {
     private static final String API_URL = "http://esya.iiitd.edu.in/m/";
 
+    public static String getSimpleSignedResponse(String url_, String cookie_data) throws IOException
+    {
+        URL url = new URL(url_);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestProperty("Cookie", "_esya2015_backend_session=" + cookie_data);
+        urlConnection.connect();
+
+        InputStream inputStream = urlConnection.getInputStream();
+        StringBuffer buffer = new StringBuffer();
+        if (inputStream == null) throw new IOException("InputStream was null");
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line + "\n");
+        }
+        if (buffer.length() == 0) return null;
+
+        return buffer.toString();
+    }
+
+    public static String getSimpleGetResponse(String url_) throws IOException
+    {
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL(url_);
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuffer buffer = new StringBuffer();
+            if (inputStream == null) throw new IOException("InputStream was null");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line + "\n");
+            }
+            if (buffer.length() == 0) return null;
+
+            return buffer.toString();
+        } finally {
+            if (urlConnection != null) urlConnection.disconnect();
+        }
+    }
+
+
     private static String fetchAllEventsJsonNetworkWorker(String api_token)
     {
         final String LOG_TAG = "FETCH_ALL_EVENTS_WRK";
         String eventsJsonResponse = null;
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
 
         try
         {
@@ -48,40 +96,10 @@ public class APIDataFetcher {
             final String format = "json";
 
             Uri callableUri = Uri.parse(API_URL).buildUpon().appendPath(resource + "." + format).build();
+            eventsJsonResponse = getSimpleGetResponse(callableUri.toString());
 
-            URL url = new URL(callableUri.toString());
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestProperty("Authorization", api_token);
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) return null;
-
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line = null;
-            while((line = reader.readLine()) != null){
-                buffer.append(line + "\n");
-            }
-            if (buffer.length() == 0) return null;
-
-            eventsJsonResponse = buffer.toString();
-
-        } catch (IOException e){
+        } catch (IOException e) {
             Log.e(LOG_TAG, e.toString());
-        } finally {
-            if (urlConnection != null){
-                urlConnection.disconnect();
-            }
-            if (reader != null){
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "Could not close stream" +
-                            e.toString());
-                }
-            }
         }
         return eventsJsonResponse;
     }
@@ -91,8 +109,6 @@ public class APIDataFetcher {
     {
         final String LOG_TAG = "FETCH_EVENT_WRK";
         String eventJsonResponse = null;
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
 
         try
         {
@@ -103,40 +119,10 @@ public class APIDataFetcher {
                     appendPath(resource).
                     appendPath(Integer.toString(pk) + "." + format).
                     build();
-
-            URL url = new URL(callableUri.toString());
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestProperty("Authorization", api_token);
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) return null;
-
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line = null;
-            while((line = reader.readLine()) != null){
-                buffer.append(line + "\n");
-            }
-            if (buffer.length() == 0) return null;
-
-            eventJsonResponse = buffer.toString();
+            eventJsonResponse = getSimpleGetResponse(callableUri.toString());
 
         } catch (IOException e){
             Log.e(LOG_TAG, e.toString());
-        } finally {
-            if (urlConnection != null){
-                urlConnection.disconnect();
-            }
-            if (reader != null){
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "Could not close stream" +
-                            e.toString());
-                }
-            }
         }
         return eventJsonResponse;
     }
@@ -490,5 +476,96 @@ class LoginPingTest extends AsyncTask<Void, Void, Void>
             Log.d("PingTest", e.toString());
         }
         return null;
+    }
+}
+
+abstract class CheckRegistrationForEvent extends AsyncTask<Void, Void, Boolean>
+{
+    private String TAG = CheckRegistrationForEvent.class.getSimpleName();
+    protected Context context;
+    protected Event event;
+    public CheckRegistrationForEvent(Context c, Event event)
+    {
+        this.context = c;
+        this.event = event;
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... voids) {
+        try {
+            String url =  context.getString(R.string.URL_api_base) + "m/check_registration/" + event.id;
+            String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
+                    context.getString(R.string.api_auth_token), "Nope");
+
+            Log.v(TAG, APIDataFetcher.getSimpleSignedResponse(url, token));
+
+            //TODO: check whether event has been registered for or not.
+        } catch (IOException e)
+        {
+            Log.d(TAG, e.toString());
+        }
+        return false;
+    }
+}
+
+abstract class RegisterForEventIndividual extends AsyncTask<Void, Void, Boolean>
+{
+    private String TAG = RegisterForEventIndividual.class.getSimpleName();
+    protected Context context;
+    protected Event event;
+    public RegisterForEventIndividual(Context c, Event event)
+    {
+        this.context = c;
+        this.event = event;
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... voids) {
+
+        try {
+            // TODO: verify that this api works
+            String url = context.getString(R.string.URL_api_base) + "m/register/" + event.id;
+            String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
+                    context.getString(R.string.api_auth_token), "Nope");
+            Log.v(TAG, APIDataFetcher.getSimpleSignedResponse(url, token));
+            return true;
+        } catch (IOException e)
+        {
+            Log.d(TAG, e.toString());
+            return false;
+        }
+    }
+}
+
+abstract class RegisterForEventTeam extends AsyncTask<Void, Void, Boolean>
+{
+    private String TAG = RegisterForEventTeam.class.getSimpleName();
+    protected Context context;
+    protected Event event;
+    protected String team_name;
+    protected boolean new_team;
+    public RegisterForEventTeam(Context c, Event event, String team_name, boolean new_team)
+    {
+        this.context = c;
+        this.event = event;
+        this.team_name = team_name;
+        this.new_team = new_team;
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... voids) {
+        String url = context.getString(R.string.URL_api_base) + "/m/register/" + event.id + "/";
+        if (new_team) url += "team/" + team_name;
+        else url += team_name;
+
+        String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
+                context.getString(R.string.api_auth_token), "Nope");
+
+        try {
+            Log.v(TAG, APIDataFetcher.getSimpleSignedResponse(url, token));
+        } catch (IOException e) {
+            Log.d(TAG, e.toString());
+        }
+        return true;
     }
 }
