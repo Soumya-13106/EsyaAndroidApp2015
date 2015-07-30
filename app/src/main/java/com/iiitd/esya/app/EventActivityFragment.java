@@ -3,6 +3,7 @@ package com.iiitd.esya.app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
@@ -36,12 +38,31 @@ public class EventActivityFragment extends Fragment {
 //    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private static int mProminentColor;
 
     private MaterialViewPager mViewPager;
 //    private ViewPager viewPager;
     private RecyclerViewMaterialAdapter mAdapter;
     private static Fragment[] fragments = null;
 
+
+    private static int getContrastColor(int color) {
+        double y = (299 * Color.red(color) + 587 * Color.green(color) + 114 * Color.blue(color)) / 1000;
+        return (y >= 128 ? Color.BLACK : Color.WHITE);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) view.
+                findViewById(R.id.materialviewpager_pagerTitleStrip);
+
+        if (pagerSlidingTabStrip!= null)
+        {
+            Log.v("Setting Color to", getContrastColor(mProminentColor) + "");
+            pagerSlidingTabStrip.setTextColor(getContrastColor(mProminentColor));
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,9 +135,19 @@ public class EventActivityFragment extends Fragment {
             image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.logo);
         }
 
-        ((ImageView)view.findViewById(R.id.materialviewpager_imageHeader)).
-                setImageDrawable(new BitmapDrawable(getActivity().getResources(), image));
+        ImageView header = ((ImageView)view.findViewById(R.id.materialviewpager_imageHeader));
+        header.setScaleType(ImageView.ScaleType.FIT_XY);
+        header.setImageDrawable(new BitmapDrawable(getActivity().getResources(), image));
 
+//        mProminentColor = Bitmap.createScaledBitmap(image, 1, 1, true).getPixel(0, 0);
+        Bitmap lower_end = Bitmap.createBitmap(image, 0,
+                image.getHeight() - 50, image.getWidth(), 50);
+        mProminentColor = Bitmap.createScaledBitmap(lower_end, 1, 1, true).getPixel(0, 0);
+
+
+//        Palette palette = new Palette.Builder(image).generate();
+//        mProminentColor = palette.getVibrantColor(Color.BLACK);
+        Log.w("Color", mProminentColor + "");
 
         mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
