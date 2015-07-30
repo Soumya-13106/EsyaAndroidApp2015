@@ -91,6 +91,18 @@ public class Event {
         this.categories = categories;
         this.image_url = image_url;
         this.image = null;
+
+        this.contact = DataHolder.CONTACT_DEFAULT;
+        this.registered = DataHolder.REGISTERED_DEFAULT != 0;
+        this.team_event = DataHolder.TEAM_EVENT_DEFAULT;
+        this.team_id = DataHolder.TEAM_ID_DEFAULT;
+        this.eligibility = DataHolder.ELIGIBILITY_DEFAULT;
+        this.judging = DataHolder.JUDGING_DEFAULT;
+        this.prizes = DataHolder.PRIZES_DEFAULT;
+        this.rules = DataHolder.RULES_DEFAULT;
+        this.team_size = DataHolder.TEAM_SIZE_DEFAULT;
+        this.venue = DataHolder.VENUE_DEFAULT;
+        this.description = DataHolder.DESCRIPTION_DEFAULT;
     }
 
     public String toString(){

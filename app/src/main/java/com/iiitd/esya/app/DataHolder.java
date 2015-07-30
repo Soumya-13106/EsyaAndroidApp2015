@@ -27,16 +27,16 @@ public class DataHolder {
     public static final String TEAM_EVENT_RESPONSE = "team_event";
     public static final String TEAM_ID_RESPONSE = "team_id";
 
-    public static final String ELIGIBILITY_DEFAULT = "No specific eligibility criteria";
-    public static final String JUDGING_DEFAULT =  "Judging criteria not decided yet.";
-    public static final String PRIZES_DEFAULT =  "Prizes have not been decided yet.";
+    public static final String ELIGIBILITY_DEFAULT = "No specific eligibility criteria.";
+    public static final String JUDGING_DEFAULT =  "Judging criteria has not been decided yet. Stay tuned!";
+    public static final String PRIZES_DEFAULT =  "Prizes have not been announced yet. Stay tuned, though!";
     public static final String RULES_DEFAULT =  "Rules have not been decided yet.";
     public static final String VENUE_DEFAULT =  "IIIT - D";
-    public static final String DESCRIPTION_DEFAULT =  null;
+    public static final String DESCRIPTION_DEFAULT =  "Description of the event";
     public static final int TEAM_SIZE_DEFAULT =  0;
     public static final String CONTACT_DEFAULT =  "events.esya@iiitd.ac.in";
     public static final int REGISTERED_DEFAULT = 0;
-    public static final boolean TEAME_EVENT_DEFAULT = false;
+    public static final boolean TEAM_EVENT_DEFAULT = false;
     public static final int TEAM_ID_DEFAULT = 0;
 
     public static final HashMap<Category, ArrayList<Event>> CATEGORY_TO_EVENTS = new HashMap<>();

@@ -211,7 +211,7 @@ public class APIDataFetcher {
 //            if ((event.description != null) && event.description.equals("")) event.description = DataHolder.DESCRIPTION_DEFAULT;
 
             event.registered = jsonEvent.optInt(DataHolder.REGISTERED_RESPONSE, DataHolder.REGISTERED_DEFAULT)!= 0;
-            event.team_event = jsonEvent.optBoolean(DataHolder.TEAM_EVENT_RESPONSE, DataHolder.TEAME_EVENT_DEFAULT);
+            event.team_event = jsonEvent.optBoolean(DataHolder.TEAM_EVENT_RESPONSE, DataHolder.TEAM_EVENT_DEFAULT);
             event.team_id = jsonEvent.optInt(DataHolder.TEAM_ID_RESPONSE, DataHolder.TEAM_ID_DEFAULT);
 
             return event;
