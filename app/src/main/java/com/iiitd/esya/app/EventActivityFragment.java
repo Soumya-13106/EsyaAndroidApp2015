@@ -13,13 +13,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
-import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 
 /**
@@ -60,27 +60,21 @@ public class EventActivityFragment extends Fragment {
                 new FragmentStatePagerAdapter(getActivity().getSupportFragmentManager()) {
                     @Override
                     public Fragment getItem(int position) {
-                        switch (position)
-                        {
+                        switch (position) {
                             case 0:
                                 return EventDetailFragment.newInstance(old_event.description);
-//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
                             case 1:
                                 return EventDetailFragment.newInstance(old_event.contact);
-//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
                             case 2:
                                 return EventDetailFragment.newInstance(old_event.eligibility);
-//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
                             case 3:
                                 return EventDetailFragment.newInstance(old_event.judging);
-//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
                             case 4:
                                 return EventDetailFragment.newInstance(old_event.rules);
-//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
                             case 5:
                                 return EventDetailFragment.newInstance(old_event.prizes);
-//                                return EventDetailFragment.newInstance("Whatasughas kgus ksabhg");
-                        };
+                        }
+                        ;
                         return null;
                     }
 
@@ -109,30 +103,26 @@ public class EventActivityFragment extends Fragment {
                     }
                 });
 
+        Bitmap image = null;
+        if (old_event.image_url != null)
+        {
+            image = old_event.getCacheImage(Event.getImageNameFromUrl(
+                    old_event.image_url), getActivity());
+        }
+        if (image == null)
+        {
+            image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.logo);
+        }
+
+        ((ImageView)view.findViewById(R.id.materialviewpager_imageHeader)).
+                setImageDrawable(new BitmapDrawable(getActivity().getResources(), image));
+
+
         mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 
+        mViewPager.getViewPager().setCurrentItem(1);
         mViewPager.getViewPager().setCurrentItem(0);
-
-
-        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener(){
-
-            @Override
-            public HeaderDesign getHeaderDesign(int i) {
-                Bitmap image = null;
-                if (old_event.image_url != null)
-                {
-                    image = old_event.getCacheImage(Event.getImageNameFromUrl(
-                            old_event.image_url), getActivity());
-                }
-                if (image == null)
-                {
-                    image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.logo);
-                }
-                return HeaderDesign.fromColorAndDrawable(
-                        R.color.red, new BitmapDrawable(getActivity().getResources(), image));
-            }
-        });
 
 //        mAdapter = new RecyclerViewMaterialAdapter(new EventAdapterForRecylerView(old_event.image_url));
 
