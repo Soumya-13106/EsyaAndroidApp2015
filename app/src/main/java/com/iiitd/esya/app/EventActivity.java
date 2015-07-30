@@ -8,8 +8,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class EventActivity extends AppCompatActivity {
@@ -54,6 +57,33 @@ public class EventActivity extends AppCompatActivity {
         });
     }
 
+    public void register_team(View v)
+    {
+        if(v.getId() != R.id.register_button) return;
+        Toast.makeText(this, "Clicled" + v.getId(), Toast.LENGTH_SHORT).show();
+
+        if(mEvent.team_event)
+        {
+            RegisterForEventTeam task = new RegisterForEventTeam(this, mEvent, "Wohoo", true) {
+                @Override
+                protected void onPostExecute(Boolean aBoolean) {
+                    Log.v("RegisterTeam", aBoolean + "");
+                }
+            };
+            task.execute();
+        }
+        else
+        {
+            RegisterForEventIndividual task = new RegisterForEventIndividual(this, mEvent) {
+                @Override
+                protected void onPostExecute(Boolean aBoolean) {
+                    super.onPostExecute(aBoolean);
+                    Log.v("RegisterIndividual", aBoolean + "");
+                }
+            };
+            task.execute();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
