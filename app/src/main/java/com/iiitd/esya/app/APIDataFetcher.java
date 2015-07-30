@@ -524,7 +524,7 @@ abstract class RegisterForEventIndividual extends AsyncTask<Void, Void, Boolean>
 
         try {
             // TODO: verify that this api works
-            String url = context.getString(R.string.URL_api_base) + "m/register/" + event.id;
+            String url = context.getString(R.string.URL_api_base) + "m/register/" + event.id + ".json";
             String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
                     context.getString(R.string.api_auth_token), "Nope");
             Log.v(TAG, APIDataFetcher.getSimpleSignedResponse(url, token));
@@ -555,8 +555,9 @@ abstract class RegisterForEventTeam extends AsyncTask<Void, Void, Boolean>
     @Override
     protected Boolean doInBackground(Void... voids) {
         String url = context.getString(R.string.URL_api_base) + "/m/register/" + event.id + "/";
-        if (new_team) url += "team/" + team_name;
-        else url += team_name;
+
+        if (new_team) url += "team/" + team_name + ".json";
+        else url += team_name + ".json";
 
         String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
                 context.getString(R.string.api_auth_token), "Nope");

@@ -30,7 +30,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/text_event_details"/>
+                    android:id="@+id/text_event_details"
+                    android:enabled="false"
+                    android:text="Sambhav"
+                    android:textColor="#ff000000" />
 
             </LinearLayout>
 
