@@ -11,18 +11,18 @@
         android:id="@+id/materialViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:viewpager_color="@color/colorPrimary"
         app:viewpager_headerHeight="200dp"
         app:viewpager_headerAlpha="1.0"
         app:viewpager_hideLogoWithFade="false"
-        app:viewpager_hideToolbarAndTitle="false"
+        app:viewpager_hideToolbarAndTitle="true"
         app:viewpager_enableToolbarElevation="false"
         app:viewpager_parallaxHeaderFactor="1.2"
         app:viewpager_headerAdditionalHeight="0dp"
-        app:viewpager_displayToolbarWhenSwipe="false"
-        app:viewpager_transparentToolbar="false"
+        app:viewpager_displayToolbarWhenSwipe="true"
+        app:viewpager_transparentToolbar="true"
         app:viewpager_animatedHeaderImage="false"
-        />
+        android:elevation="8dp"
+        android:focusable="false" />
 
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"
@@ -35,6 +35,7 @@
         android:onClick="register_team"
         android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:focusable="true" />
 
 </RelativeLayout>

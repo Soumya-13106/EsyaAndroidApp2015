@@ -65,6 +65,18 @@ public class EventDetailFragment extends Fragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            if (mRecyclerView != null)
+            {
+                mRecyclerView.smoothScrollToPosition(0);
+                MaterialViewPagerHelper.getAnimator(getActivity()).onMaterialScrolled(null, 0);
+            }
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -80,6 +92,8 @@ class TestRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private String details;
     private TextView detailsTextView;
+
+
 
     public TestRecyclerViewAdapter(String details) {
         this.details = details;
