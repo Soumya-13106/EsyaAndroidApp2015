@@ -56,6 +56,19 @@ public class Event {
         }
     }
 
+    public static boolean isDBStale(Event networkEvent, Event dbEvent)
+    {
+        return networkEvent.updated_at.after(dbEvent.updated_at);
+    }
+
+    public static boolean updateEventInDB(Event staleEvent, Event fresh_event, Context context)
+    {
+        staleEvent.copyFrom(fresh_event);
+        DataHolder.EVENTS.put(fresh_event.id, fresh_event);
+        DBHelper dbHelper = new DBHelper(context);
+        return dbHelper.updateEvent(staleEvent);
+    }
+
     public static String parseDateToString(Date date) {
         SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         return serverFormat.format(date);
@@ -155,6 +168,5 @@ public class Event {
         venue = f.venue; description = f.description; registered = f.registered;
         team_event = f.team_event; team_id = f.team_id; updated_at = f.updated_at;
         event_date_time = f.event_date_time;
-
     }
 }

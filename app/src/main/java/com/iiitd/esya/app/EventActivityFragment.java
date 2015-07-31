@@ -84,20 +84,20 @@ public class EventActivityFragment extends Fragment {
                                 .getString(getString(R.string.api_auth_token), "nope");
 
         int eventPk = getActivity().getIntent().getIntExtra(Intent.EXTRA_UID, -1);
-        final Event old_event = DataHolder.EVENTS.get(eventPk);
+        final Event event = DataHolder.EVENTS.get(eventPk);
 
-        mEvent = old_event;
+        mEvent = event;
 
         mViewPager = (MaterialViewPager) view.findViewById(R.id.materialViewPager);
 
         final HashMap<String, EventDetailFragment> details_to_fragments = new HashMap<>();
 
-        details_to_fragments.put("description", EventDetailFragment.newInstance(old_event.description));
-        details_to_fragments.put("contact", EventDetailFragment.newInstance(old_event.contact));
-        details_to_fragments.put("eligibility", EventDetailFragment.newInstance(old_event.eligibility));
-        details_to_fragments.put("judging", EventDetailFragment.newInstance(old_event.judging));
-        details_to_fragments.put("rules", EventDetailFragment.newInstance(old_event.rules));
-        details_to_fragments.put("prizes", EventDetailFragment.newInstance(old_event.prizes));
+        details_to_fragments.put("description", EventDetailFragment.newInstance(event.description));
+        details_to_fragments.put("contact", EventDetailFragment.newInstance(event.contact));
+        details_to_fragments.put("eligibility", EventDetailFragment.newInstance(event.eligibility));
+        details_to_fragments.put("judging", EventDetailFragment.newInstance(event.judging));
+        details_to_fragments.put("rules", EventDetailFragment.newInstance(event.rules));
+        details_to_fragments.put("prizes", EventDetailFragment.newInstance(event.prizes));
 
         mViewPager.getViewPager().setAdapter(
                 new FragmentStatePagerAdapter(getActivity().getSupportFragmentManager()) {
@@ -146,10 +146,10 @@ public class EventActivityFragment extends Fragment {
                 });
 
         Bitmap image = null;
-        if (old_event.image_url != null)
+        if (event.image_url != null)
         {
-            image = old_event.getCacheImage(Event.getImageNameFromUrl(
-                    old_event.image_url), getActivity());
+            image = event.getCacheImage(Event.getImageNameFromUrl(
+                    event.image_url), getActivity());
         }
         if (image == null)
         {
@@ -199,29 +199,6 @@ public class EventActivityFragment extends Fragment {
 
 //        final TextView textView = (TextView)view.findViewById(R.id.event_text);
 
-        FetchSpecificEventTask fetchTaskDetails = new FetchSpecificEventTask(auth_token) {
-            @Override
-            protected void onPostExecute(Event event) {
-                if (event == null){
-                    Toast.makeText(getActivity(), "Network error.", Toast.LENGTH_SHORT).show();
-                    Log.e(LOG_TAG, "Could not fetch event data from server");
-                    return;
-                }
-                old_event.copyFrom(event);
-
-                // Change stuff
-                details_to_fragments.get("description").updateDescription(old_event.description);
-                details_to_fragments.get("contact").updateDescription(old_event.contact);
-                details_to_fragments.get("eligibility").updateDescription(old_event.eligibility);
-                details_to_fragments.get("judging").updateDescription(old_event.judging);
-                details_to_fragments.get("rules").updateDescription(old_event.rules);
-                details_to_fragments.get("prizes").updateDescription(old_event.prizes);
-
-                Log.v(LOG_TAG, "Fetched fresh data of event " +
-                        event.id + ": " + event.debuggableToString());
-            }
-        };
-        fetchTaskDetails.execute(eventPk);
 
         MaterialViewPagerHelper.registerScrollView(getActivity(),
                 (ObservableScrollView)view.findViewById(R.id.scrollView), null);

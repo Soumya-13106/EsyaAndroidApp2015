@@ -3,11 +3,13 @@ package com.iiitd.esya.app;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by darkryder on 27/6/15.
@@ -70,19 +72,80 @@ class InitialDataFetcher extends FetchAllEventsTask
     {
         super(context);
         this.context = context;
+        this.db = new DBHelper(context);
     }
 
     public static final String ERROR_TOAST = "No network connection";
     public static final String LOG_TAG = InitialDataFetcher.class.getSimpleName();
+    private DBHelper db;
+    private HashMap<Integer, Event> network_event_ids = new HashMap<>();
+    private HashMap<Integer, Event> database_event_ids = new HashMap<>();
+
+    @Override
+    protected void onPreExecute() {
+        if (DataHolder.initialised == true) return;
+        super.onPreExecute();
+    }
+
+    @Override
+    protected Event[] doInBackground(Void... voids) {
+        for(Event e: db.getAllEvents()) database_event_ids.put(e.id, e);
+        return super.doInBackground(voids);
+    }
 
     @Override
     protected void onPostExecute(Event[] events) {
         if (events == null){
             Log.e(LOG_TAG, "Could not fetch initial Data. No connection");
-            return;
+            Toast.makeText(context, "Could not refresh data. No connection", Toast.LENGTH_SHORT).show();
+        } else{
+            Log.v(LOG_TAG, "Fetched all events: " + Arrays.deepToString(events));
         }
-        Log.v(LOG_TAG, "Fetched all events: " + Arrays.deepToString(events));
-        if (DataHolder.initialised == true) return;
+
+        if (events != null)
+        {
+            for(Event e: events) network_event_ids.put(e.id, e);
+        }
+        ArrayList<Integer> eventIdsToUpdate = new ArrayList<>();
+
+        if (events != null)
+        {
+            for (int i : network_event_ids.keySet()) {
+                Event dbEvent = database_event_ids.get(i);
+                Event netEvent = network_event_ids.get(i);
+                if (!database_event_ids.containsKey(i)) {
+                    // inserts new events in the db
+                    db.insertEvent(netEvent);
+                    eventIdsToUpdate.add(netEvent.id);
+                    continue;
+                }
+                if (Event.isDBStale(netEvent, dbEvent)) {
+                    eventIdsToUpdate.add(netEvent.id);
+                }
+            }
+            for (int i: database_event_ids.keySet())
+            {
+                if (!network_event_ids.containsKey(i))
+                {
+                    Log.v(LOG_TAG, "Attempting to delete event with id:" + i);
+                    if(db.deleteEvent(i))
+                    {
+                        Log.v(LOG_TAG, "Delete successful");
+                    }
+                    else
+                    {
+                        Log.d(LOG_TAG, "Could not delete event with id:" + i);
+                    }
+                }
+            }
+        }
+        // The network isn't working.
+        // set the database events to the events to show
+        else {
+            Log.d(LOG_TAG, "Network error. Reverting to database values");
+            events = database_event_ids.values().toArray(new Event[database_event_ids.values().size()]);
+        }
+
         for(Event ev: events){
             for(Category category: ev.categories)
             {
@@ -91,24 +154,20 @@ class InitialDataFetcher extends FetchAllEventsTask
             DataHolder.CATEGORY_TO_EVENTS.get(Category.ALL).add(ev);
             DataHolder.EVENTS.put(ev.id, ev);
         };
-        DataHolder.initialised = true;
 
-        DBHelper db = new DBHelper(context);
-        boolean check;
-        for(Event e: events) {
-            check = db.insertEvent(e);
-            if(check) {
-                Log.v(LOG_TAG, "Inserted Event " + e.toString() + "to database");
-            } else {
-                Log.e(LOG_TAG, "Could not insert Event " + e.toString() + "to database");
-            }
-
-            Event ev1 = db.getEvent(e.id);
-            if(ev1.id == e.id) {
-                Log.v(LOG_TAG, "Database insertion successful");
-            } else {
-                Log.e(LOG_TAG, "NOT INSERTED PROPERLY IN DB");
-            }
+        for(int i: eventIdsToUpdate)
+        {
+            FetchSpecificEventTask task = new FetchSpecificEventTask(api_token) {
+                @Override
+                protected void onPostExecute(Event event) {
+                    super.onPostExecute(event);
+                    if (!Event.updateEventInDB(DataHolder.EVENTS.get(event.id), event, context))
+                    {
+                        Log.d(LOG_TAG, "Unable to update event to db:" + event.toString());
+                    } else Log.v(LOG_TAG, "Updated event in db: " + event.toString());
+                }
+            };
+            task.execute(i);
         }
 
         InitialImagesFetcher task = new InitialImagesFetcher(context);
@@ -118,7 +177,7 @@ class InitialDataFetcher extends FetchAllEventsTask
             event_image_urls[i] = events[i].image_url;
         }
         task.execute(event_image_urls);
-
+        DataHolder.initialised = true;
     }
 }
 
