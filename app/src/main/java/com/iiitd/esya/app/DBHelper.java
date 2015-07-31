@@ -150,10 +150,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-        c.moveToFirst();
-        while(c.isAfterLast() == false) {
+//        c.moveToFirst();
+        while(c.moveToNext()) {
             eventArrayList.add(getEventFromCursor(c));
-            c.moveToNext();
+//            c.moveToNext();
         }
         c.close();
         db.close();
@@ -186,9 +186,9 @@ public class DBHelper extends SQLiteOpenHelper {
         if(c==null) {
             return null;
         }
-        if(!c.moveToFirst()){
-            return null;
-        }
+//        if(!c.moveToFirst()){
+//            return null;
+//        }
         int eventId = c.getInt(c.getColumnIndexOrThrow(COLUMN_EVENT_ID));
         String eventName = c.getString(c.getColumnIndexOrThrow(COLUMN_EVENT_NAME));
         Category[] eventCategories = getCategoriesFromCSVString(c.getString(c.getColumnIndexOrThrow(COLUMN_CATEGORY_IDS)));
