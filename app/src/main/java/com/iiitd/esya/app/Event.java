@@ -10,7 +10,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Created by darkryder on 28/6/15.
@@ -27,8 +30,8 @@ public class Event {
     public boolean registered;
     public boolean team_event;
     public int team_id;
-    // Datetime event_date_time;
-    // Datetime registration_deadline
+    Date event_date_time;
+    Date updated_at;
 
     public String eligibility;
     public String judging;
@@ -40,6 +43,23 @@ public class Event {
     public String description;
     private Bitmap image;
     // TODO: set a default image
+
+    public static Date parseStringToDate(String date) {
+        /*SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy hh:mm:ss");
+        Date d = format.parse(date);*/
+        SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            return serverFormat.parse(date);
+        } catch (ParseException e) {
+            Log.v("Date parsed", e.toString());
+            return new Date();
+        }
+    }
+
+    public static String parseDateToString(Date date) {
+        SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        return serverFormat.format(date);
+    }
 
     public boolean isImageInCache(String uri, Context context)
     {
@@ -83,14 +103,14 @@ public class Event {
         }
     }
 
-
-    public Event(int id, String name, Category[] categories, String image_url)
+    public Event(int id, String name, Category[] categories, String image_url, String updated_at)
     {
         this.id = id;
         this.name = name;
         this.categories = categories;
         this.image_url = image_url;
         this.image = null;
+        this.updated_at = parseStringToDate(updated_at);
 
         this.contact = DataHolder.CONTACT_DEFAULT;
         this.registered = DataHolder.REGISTERED_DEFAULT != 0;
@@ -103,6 +123,7 @@ public class Event {
         this.team_size = DataHolder.TEAM_SIZE_DEFAULT;
         this.venue = DataHolder.VENUE_DEFAULT;
         this.description = DataHolder.DESCRIPTION_DEFAULT;
+        this.event_date_time = DataHolder.EVENT_DATE_TIME_DEFAULT;
     }
 
     public String toString(){
@@ -132,7 +153,8 @@ public class Event {
         contact = f.contact; eligibility = f.eligibility; judging = f.judging;
         prizes = f.prizes; rules = f.rules; team_size = f.team_size;
         venue = f.venue; description = f.description; registered = f.registered;
-        team_event = f.team_event; team_id = f.team_id;
+        team_event = f.team_event; team_id = f.team_id; updated_at = f.updated_at;
+        event_date_time = f.event_date_time;
 
     }
 }

@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EVENT_ID = "event_id";
     public static final String COLUMN_EVENT_NAME = "event_name";
     public static final String COLUMN_CATEGORY_IDS = "category_ids";
-//    public static final String COLUMN_LAST_UPDATED = "last_updated";
+    public static final String COLUMN_LAST_UPDATED = "last_updated";
     public static final String COLUMN_IMAGE_URL = "image_url";
     public static final String COLUMN_CONTACT = "contact";
     public static final String COLUMN_IS_REGISTERED = "is_registered";
@@ -31,12 +31,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TEAM_SIZE = "team_size";
     public static final String COLUMN_VENUE = "venue";
     public static final String COLUMN_EVENT_DESCRIPTION = "event_description";
+    public static final String COLUMN_EVENT_DATE_TIME = "event_date_time";
 
     private static final String[] projection = {
             COLUMN_EVENT_ID,
             COLUMN_EVENT_NAME,
             COLUMN_CATEGORY_IDS,
-//            COLUMN_LAST_UPDATED,
+            COLUMN_LAST_UPDATED,
             COLUMN_IMAGE_URL,
             COLUMN_CONTACT,
             COLUMN_IS_REGISTERED,
@@ -49,10 +50,11 @@ public class DBHelper extends SQLiteOpenHelper {
             COLUMN_TEAM_SIZE,
             COLUMN_VENUE,
             COLUMN_EVENT_DESCRIPTION,
+            COLUMN_EVENT_DATE_TIME
     };
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
     };
 
     @Override
@@ -67,8 +69,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         COLUMN_EVENT_ID + " INT NOT NULL PRIMARY KEY, " +
                         COLUMN_EVENT_NAME + " VARCHAR(255) NOT NULL, " +
                         COLUMN_CATEGORY_IDS + " VARCHAR(255) NOT NULL, " +
-//                        COLUMN_LAST_UPDATED + " VARCHAR(255) NOT NULL, " +
-                        COLUMN_IMAGE_URL + " VARCHAR(255) NOT NULL, " +
+                        COLUMN_LAST_UPDATED + " VARCHAR(255) NOT NULL, " +
+                        COLUMN_IMAGE_URL + " VARCHAR(255), " +
                         COLUMN_CONTACT + " VARCHAR(2048) NOT NULL, " +
                         COLUMN_IS_REGISTERED + " INT NOT NULL DEFAULT 0, " +
                         COLUMN_IS_TEAM_EVENT + " INT NOT NULL DEFAULT 0, " +
@@ -79,7 +81,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         COLUMN_EVENT_RULES + " VARCHAR(5000) NOT NULL, " +
                         COLUMN_TEAM_SIZE + " INT NOT NULL, " +
                         COLUMN_VENUE + " VARCHAR(1024) NOT NULL, " +
-                        COLUMN_EVENT_DESCRIPTION + " VARCHAR(10000) NOT NULL" +
+                        COLUMN_EVENT_DESCRIPTION + " VARCHAR(10000) NOT NULL, " +
+                        COLUMN_EVENT_DATE_TIME + " VARCHAR(1024)" +
                         ");"
         );
     }
@@ -103,13 +106,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return categories.toArray(new Category[categories.size()]);
     }
 
-    public int returnIntFromBoolean(boolean value) {
+    private int returnIntFromBoolean(boolean value) {
         if(value) {
             return 1;
         } return 0;
     }
 
-    public boolean returnBooleanFromInt(int value) {
+    private boolean returnBooleanFromInt(int value) {
         if(value==1) {
             return true;
         } return false;
@@ -121,7 +124,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_EVENT_ID, event.id);
         contentValues.put(COLUMN_EVENT_NAME, event.name);
         contentValues.put(COLUMN_CATEGORY_IDS, getCommaSeperatedCategories(event.categories));
-//        contentValues.put(COLUMN_LAST_UPDATED, event.lastUpdated);
+        contentValues.put(COLUMN_LAST_UPDATED, Event.parseDateToString(event.updated_at));
         contentValues.put(COLUMN_IMAGE_URL, event.image_url);
         contentValues.put(COLUMN_CONTACT, event.contact);
         contentValues.put(COLUMN_IS_REGISTERED, event.registered);
@@ -134,7 +137,9 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_TEAM_SIZE, event.team_size);
         contentValues.put(COLUMN_VENUE, event.venue);
         contentValues.put(COLUMN_EVENT_DESCRIPTION, event.description);
+        contentValues.put(COLUMN_EVENT_DATE_TIME, Event.parseDateToString(event.event_date_time));
         long check = db.insert(TABLE_NAME, null, contentValues);
+        db.close();
         if(check>0) {
             return true;
         } return false;
@@ -150,6 +155,8 @@ public class DBHelper extends SQLiteOpenHelper {
             eventArrayList.add(getEventFromCursor(c));
             c.moveToNext();
         }
+        c.close();
+        db.close();
         return eventArrayList.toArray(new Event[eventArrayList.size()]);
     }
 
@@ -165,14 +172,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 null
         );
         if(c==null) {
+            db.close();
             return null;
         }
         c.moveToFirst();
-        return getEventFromCursor(c);
+        Event event = getEventFromCursor(c);
+        c.close();
+        db.close();
+        return event;
     }
 
     private Event getEventFromCursor(Cursor c) {
         if(c==null) {
+            return null;
+        }
+        if(!c.moveToFirst()){
             return null;
         }
         int eventId = c.getInt(c.getColumnIndexOrThrow(COLUMN_EVENT_ID));
@@ -180,8 +194,9 @@ public class DBHelper extends SQLiteOpenHelper {
         Category[] eventCategories = getCategoriesFromCSVString(c.getString(c.getColumnIndexOrThrow(COLUMN_CATEGORY_IDS)));
 //        String eventLastUpdated = c.getString(c.getColumnIndexOrThrow(COLUMN_LAST_UPDATED));
         String eventImageUrl = c.getString(c.getColumnIndexOrThrow(COLUMN_IMAGE_URL));
+        String eventUpdatedAt = c.getString(c.getColumnIndexOrThrow(COLUMN_LAST_UPDATED));
 
-        Event event = new Event(eventId, eventName, eventCategories, eventImageUrl);
+        Event event = new Event(eventId, eventName, eventCategories, eventImageUrl, eventUpdatedAt);
 
         event.contact = c.getString(c.getColumnIndexOrThrow(COLUMN_CONTACT));
         event.registered = returnBooleanFromInt(c.getInt(c.getColumnIndexOrThrow(COLUMN_IS_REGISTERED)));
@@ -194,6 +209,7 @@ public class DBHelper extends SQLiteOpenHelper {
         event.team_size = c.getInt(c.getColumnIndexOrThrow(COLUMN_TEAM_SIZE));
         event.venue = c.getString(c.getColumnIndexOrThrow(COLUMN_VENUE));
         event.description = c.getString(c.getColumnIndexOrThrow(COLUMN_EVENT_DESCRIPTION));
+        event.event_date_time = Event.parseStringToDate(c.getString(c.getColumnIndexOrThrow(COLUMN_EVENT_DATE_TIME)));
 
         return event;
     }
@@ -212,6 +228,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean deleteEvent(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         int check = db.delete(TABLE_NAME, COLUMN_EVENT_ID + "=?", new String[] {String.valueOf(id)});
+        db.close();
         if(check > 0) {
             return true;
         } return false;
