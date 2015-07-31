@@ -48,7 +48,8 @@ public class DataHolder {
 
     public static boolean initialised = false;
 
-    public static void init(Context context){
+    public static void init(Context context)
+    {
         if (initialised) return;
 
         for(Category c: Category.values()){
@@ -57,7 +58,7 @@ public class DataHolder {
 
         InitialDataFetcher task = new InitialDataFetcher(context);
         task.execute();
-    };
+    }
 
     public static HashMap<Integer, Event> EVENTS = new HashMap<>();
 }

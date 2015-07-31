@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.widget.RecyclerView;
@@ -37,16 +38,15 @@ import java.util.HashMap;
 public class EventActivityFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-//    private RecyclerView.Adapter mAdapter;
+//    pprivate RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private static int mProminentColor;
+    private int mProminentColor;
+    private Event mEvent;
 
     private MaterialViewPager mViewPager;
 //    private ViewPager viewPager;
     private RecyclerViewMaterialAdapter mAdapter;
-    private static Fragment[] fragments = null;
-
 
     private static int getContrastColor(int color) {
         double y = (299 * Color.red(color) + 587 * Color.green(color) + 114 * Color.blue(color)) / 1000;
@@ -64,6 +64,14 @@ public class EventActivityFragment extends Fragment {
             Log.v("Setting Color to", getContrastColor(mProminentColor) + "");
             pagerSlidingTabStrip.setTextColor(getContrastColor(mProminentColor));
         }
+
+        FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.register_button);
+        if(mEvent.registered)
+        {
+            fab.setRippleColor(Color.GREEN);
+        } else {
+            fab.setRippleColor(Color.BLUE);
+        }
     }
 
     @Override
@@ -77,6 +85,8 @@ public class EventActivityFragment extends Fragment {
 
         int eventPk = getActivity().getIntent().getIntExtra(Intent.EXTRA_UID, -1);
         final Event old_event = DataHolder.EVENTS.get(eventPk);
+
+        mEvent = old_event;
 
         mViewPager = (MaterialViewPager) view.findViewById(R.id.materialViewPager);
 
