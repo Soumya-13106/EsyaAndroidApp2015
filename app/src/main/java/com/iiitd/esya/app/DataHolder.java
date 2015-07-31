@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -26,6 +27,8 @@ public class DataHolder {
     public static final String REGISTERED_RESPONSE = "registered";
     public static final String TEAM_EVENT_RESPONSE = "team_event";
     public static final String TEAM_ID_RESPONSE = "team_id";
+    public static final String UPDATED_AT_RESPONSE = "updated_at";
+    public static final String EVENT_DATE_TIME_RESPONSE = "event_date_time";
 
     public static final String ELIGIBILITY_DEFAULT = "No specific eligibility criteria.";
     public static final String JUDGING_DEFAULT =  "Judging criteria has not been decided yet. Stay tuned!";
@@ -38,6 +41,8 @@ public class DataHolder {
     public static final int REGISTERED_DEFAULT = 0;
     public static final boolean TEAM_EVENT_DEFAULT = false;
     public static final int TEAM_ID_DEFAULT = 0;
+    public static final Date UPDATED_AT_DEFAULT = new Date();
+    public static final Date EVENT_DATE_TIME_DEFAULT = new Date();
 
     public static final HashMap<Category, ArrayList<Event>> CATEGORY_TO_EVENTS = new HashMap<>();
 
@@ -86,6 +91,24 @@ class InitialDataFetcher extends FetchAllEventsTask
             DataHolder.EVENTS.put(ev.id, ev);
         };
         DataHolder.initialised = true;
+
+        DBHelper db = new DBHelper(context);
+        boolean check;
+        for(Event e: events) {
+            check = db.insertEvent(e);
+            if(check) {
+                Log.v(LOG_TAG, "Inserted Event " + e.toString() + "to database");
+            } else {
+                Log.e(LOG_TAG, "Could not insert Event " + e.toString() + "to database");
+            }
+
+            Event ev1 = db.getEvent(e.id);
+            if(ev1.id == e.id) {
+                Log.v(LOG_TAG, "Database insertion successful");
+            } else {
+                Log.e(LOG_TAG, "NOT INSERTED PROPERLY IN DB");
+            }
+        }
 
         InitialImagesFetcher task = new InitialImagesFetcher(context);
         String[] event_image_urls = new String[events.length];

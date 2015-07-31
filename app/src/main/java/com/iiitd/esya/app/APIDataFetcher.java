@@ -28,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Created by darkryder on 27/6/15.
@@ -154,7 +155,8 @@ public class APIDataFetcher {
                         jsonEvent.getInt("id"),
                         jsonEvent.getString("name"),
                         categories.toArray(new Category[categories.size()]),
-                        temp_image_url.equals("null") ? null : temp_image_url
+                        temp_image_url.equals("null") ? null : temp_image_url,
+                        jsonEvent.getString(DataHolder.UPDATED_AT_RESPONSE)
                 ));
             }
 
@@ -187,7 +189,8 @@ public class APIDataFetcher {
                     jsonEvent.getInt("id"),
                     jsonEvent.getString("name"),
                     categories.toArray(new Category[categories.size()]),
-                    temp_image_url.equals("null") ? null : temp_image_url
+                    temp_image_url.equals("null") ? null : temp_image_url,
+                    jsonEvent.getString(DataHolder.UPDATED_AT_RESPONSE)
             );
 
 
@@ -199,6 +202,13 @@ public class APIDataFetcher {
             event.description = jsonEvent.optString(DataHolder.DESCRIPTION_RESPONSE, DataHolder.DESCRIPTION_DEFAULT);
             event.team_size = jsonEvent.optInt(DataHolder.TEAM_SIZE_RESPONSE, DataHolder.TEAM_SIZE_DEFAULT);
             event.contact = jsonEvent.optString(DataHolder.CONTACT_RESPONSE, DataHolder.CONTACT_DEFAULT);
+            String temporary_event_date_time = jsonEvent.optString(DataHolder.EVENT_DATE_TIME_RESPONSE, "null");
+
+            if(temporary_event_date_time == "null"){
+                event.event_date_time = new Date();
+            } else {
+                event.event_date_time = Event.parseStringToDate(temporary_event_date_time);
+            }
 
             if (event.eligibility.equals("")) event.eligibility = DataHolder.ELIGIBILITY_DEFAULT;
             if (event.judging.equals("")) event.judging = DataHolder.JUDGING_DEFAULT;
@@ -206,6 +216,7 @@ public class APIDataFetcher {
             if (event.rules.equals("")) event.rules = DataHolder.RULES_DEFAULT;
             if (event.venue.equals("")) event.venue = DataHolder.VENUE_DEFAULT;
             if (event.contact.equals("")) event.contact = DataHolder.CONTACT_DEFAULT;
+
 
             // TODO: get this fixed in the API. It's not being sent as of now.
 //            if ((event.description != null) && event.description.equals("")) event.description = DataHolder.DESCRIPTION_DEFAULT;
