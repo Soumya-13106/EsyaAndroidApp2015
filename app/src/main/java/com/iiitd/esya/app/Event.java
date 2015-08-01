@@ -64,7 +64,6 @@ public class Event {
     public static boolean updateEventInDB(Event staleEvent, Event fresh_event, Context context)
     {
         staleEvent.copyFrom(fresh_event);
-        DataHolder.EVENTS.put(fresh_event.id, fresh_event);
         DBHelper dbHelper = new DBHelper(context);
         return dbHelper.updateEvent(staleEvent);
     }
