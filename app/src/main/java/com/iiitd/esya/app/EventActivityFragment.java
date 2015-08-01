@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.github.florent37.materialviewpager.MaterialViewPager;
@@ -68,7 +67,7 @@ public class EventActivityFragment extends Fragment {
         FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.register_button);
         if(mEvent.registered)
         {
-            fab.setRippleColor(Color.GREEN);
+            fab.setRippleColor(Color.RED);
         } else {
             fab.setRippleColor(Color.BLUE);
         }

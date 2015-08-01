@@ -31,8 +31,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -585,17 +587,22 @@ abstract class RegisterForEventIndividual extends AsyncTask<Void, Void, Boolean>
             String url = context.getString(R.string.URL_api_base) + "m/register/" + event.id + ".json";
             String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
                     context.getString(R.string.api_auth_token), "Nope");
-            Log.v(TAG, APIDataFetcher.getSimpleSignedResponse(url, token));
-            return true;
+            String response = APIDataFetcher.getSimpleSignedResponse(url, token);
+            Log.v(TAG, response);
+
+            return (new JSONObject(response).getString("data").equals("Success"));
+
         } catch (IOException e)
         {
             Log.d(TAG, e.toString());
-            return false;
+        } catch (JSONException e) {
+            Log.d(TAG, "ParseException" + e.toString());
         }
+        return false;
     }
 }
 
-abstract class RegisterForEventTeam extends AsyncTask<Void, Void, Boolean>
+abstract class RegisterForEventTeam extends AsyncTask<Void, Void, String>
 {
     private String TAG = RegisterForEventTeam.class.getSimpleName();
     protected Context context;
@@ -611,21 +618,51 @@ abstract class RegisterForEventTeam extends AsyncTask<Void, Void, Boolean>
     }
 
     @Override
-    protected Boolean doInBackground(Void... voids) {
+    protected String doInBackground(Void... voids) {
         String url = context.getString(R.string.URL_api_base) + "/m/register/" + event.id + "/";
 
-        if (new_team) url += "team/" + team_name + ".json";
-        else url += team_name + ".json";
+        String response = "Failed";
+
+        try
+        {
+            if (new_team)
+            {
+                url += "team/" + URLEncoder.encode(team_name, "UTF-8") + ".json";
+            }
+            else
+            {
+                url += team_name + ".json";
+            }
+        } catch (UnsupportedEncodingException e){
+            Log.d(TAG, "UnsupportedEncodingException: " + team_name + " " + e.toString());
+            return response;
+        }
+        Log.v(TAG, "Connecting to "+ url);
 
         String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
                 context.getString(R.string.api_auth_token), "Nope");
 
+
+
         try {
-            Log.v(TAG, APIDataFetcher.getSimpleSignedResponse(url, token));
+            response = APIDataFetcher.getSimpleSignedResponse(url, token);
+            if (response != null) Log.v(TAG, response.toString());
         } catch (IOException e) {
             Log.d(TAG, e.toString());
+            return response;
         }
-        return true;
+
+        try {
+            JSONObject jsonResponse = new JSONObject(response);
+            String status = jsonResponse.getString("data");
+            if (status.contains("Success")) {
+                return jsonResponse.getString("team_code");
+            }
+        } catch (JSONException e){
+            Log.d("RegisterTeamJson", e.toString());
+        }
+
+        return "Failed";
     }
 }
 

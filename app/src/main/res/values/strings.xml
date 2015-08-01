@@ -39,7 +39,22 @@
     <string name="title_activity_categories">CategoriesActivity</string>
     <string name="title_activity_event">EventActivity</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+
+    <string name="help_text_team_event_initial_dialog_box_title">Team Event</string>
+    <string name="help_text_team_event_initial_dialog_box_message">This is a team event. Do you want to create a new team or join an existing team?</string>
+    <string name="help_text_team_event_new_team">Create a team</string>
+    <string name="help_text_team_event_join_team">Join a team</string>
+
+    <string name="help_text_new_team_title">Create team</string>
+    <string name="help_text_new_team_message">Enter the name of your team</string>
+    <string name="help_text_new_team_button">Create</string>
+
+    <string name="help_text_join_team_title">Join team</string>
+    <string name="help_text_join_team_message">Enter the joining code of the team</string>
+    <string name="help_text_join_team_button">Join</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="hello_world">Hello world!</string>
