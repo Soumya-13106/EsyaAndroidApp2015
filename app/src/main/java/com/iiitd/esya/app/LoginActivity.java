@@ -171,7 +171,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                 .addApi(Plus.API)
                 .addScope(new Scope(Scopes.PROFILE))
                 .addScope(new Scope(Scopes.PLUS_ME))
-//                .addScope(new Scope(Scopes.PLUS_LOGIN))
+                .addScope(new Scope(Scopes.PLUS_LOGIN))
                 .addScope(new Scope("https://www.googleapis.com/auth/plus.profile.emails.read"))
                 .build();
 

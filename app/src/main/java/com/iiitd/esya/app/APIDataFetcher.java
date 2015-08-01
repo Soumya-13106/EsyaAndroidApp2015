@@ -396,7 +396,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
         Account account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-        String scopes = "oauth2:" + Scopes.PLUS_ME + " " + Scopes.PROFILE + " https://www.googleapis.com/auth/plus.profile.emails.read";
+        String scopes = "oauth2:" + Scopes.PLUS_ME + " " + Scopes.PLUS_LOGIN + " " + Scopes.PROFILE + " https://www.googleapis.com/auth/plus.profile.emails.read";
         String idToken;
 
         try {
