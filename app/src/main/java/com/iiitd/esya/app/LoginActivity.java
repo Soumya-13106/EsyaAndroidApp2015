@@ -92,11 +92,11 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                         super.onPostExecute(loggedin);
                         if(loggedin)
                         {
-//                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-//                                    .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
-//                            startActivity(new Intent(getApplicationContext(), MainActivity.class).
-//                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-//                            finish();
+                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                                    .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class).
+                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            finish();
                         }
                         else
                         {
@@ -104,12 +104,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                         }
                     }
                 };
-                loginPingTest.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                        .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class).
-                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                finish();
+                loginPingTest.execute();
             }
         };
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

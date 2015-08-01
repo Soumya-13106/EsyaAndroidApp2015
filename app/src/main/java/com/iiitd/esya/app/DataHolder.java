@@ -72,6 +72,7 @@ public class DataHolder {
 
 class InitialDataFetcher extends FetchAllEventsTask
 {
+    static boolean first_time_app_launch_ever = false;
     Context context;
     public InitialDataFetcher(Context context)
     {
@@ -107,11 +108,16 @@ class InitialDataFetcher extends FetchAllEventsTask
             Log.v(LOG_TAG, "Fetched all events: " + Arrays.deepToString(events));
         }
 
+
+
         if (events != null)
         {
             for(Event e: events) network_event_ids.put(e.id, e);
         }
         ArrayList<Integer> eventIdsToUpdate = new ArrayList<>();
+
+        HashMap<Integer, Event> database_event_ids_copy = (HashMap<Integer, Event>)database_event_ids.clone();
+        HashMap<Integer, Event> network_event_ids_copy = (HashMap<Integer, Event>)network_event_ids.clone();
 
         if (events != null)
         {
@@ -135,6 +141,7 @@ class InitialDataFetcher extends FetchAllEventsTask
                     netEvent.updated_at.setTime(10);
 
                     db.insertEvent(netEvent);
+                    database_event_ids.put(netEvent.id, netEvent);
                     eventIdsToUpdate.add(netEvent.id);
                     continue;
                 }
@@ -142,13 +149,15 @@ class InitialDataFetcher extends FetchAllEventsTask
                     eventIdsToUpdate.add(netEvent.id);
                 }
             }
-            for (int i: database_event_ids.keySet())
+
+            for (int i: database_event_ids_copy.keySet())
             {
-                if (!network_event_ids.containsKey(i))
+                if (!network_event_ids_copy.containsKey(i))
                 {
                     Log.v(LOG_TAG, "Attempting to delete event with id:" + i);
                     if(db.deleteEvent(i))
                     {
+                        database_event_ids.remove(i);
                         Log.v(LOG_TAG, "Delete successful");
                     }
                     else
@@ -158,6 +167,7 @@ class InitialDataFetcher extends FetchAllEventsTask
                 }
             }
         }
+
         // The network isn't working.
         // set the database events to the events to show
         else {
@@ -167,6 +177,7 @@ class InitialDataFetcher extends FetchAllEventsTask
 
         if (!database_event_ids.isEmpty())
         {
+
             for(Event ev: database_event_ids.values()){
                 for(Category category: ev.categories)
                 {
@@ -176,6 +187,18 @@ class InitialDataFetcher extends FetchAllEventsTask
                 DataHolder.EVENTS.put(ev.id, ev);
             }
         }
+        else
+        {
+            first_time_app_launch_ever = true;
+        }
+
+        final InitialImagesFetcher imagesFetcherTask = new InitialImagesFetcher(context);
+        final String[] event_image_urls = new String[events.length];
+        for(int i = 0; i < events.length; i++)
+        {
+            event_image_urls[i] = events[i].image_url;
+        }
+
 
         FetchSpecificEventTask fetchSpecificEventTask = new FetchSpecificEventTask(api_token) {
 
@@ -190,18 +213,20 @@ class InitialDataFetcher extends FetchAllEventsTask
                         Log.d(LOG_TAG, "Unable to update event to db:" + event.toString());
                     } else Log.v(LOG_TAG, "Updated event in db: " + event.toString());
                 }
+                if(first_time_app_launch_ever)
+                {
+                    imagesFetcherTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, event_image_urls);
+                }
             }
         };
         fetchSpecificEventTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 eventIdsToUpdate.toArray(new Integer[eventIdsToUpdate.size()]));
 
-        final InitialImagesFetcher task = new InitialImagesFetcher(context);
-        final String[] event_image_urls = new String[events.length];
-        for(int i = 0; i < events.length; i++)
+        if (!first_time_app_launch_ever)
         {
-            event_image_urls[i] = events[i].image_url;
+            imagesFetcherTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, event_image_urls);
         }
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, event_image_urls);
+
 
         DataHolder.initialised = true;
     }
