@@ -19,14 +19,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +36,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by darkryder on 27/6/15.
@@ -507,7 +502,8 @@ class LoginPingTest extends AsyncTask<Void, Void, Boolean>
             return new JSONObject(resp).getBoolean(DataHolder.PROFILE_LOGIN_RESPONSE);
         } catch (IOException e)
         {
-            Log.d("PingTest", resp);
+            if (resp != null) Log.d("PingTest", resp.toString());
+            Log.d("PingTest", "NetworkError");
         } catch (JSONException e)
         {
             Log.d("PingTest JSON", e.toString());
@@ -618,7 +614,7 @@ class UpdateProfile extends AsyncTask<String, Void, Boolean>
 
     @Override
     protected Boolean doInBackground(String... params) {
-        String url =  context.getString(R.string.URL_api_base) + "m/profile.json";
+        String url =  context.getString(R.string.URL_api_base) + "m/profile/update.json";
         String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
                 context.getString(R.string.api_auth_token), "Nope");
 
@@ -633,20 +629,27 @@ class UpdateProfile extends AsyncTask<String, Void, Boolean>
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(url);
             httppost.addHeader("Cookie", "_esya2015_backend_session=" + token);
+            httppost.addHeader("Content-Type", "application/json");
+            httppost.addHeader("Accept", "application/json");
 
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("name", params[0]);
+            jsonObject.put("college", params[1]);
+            jsonObject.put("phone", params[2]);
 
-            nameValuePairs.add(new BasicNameValuePair("name", params[0]));
-            nameValuePairs.add(new BasicNameValuePair("college", params[1]));
-            nameValuePairs.add(new BasicNameValuePair("phone", params[2]));
 
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+            StringEntity se = new StringEntity(new JSONObject().put("participant", jsonObject).toString());
+
+            httppost.setEntity(se);
             HttpResponse response = httpclient.execute(httppost);
 
+            Log.v("UpdateProfile", response.toString());
+            return true;
         } catch (IOException e){
             Log.d("UpdateProfile", "Could not update profile: " + e.toString());
-            return false;
+        } catch (JSONException e){
+            Log.d("UpdateProfile", "JSON Exception: " + e.toString());
         }
-        return true;
+        return false;
     }
 }
