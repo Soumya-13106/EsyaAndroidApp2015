@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (mGoogleApiClient.isConnected())
+        if (mGoogleApiClient !=null && mGoogleApiClient.isConnected())
         {
             Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
             mGoogleApiClient.disconnect();
