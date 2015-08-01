@@ -61,7 +61,7 @@ public class RegistrationIntentService extends IntentService {
         {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(API_URL);
-            httppost.addHeader("Authorization", api_token);
+            httppost.addHeader("Cookie",  "_esya2015_backend_session=" + api_token);
 
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 

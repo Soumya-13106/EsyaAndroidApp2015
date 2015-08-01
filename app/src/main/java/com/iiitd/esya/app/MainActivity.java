@@ -140,16 +140,20 @@ public class MainActivity extends AppCompatActivity {
                         mCurrentSelectedPosition = 0;
                         break;
                     case R.id.navigation_item_1:
-                        Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mContentFrame, "Profile", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 1;
                         break;
                     case R.id.navigation_item_2:
-                        Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 2;
                         break;
                     case R.id.navigation_item_3:
-                        Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 3;
+                        break;
+                    case R.id.navigation_item_4:
+                        Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                        mCurrentSelectedPosition = 4;
                         break;
                 }
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -188,12 +192,15 @@ public class MainActivity extends AppCompatActivity {
                 objFragment = new CategoryListFragment();
                 break;
             case 1:
-                objFragment = new AboutUsFragment();
+                objFragment = new ProfileFragment();
                 break;
             case 2:
-                objFragment = new AboutEsyaFragment();
+                objFragment = new AboutUsFragment();
                 break;
             case 3:
+                objFragment = new AboutEsyaFragment();
+                break;
+            case 4:
                 objFragment = new ContactUsFragment();
                 break;
         }
@@ -243,12 +250,15 @@ public class MainActivity extends AppCompatActivity {
                 mTitle = getString(R.string.title_section1);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = "Profile";
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                mTitle = getString(R.string.title_section2);
                 break;
             case 4:
+                mTitle = getString(R.string.title_section3);
+                break;
+            case 5:
                 mTitle = getString(R.string.title_section4);
                 break;
         }

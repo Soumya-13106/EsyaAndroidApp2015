@@ -2,9 +2,10 @@
     <string name="app_name">Esya</string>
 
     <string name="title_section1">Events</string>
-    <string name="title_section2">About IIITD</string>
-    <string name="title_section3">About Esya</string>
-    <string name="title_section4">Contact Us</string>
+    <string name="title_section2">Profile</string>
+    <string name="title_section3">About IIITD</string>
+    <string name="title_section4">About Esya</string>
+    <string name="title_section5">Contact Us</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

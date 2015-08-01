@@ -1,0 +1,52 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.iiitd.esya.app.ProfileFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|top">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Name"
+            android:ems="10"
+            android:id="@+id/profile_name"
+            android:editable="true"
+            android:enabled="true"
+            android:textIsSelectable="false"
+            android:textSize="@dimen/abc_text_size_large_material" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="College"
+            android:ems="10"
+            android:id="@+id/profile_college"
+            android:editable="true"
+            android:enabled="true"
+            android:textIsSelectable="false"
+            android:textSize="@dimen/abc_text_size_large_material" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/profile_phone"
+            android:textSize="@dimen/abc_text_size_large_material"
+            android:text="Phone" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:clickable="true"
+            android:id="@+id/profile_submit" />
+
+    </LinearLayout>
+</FrameLayout>

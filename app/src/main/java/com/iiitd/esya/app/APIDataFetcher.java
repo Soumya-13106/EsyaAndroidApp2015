@@ -18,6 +18,15 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +40,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by darkryder on 27/6/15.
@@ -593,6 +603,49 @@ abstract class RegisterForEventTeam extends AsyncTask<Void, Void, Boolean>
             Log.v(TAG, APIDataFetcher.getSimpleSignedResponse(url, token));
         } catch (IOException e) {
             Log.d(TAG, e.toString());
+        }
+        return true;
+    }
+}
+
+class UpdateProfile extends AsyncTask<String, Void, Boolean>
+{
+    private Context context;
+    public UpdateProfile(Context context)
+    {
+        this.context = context;
+    }
+
+    @Override
+    protected Boolean doInBackground(String... params) {
+        String url =  context.getString(R.string.URL_api_base) + "m/profile.json";
+        String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
+                context.getString(R.string.api_auth_token), "Nope");
+
+        if (params.length != 3)
+        {
+            Log.d("UpdateProfile", "Got wrong number of params:" + Arrays.toString(params));
+            return false;
+        }
+
+        try
+        {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(url);
+            httppost.addHeader("Cookie", "_esya2015_backend_session=" + token);
+
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+
+            nameValuePairs.add(new BasicNameValuePair("name", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("college", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("phone", params[2]));
+
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+            HttpResponse response = httpclient.execute(httppost);
+
+        } catch (IOException e){
+            Log.d("UpdateProfile", "Could not update profile: " + e.toString());
+            return false;
         }
         return true;
     }
