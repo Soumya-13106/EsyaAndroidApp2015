@@ -1,7 +1,9 @@
 package com.iiitd.esya.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -67,18 +69,36 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
         // account has granted any requested permissions to our app and that we were able to
         // establish a service connection to Google Play services.
 
+        final Context context = this;
+
         GetAndSendIdTokenTask task = new GetAndSendIdTokenTask(this, mGoogleApiClient) {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                        .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class).
-                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                finish();
+
+                LoginPingTest loginPingTest = new LoginPingTest(context){
+                    @Override
+                    protected void onPostExecute(Boolean loggedin) {
+                        super.onPostExecute(loggedin);
+                        if(loggedin)
+                        {
+                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                                    .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class).
+                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            finish();
+                        }
+                        else
+                        {
+                            Toast.makeText(context, "Unable to log you in", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                };
+                loginPingTest.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
             }
         };
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mShouldResolve = false;
     }
 

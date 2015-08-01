@@ -452,7 +452,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
     }
 }
 
-class LoginPingTest extends AsyncTask<Void, Void, Void>
+class LoginPingTest extends AsyncTask<Void, Void, Boolean>
 {
     private String API_URL = null;
 
@@ -465,7 +465,8 @@ class LoginPingTest extends AsyncTask<Void, Void, Void>
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Boolean doInBackground(Void... voids) {
+        String resp = null;
         try {
             Log.v("PingTest", "starting");
             URL url = new URL(API_URL);
@@ -487,12 +488,17 @@ class LoginPingTest extends AsyncTask<Void, Void, Void>
             }
             if (buffer.length() == 0) return null;
 
-            Log.v("PingTest", buffer.toString());
+            resp = buffer.toString();
+            Log.v("PingTest", resp);
+            return new JSONObject(resp).getBoolean(DataHolder.PROFILE_LOGIN_RESPONSE);
         } catch (IOException e)
         {
-            Log.d("PingTest", e.toString());
+            Log.d("PingTest", resp);
+        } catch (JSONException e)
+        {
+            Log.d("PingTest JSON", e.toString());
         }
-        return null;
+        return false;
     }
 }
 

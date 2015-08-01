@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Plus.API)
                 .addScope(new Scope(Scopes.PROFILE))
+                .addScope(new Scope(Scopes.PLUS_ME))
+                .addScope(new Scope(Scopes.PLUS_LOGIN))
+                .addScope(new Scope("https://www.googleapis.com/auth/plus.profile.emails.read"))
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(Bundle bundle) {
@@ -75,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Failed", "failed" + connectionResult);
                     }
                 })
-                .addScope(new Scope(Scopes.PLUS_ME))
                 .build();
         mGoogleApiClient.connect();
     }
