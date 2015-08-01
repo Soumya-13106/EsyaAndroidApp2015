@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -95,7 +96,11 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                     }
                 };
                 loginPingTest.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+//                PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+//                        .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
+//                startActivity(new Intent(getApplicationContext(), MainActivity.class).
+//                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+//                finish();
             }
         };
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
