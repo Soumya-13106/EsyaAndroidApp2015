@@ -1,6 +1,7 @@
 package com.iiitd.esya.app;
 
 import android.accounts.Account;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
@@ -367,19 +369,19 @@ abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
 }
 
 abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
-    private Context context;
+    private Activity activity;
     private String API_URL;
     private SharedPreferences sharedPref;
     private GoogleApiClient mGoogleApiClient;
-
+    private int AUTH_CODE_REQUEST_CODE = 23619;
     private static String TAG = GetAndSendIdTokenTask.class.getSimpleName();
 
-    public GetAndSendIdTokenTask(Context context, GoogleApiClient googleApiClient)
+    public GetAndSendIdTokenTask(Activity activity, GoogleApiClient googleApiClient)
     {
         mGoogleApiClient = googleApiClient;
-        this.context = context;
-        API_URL = context.getString(R.string.URL_register_user_id);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        this.activity = activity;
+        API_URL = activity.getString(R.string.URL_register_user_id);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
     }
 
     @Override
@@ -390,10 +392,13 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
         String idToken;
 
         try {
-            idToken =  GoogleAuthUtil.getToken(context, accountName, scopes);
+            idToken =  GoogleAuthUtil.getToken(activity, accountName, scopes);
             sharedPref.edit().putString(
-                    context.getString(R.string.login_user_id), idToken).apply();
+                    activity.getString(R.string.login_user_id), idToken).apply();
 
+        } catch(UserRecoverableAuthException e){
+            activity.startActivityForResult(e.getIntent(), AUTH_CODE_REQUEST_CODE);
+            return null;
         } catch (IOException e) {
             Log.e(TAG, "Error retrieving ID token.", e);
             return null;
@@ -404,7 +409,6 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
 
         try
         {
-
             Log.v(TAG, "Sending accesstoken to server: " + idToken);
 
             URL url = new URL(API_URL + "?token=" + idToken);
@@ -425,7 +429,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
 
             JSONObject jsonResponse = new JSONObject(buffer.toString());
 
-            int success =jsonResponse.getInt(context.getString(R.string.api_response_key_success));
+            int success =jsonResponse.getInt(activity.getString(R.string.api_response_key_success));
             if (success != 200) throw new JSONException("LoginFailed" + jsonResponse);
 
             String session_cookie_temp = urlConnection.getHeaderField("Set-Cookie");
@@ -434,14 +438,14 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
             session_cookie_temp = session_cookie_temp.split("; ")[0];
             String auth_token = session_cookie_temp.split("=")[1];
 
-            sharedPref.edit().putString(context.getString(R.string.api_auth_token), auth_token).commit();
+            sharedPref.edit().putString(activity.getString(R.string.api_auth_token), auth_token).commit();
 
             if (auth_token == null || auth_token.isEmpty() || auth_token.equals("null"))
             {
                 throw new JSONException("EmptyResponse" + jsonResponse);
             }
 
-            sharedPref.edit().putString(context.getString(R.string.api_auth_token), auth_token).commit();
+            sharedPref.edit().putString(activity.getString(R.string.api_auth_token), auth_token).commit();
             Log.e("SendToken", "Received api auth: " + auth_token + " for loginToken " + idToken);
         } catch (IOException e){
             Log.e("SendToken", e.toString());
