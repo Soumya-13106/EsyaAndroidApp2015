@@ -166,6 +166,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mTitle = getTitle();
+
+        Intent intent = getIntent();
+        if (intent != null)
+        {
+            if (intent.hasExtra("UpdateProfile"))
+            {
+                if (intent.getBooleanExtra("UpdateProfile", false))
+                {
+                    changeFragment(PROFILE_FRAGMENT_POSITION);
+                }
+            }
+        }
+
     }
 
     private void setUpNavDrawer() {
@@ -190,13 +203,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private final int PROFILE_FRAGMENT_POSITION = 1;
+
     public boolean changeFragment (int position) {
         Fragment objFragment = null;
         switch (position) {
             case 0:
                 objFragment = new CategoryListFragment();
                 break;
-            case 1:
+            case PROFILE_FRAGMENT_POSITION:
                 objFragment = new ProfileFragment();
                 break;
             case 2:

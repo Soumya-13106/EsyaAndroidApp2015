@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -77,6 +78,18 @@ public class EventActivity extends AppCompatActivity {
         if(mEvent.registered)
         {
             Toast.makeText(this, "Already registered.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        boolean completed_profile = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+                getString(R.string.pref_profile_complete), false);
+
+        if (!completed_profile)
+        {
+            Toast.makeText(this, "Please update your profile before registering",
+                    Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class).
+                    putExtra("UpdateProfile", true));
             return;
         }
 
