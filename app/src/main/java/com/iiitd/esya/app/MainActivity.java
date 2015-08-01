@@ -3,6 +3,7 @@ package com.iiitd.esya.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -107,6 +108,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
+
+
+        LoginPingTest test = new LoginPingTest(this);
+        test.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         setContentView(R.layout.activity_main);
 
