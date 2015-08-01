@@ -36,6 +36,16 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
     private boolean mIsResolving = false;
     private boolean mShouldResolve = false;
 
+    @Override
+    protected void onDestroy() {
+        if (mGoogleApiClient.isConnected())
+        {
+            Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+            mGoogleApiClient.disconnect();
+        }
+        super.onDestroy();
+    }
+
     public void onSignInClicked(View view) {
         // User clicked the sign-in button, so begin the sign-in process and automatically
         // attempt to resolve any errors that occur.
@@ -167,7 +177,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                 .addApi(Plus.API)
                 .addScope(new Scope(Scopes.PROFILE))
                 .addScope(new Scope(Scopes.PLUS_ME))
-                .addScope(new Scope(Scopes.PLUS_LOGIN))
+//                .addScope(new Scope(Scopes.PLUS_LOGIN))
                 .addScope(new Scope("https://www.googleapis.com/auth/plus.profile.emails.read"))
                 .build();
 
