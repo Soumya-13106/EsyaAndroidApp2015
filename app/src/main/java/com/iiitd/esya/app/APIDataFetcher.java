@@ -282,7 +282,7 @@ abstract class FetchAllEventsTask extends AsyncTask<Void, Void, Event[]>
  * to override the onPostExecuteMethod as and when
  * needed by creating an anonymous class.
  */
-abstract class FetchSpecificEventTask extends AsyncTask<Integer, Void, Event>
+abstract class FetchSpecificEventTask extends AsyncTask<Integer[], Void, Event[]>
 {
     public FetchSpecificEventTask(String api_token)
     {
@@ -290,12 +290,18 @@ abstract class FetchSpecificEventTask extends AsyncTask<Integer, Void, Event>
     }
     protected  String api_token;
     final String LOG_TAG = "FETCH_EVENT";
+
     @Override
-    protected Event doInBackground(Integer... integers) {
+    protected Event[] doInBackground(Integer[]... integers) {
         if (integers.length != 1) return null;
-        int pk = integers[0];
-        Log.v(LOG_TAG, "Fetching event " + pk + " task started.");
-        return APIDataFetcher.fetchEventDetails(pk, api_token);
+        Integer[] pks = integers[0];
+        ArrayList<Event> events = new ArrayList<>();
+        for(int pk: pks)
+        {
+            Log.v(LOG_TAG, "Fetching event " + pk + " task started.");
+            events.add(APIDataFetcher.fetchEventDetails(pk, api_token));
+        }
+        return events.toArray(new Event[events.size()]);
     }
 }
 

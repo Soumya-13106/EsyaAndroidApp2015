@@ -142,7 +142,7 @@ class InitialDataFetcher extends FetchAllEventsTask
         // The network isn't working.
         // set the database events to the events to show
         else {
-            Log.d(LOG_TAG, "Network error. Reverting to database values");
+            Log.e(LOG_TAG, "Network error. Reverting to database values");
             events = database_event_ids.values().toArray(new Event[database_event_ids.values().size()]);
         }
 
@@ -155,20 +155,23 @@ class InitialDataFetcher extends FetchAllEventsTask
             DataHolder.EVENTS.put(ev.id, ev);
         };
 
-        for(int i: eventIdsToUpdate)
-        {
-            FetchSpecificEventTask task = new FetchSpecificEventTask(api_token) {
-                @Override
-                protected void onPostExecute(Event event) {
-                    super.onPostExecute(event);
+        FetchSpecificEventTask fetchSpecificEventTask = new FetchSpecificEventTask(api_token) {
+
+            @Override
+            protected void onPostExecute(Event[] events) {
+                super.onPostExecute(events);
+                if (events == null || events.length == 0) return;
+                for(Event event: events)
+                {
                     if (!Event.updateEventInDB(DataHolder.EVENTS.get(event.id), event, context))
                     {
                         Log.d(LOG_TAG, "Unable to update event to db:" + event.toString());
                     } else Log.v(LOG_TAG, "Updated event in db: " + event.toString());
                 }
-            };
-            task.execute(i);
-        }
+            }
+        };
+        fetchSpecificEventTask.execute(
+                eventIdsToUpdate.toArray(new Integer[eventIdsToUpdate.size()]));
 
         InitialImagesFetcher task = new InitialImagesFetcher(context);
         String[] event_image_urls = new String[events.length];

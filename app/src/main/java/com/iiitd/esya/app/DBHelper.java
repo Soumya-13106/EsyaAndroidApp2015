@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class DBHelper extends SQLiteOpenHelper {
 
+    private static final int DATABSE_VERSION = 1;
+
     public static final String DATABASE_NAME = "esya.db";
     public static final String TABLE_NAME = "event";
     public static final String COLUMN_EVENT_ID = "event_id";
@@ -54,7 +56,7 @@ public class DBHelper extends SQLiteOpenHelper {
     };
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, 2);
+        super(context, DATABASE_NAME, null, DATABSE_VERSION);
     };
 
     @Override
