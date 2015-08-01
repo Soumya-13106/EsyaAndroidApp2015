@@ -3,7 +3,6 @@ package com.iiitd.esya.app;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * Created by darkryder on 27/6/15.
@@ -163,14 +161,17 @@ class InitialDataFetcher extends FetchAllEventsTask
             events = database_event_ids.values().toArray(new Event[database_event_ids.values().size()]);
         }
 
-        for(Event ev: events){
-            for(Category category: ev.categories)
-            {
-                DataHolder.CATEGORY_TO_EVENTS.get(category).add(ev);
+        if (!database_event_ids.isEmpty())
+        {
+            for(Event ev: database_event_ids.values()){
+                for(Category category: ev.categories)
+                {
+                    DataHolder.CATEGORY_TO_EVENTS.get(category).add(ev);
+                }
+                DataHolder.CATEGORY_TO_EVENTS.get(Category.ALL).add(ev);
+                DataHolder.EVENTS.put(ev.id, ev);
             }
-            DataHolder.CATEGORY_TO_EVENTS.get(Category.ALL).add(ev);
-            DataHolder.EVENTS.put(ev.id, ev);
-        };
+        }
 
         FetchSpecificEventTask fetchSpecificEventTask = new FetchSpecificEventTask(api_token) {
 
