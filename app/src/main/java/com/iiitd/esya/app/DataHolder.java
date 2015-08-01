@@ -2,6 +2,8 @@ package com.iiitd.esya.app;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,6 +33,7 @@ public class DataHolder {
     public static final String TEAM_ID_RESPONSE = "team_id";
     public static final String UPDATED_AT_RESPONSE = "updated_at";
     public static final String EVENT_DATE_TIME_RESPONSE = "event_date_time";
+    public static final String PROFILE_LOGIN_RESPONSE = "login";
 
     public static final String ELIGIBILITY_DEFAULT = "No specific eligibility criteria.";
     public static final String JUDGING_DEFAULT =  "Judging criteria has not been decided yet. Stay tuned!";
@@ -59,7 +62,7 @@ public class DataHolder {
         }
 
         InitialDataFetcher task = new InitialDataFetcher(context);
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public static HashMap<Integer, Event> EVENTS = new HashMap<>();
@@ -184,16 +187,17 @@ class InitialDataFetcher extends FetchAllEventsTask
                 }
             }
         };
-        fetchSpecificEventTask.execute(
+        fetchSpecificEventTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 eventIdsToUpdate.toArray(new Integer[eventIdsToUpdate.size()]));
 
-        InitialImagesFetcher task = new InitialImagesFetcher(context);
-        String[] event_image_urls = new String[events.length];
+        final InitialImagesFetcher task = new InitialImagesFetcher(context);
+        final String[] event_image_urls = new String[events.length];
         for(int i = 0; i < events.length; i++)
         {
             event_image_urls[i] = events[i].image_url;
         }
-        task.execute(event_image_urls);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, event_image_urls);
+
         DataHolder.initialised = true;
     }
 }

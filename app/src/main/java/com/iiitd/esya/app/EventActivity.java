@@ -3,6 +3,7 @@ package com.iiitd.esya.app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -70,7 +71,7 @@ public class EventActivity extends AppCompatActivity {
                     Log.v("RegisterTeam", aBoolean + "");
                 }
             };
-            task.execute();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else
         {
@@ -81,7 +82,7 @@ public class EventActivity extends AppCompatActivity {
                     Log.v("RegisterIndividual", aBoolean + "");
                 }
             };
-            task.execute();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
