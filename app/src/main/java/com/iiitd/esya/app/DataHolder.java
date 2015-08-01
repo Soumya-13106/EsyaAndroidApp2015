@@ -115,6 +115,20 @@ class InitialDataFetcher extends FetchAllEventsTask
                 Event netEvent = network_event_ids.get(i);
                 if (!database_event_ids.containsKey(i)) {
                     // inserts new events in the db
+
+                    // make the date of the event updated_at to be equal to just epoch time.
+                    // this is because of the following situation.
+                    // suppose the initial data of all the events are fetched.
+                    // Basic info of this event is added to the database, including the
+                    // last updated_at timestamp as the correct time stamp.
+                    // however if the proceeding async task to fetch rest of the complete
+                    // details of the event gets terminated, the app will not fetch the new
+                    // details from the server on further app restarts, because according to
+                    // the database, the last updated times match.
+                    // the updated_at time will automatically be fixed when the complete data
+                    // is fetched.
+                    netEvent.updated_at.setTime(10);
+
                     db.insertEvent(netEvent);
                     eventIdsToUpdate.add(netEvent.id);
                     continue;
