@@ -351,6 +351,7 @@ abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
                 int id = Integer.parseInt(url_parts[6]);
                 event = DataHolder.EVENTS.get(id);
                 String name = Event.getImageNameFromUrl(url);
+                // TODO: there was a NullPointerException here on app reinstall. Fix it.
                 if (event.isImageInCache(name, context))
                 {
                     image = event.getCacheImage(name, context);
@@ -499,7 +500,31 @@ class LoginPingTest extends AsyncTask<Void, Void, Boolean>
 
             resp = buffer.toString();
             Log.v("PingTest", resp);
-            return new JSONObject(resp).getBoolean(DataHolder.PROFILE_LOGIN_RESPONSE);
+
+            JSONObject jsonResponse = new JSONObject(resp);
+
+            boolean check = jsonResponse.getBoolean(DataHolder.PROFILE_LOGIN_RESPONSE);
+
+            if (!check) return false;
+
+            boolean completed = jsonResponse.getBoolean(DataHolder.PROFILE_COMPLETE_RESPONSE);
+
+            String name = jsonResponse.getString(DataHolder.PROFILE_NAME_RESPONSE);
+            if (name == null || name.equals("null")) name = "";
+            String college = jsonResponse.getString(DataHolder.PROFILE_COLLEGE_RESPONSE);
+            if (college == null || college.equals("null")) college = "";
+            String phone = jsonResponse.getString(DataHolder.PROFILE_PHONE_RESPONSE);
+            if (phone == null || phone.equals("null")) phone = "";
+
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(
+                    context).edit();
+            editor.putString(context.getString(R.string.profile_name), name);
+            editor.putString(context.getString(R.string.profile_college), college);
+            editor.putString(context.getString(R.string.profile_phone), phone);
+            editor.putBoolean(context.getString(R.string.pref_profile_complete), completed);
+            editor.commit();
+
+            return true;
         } catch (IOException e)
         {
             if (resp != null) Log.d("PingTest", resp.toString());
@@ -643,7 +668,27 @@ class UpdateProfile extends AsyncTask<String, Void, Boolean>
             httppost.setEntity(se);
             HttpResponse response = httpclient.execute(httppost);
 
-            Log.v("UpdateProfile", response.toString());
+            LoginPingTest loginPingTestAndUpdate = new LoginPingTest(context){
+                @Override
+                protected void onPostExecute(Boolean aBoolean) {
+                    if (!aBoolean)
+                    {
+                        Log.d("ProfileAfterUpdate: ", "Not done:" + aBoolean);
+                        return;
+                    }
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+                    Log.v("ProfileAfterUpdate", "completed: " + pref.getBoolean(
+                            context.getString(R.string.pref_profile_complete), false));
+                    Log.v("ProfileAfterUpdate", "name: " + pref.getString(
+                            context.getString(R.string.profile_name), "DefaultName"));
+                    Log.v("ProfileAfterUpdate", "college: " + pref.getString(
+                            context.getString(R.string.profile_college), "DefaultCollege"));
+                    Log.v("ProfileAfterUpdate", "phone: " + pref.getString(
+                            context.getString(R.string.profile_phone), "DefaultPhone"));
+                }
+            };
+            loginPingTestAndUpdate.execute();
+
             return true;
         } catch (IOException e){
             Log.d("UpdateProfile", "Could not update profile: " + e.toString());

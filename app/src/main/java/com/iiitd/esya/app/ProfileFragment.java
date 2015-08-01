@@ -1,8 +1,10 @@
 package com.iiitd.esya.app;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,16 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Button button = (Button)view.findViewById(R.id.profile_submit);
 
+        final Context context = getActivity();
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        ((EditText)view.findViewById(R.id.profile_name)).
+                setText(pref.getString(context.getString(R.string.profile_name), "Name"));
+        ((EditText)view.findViewById(R.id.profile_college)).
+                setText(pref.getString(context.getString(R.string.profile_college), "College"));
+        ((EditText)view.findViewById(R.id.profile_phone)).
+                setText(pref.getString(context.getString(R.string.profile_phone), "Phone"));
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,7 +44,7 @@ public class ProfileFragment extends Fragment {
                 String college = ((EditText)view.findViewById(R.id.profile_college)).getText().toString();
                 String phone = ((EditText)view.findViewById(R.id.profile_phone)).getText().toString();
 
-                new UpdateProfile(getActivity()){
+                new UpdateProfile(context){
                     @Override
                     protected void onPostExecute(Boolean updated) {
                         super.onPostExecute(updated);

@@ -32,6 +32,10 @@ public class DataHolder {
     public static final String UPDATED_AT_RESPONSE = "updated_at";
     public static final String EVENT_DATE_TIME_RESPONSE = "event_date_time";
     public static final String PROFILE_LOGIN_RESPONSE = "login";
+    public static final String PROFILE_NAME_RESPONSE = "name";
+    public static final String PROFILE_PHONE_RESPONSE = "phone";
+    public static final String PROFILE_COLLEGE_RESPONSE = "college";
+    public static final String PROFILE_COMPLETE_RESPONSE = "complete";
 
     public static final String ELIGIBILITY_DEFAULT = "No specific eligibility criteria.";
     public static final String JUDGING_DEFAULT =  "Judging criteria has not been decided yet. Stay tuned!";
