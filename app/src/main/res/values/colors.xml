@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Red 500-->
-    <color name="colorPrimary">#F44336</color>
+    <!--<color name="colorPrimary">#F44336</color>-->
     <!--Red 700-->
-    <color name="colorPrimaryDark">#D32F2F</color>
+    <!--<color name="colorPrimaryDark">#D32F2F</color>-->
     <!--Blue A200-->
-    <color name="colorAccent">#448AFF</color>
+    <!--<color name="colorAccent">#448AFF</color>-->
+
+    <color name="colorPrimaryDark">#E64A19</color>
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryLight">#FF5722</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="colorAccent">#9E9E9E</color>
+
+    <color name="colorPrimaryDarkTest">#E64A19</color>
+    <color name="colorPrimaryTest">#FF5722</color>
+    <color name="colorPrimaryLightTest">#FF5722</color>
+    <color name="textColorPrimaryTest">#FFFFFF</color>
+    <color name="colorAccentTest">#9E9E9E</color>
 
     <color name="colorAccentRipple">#802962ff</color>
     <color name="colorAccentTrans">#402962ff</color>

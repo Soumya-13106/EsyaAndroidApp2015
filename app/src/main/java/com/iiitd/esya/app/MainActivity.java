@@ -270,16 +270,16 @@ public class MainActivity extends AppCompatActivity {
                 mTitle = getString(R.string.title_section1);
                 break;
             case 2:
-                mTitle = "Profile";
-                break;
-            case 3:
                 mTitle = getString(R.string.title_section2);
                 break;
-            case 4:
+            case 3:
                 mTitle = getString(R.string.title_section3);
                 break;
-            case 5:
+            case 4:
                 mTitle = getString(R.string.title_section4);
+                break;
+            case 5:
+                mTitle = getString(R.string.title_section5);
                 break;
         }
     }
