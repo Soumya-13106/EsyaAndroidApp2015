@@ -12,8 +12,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mTitle;
     private static String TAG = MainActivity.class.getSimpleName();
     private GoogleApiClient mGoogleApiClient;
+    private static final String esyaShare = "IIITD's Technical Fest Esya is around the corner. Go visit : http://esya.iiitd.edu.in/ ";
+    private static final String EVENT_SHARE_HASHTAG = "#Esya2015 #IIITD";
 
     @Override
     protected void onDestroy() {
@@ -233,7 +237,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+
+        ShareActionProvider mShareActionProvider =
+                (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+        // Attach an intent to this ShareActionProvider.  You can update this at any time,
+        // like when the user selects a new piece of data they might like to share.
+        if (mShareActionProvider != null ) {
+            mShareActionProvider.setShareIntent(createShareForecastIntent());
+        } else {
+            Log.d(TAG, "Share Action Provider is null?");
+        }
+
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private Intent createShareForecastIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT,
+                esyaShare + EVENT_SHARE_HASHTAG);
+        return shareIntent;
     }
 
     @Override

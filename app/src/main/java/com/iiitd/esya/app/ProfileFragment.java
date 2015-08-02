@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
+
 /**
  * Created by Soumya on 24-06-2015.
  */
@@ -25,8 +28,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button button = (Button)view.findViewById(R.id.profile_submit);
-
+        Button buttonSubmit = (Button)view.findViewById(R.id.profile_submit);
+        Button buttonLogOut = (Button)view.findViewById(R.id.profile_logout);
         final Context context = getActivity();
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -37,28 +40,34 @@ public class ProfileFragment extends Fragment {
         ((EditText)view.findViewById(R.id.profile_phone)).
                 setText(pref.getString(context.getString(R.string.profile_phone), "Phone"));
 
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = ((EditText)view.findViewById(R.id.profile_name)).getText().toString();
-                String college = ((EditText)view.findViewById(R.id.profile_college)).getText().toString();
-                String phone = ((EditText)view.findViewById(R.id.profile_phone)).getText().toString();
+                String name = ((EditText) view.findViewById(R.id.profile_name)).getText().toString();
+                String college = ((EditText) view.findViewById(R.id.profile_college)).getText().toString();
+                String phone = ((EditText) view.findViewById(R.id.profile_phone)).getText().toString();
 
-                new UpdateProfile(context){
+                new UpdateProfile(context) {
                     @Override
                     protected void onPostExecute(Boolean updated) {
                         super.onPostExecute(updated);
-                        if (updated)
-                        {
+                        if (updated) {
                             Toast.makeText(getActivity(), "Profile updated.", Toast.LENGTH_SHORT).show();
-                        } else
-                        {
+                        } else {
                             Toast.makeText(getActivity(), "Unable to update profile",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 }.executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR, name, college, phone);
+            }
+        });
+
+        buttonLogOut.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
