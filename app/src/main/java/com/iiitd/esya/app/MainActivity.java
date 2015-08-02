@@ -45,9 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
     private CharSequence mTitle;
     private static String TAG = MainActivity.class.getSimpleName();
-    private GoogleApiClient mGoogleApiClient;
+    private static GoogleApiClient mGoogleApiClient;
     private static final String esyaShare = "IIITD's Technical Fest Esya is around the corner. Go visit : http://esya.iiitd.edu.in/ ";
     private static final String EVENT_SHARE_HASHTAG = "#Esya2015 #IIITD";
+
+    public static GoogleApiClient getGoogleApiClient()
+    {
+        return mGoogleApiClient;
+    }
 
 
     @Override

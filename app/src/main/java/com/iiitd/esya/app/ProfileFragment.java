@@ -1,6 +1,8 @@
 package com.iiitd.esya.app;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 
 /**
  * Created by Soumya on 24-06-2015.
@@ -59,6 +64,28 @@ public class ProfileFragment extends Fragment {
                     }
                 }.executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR, name, college, phone);
+            }
+        });
+
+        ((Button)view.findViewById(R.id.profile_logout)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Activity activity = getActivity();
+                GoogleApiClient googleApiClient = MainActivity.getGoogleApiClient();
+
+                if (googleApiClient != null && googleApiClient.isConnected()) {
+                    Plus.AccountApi.clearDefaultAccount(googleApiClient);
+                    googleApiClient.disconnect();
+                    googleApiClient = null;
+                }
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+                sharedPref.edit().putBoolean(getString(R.string.pref_logged_in), false).commit();
+
+                Toast.makeText(activity, "Logged out", Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(activity, LoginActivity.class));
+                activity.finish();
             }
         });
     }
