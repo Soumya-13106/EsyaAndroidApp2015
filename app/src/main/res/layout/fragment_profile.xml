@@ -18,7 +18,14 @@
             android:editable="true"
             android:enabled="true"
             android:textIsSelectable="false"
-            android:textSize="@dimen/abc_text_size_large_material" />
+            android:textSize="@dimen/abc_text_size_button_material"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:includeFontPadding="true"
+            android:password="false"
+            android:phoneNumber="false"
+            android:autoText="true"
+            />
 
         <EditText
             android:layout_width="match_parent"
@@ -30,23 +37,46 @@
             android:editable="true"
             android:enabled="true"
             android:textIsSelectable="false"
-            android:textSize="@dimen/abc_text_size_large_material" />
+            android:textSize="@dimen/abc_text_size_button_material"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:includeFontPadding="true"
+            android:password="false"
+            android:phoneNumber="false"
+            android:autoText="true"
+            />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
+            android:text="Phone"
             android:ems="10"
             android:id="@+id/profile_phone"
-            android:textSize="@dimen/abc_text_size_large_material"
-            android:text="Phone" />
+            android:editable="true"
+            android:enabled="true"
+            android:textIsSelectable="false"
+            android:textSize="@dimen/abc_text_size_button_material"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:includeFontPadding="true"
+            android:password="false"
+            android:phoneNumber="false"
+            android:autoText="true"
+            />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Submit"
             android:clickable="true"
-            android:id="@+id/profile_submit" />
+            android:id="@+id/profile_submit"
+            android:textSize="@dimen/abc_text_size_button_material"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:includeFontPadding="true"
+
+            />
 
     </LinearLayout>
 </FrameLayout>

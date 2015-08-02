@@ -11,9 +11,9 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:id="@+id/event_card_image"
-            android:src="@drawable/logo"
+            android:src="@color/colorPrimaryLight"
             android:scaleType="fitXY"/>
         <View
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
             android:paddingRight="0dp"
             android:paddingEnd="0dp"
             android:background="#400000ff"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/primary_text_dark"
             android:id="@+id/list_item_category_textview"
             android:text="Palash"
             />
