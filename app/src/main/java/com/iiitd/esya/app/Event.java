@@ -3,7 +3,10 @@ package com.iiitd.esya.app;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,7 +44,6 @@ public class Event {
     public String venue;
     // Datetime registration_deadline
     public String description;
-    private Bitmap image;
     // TODO: set a default image
 
     public static Date parseStringToDate(String date) {
@@ -90,6 +92,20 @@ public class Event {
     {
         try
         {
+            if (DataHolder.COMPRESS_IMAGES_BEFORE_SAVING)
+            {
+                WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+                Display display = wm.getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                int screen_width = size.x;
+
+                float image_original_aspect = (float)bmp.getWidth()/(float)bmp.getHeight();
+
+                bmp = Bitmap.createScaledBitmap(bmp,
+                        screen_width, Math.round(screen_width*(1/image_original_aspect)), true);
+            }
+
             FileOutputStream fileOutputStream = context.openFileOutput(uri,
                     Context.MODE_PRIVATE);
 
@@ -121,7 +137,6 @@ public class Event {
         this.name = name;
         this.categories = categories;
         this.image_url = image_url;
-        this.image = null;
         this.updated_at = parseStringToDate(updated_at);
 
         this.contact = DataHolder.CONTACT_DEFAULT;
