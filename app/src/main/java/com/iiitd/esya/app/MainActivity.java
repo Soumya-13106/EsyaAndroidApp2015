@@ -45,9 +45,15 @@ public class MainActivity extends AppCompatActivity {
 
     private CharSequence mTitle;
     private static String TAG = MainActivity.class.getSimpleName();
-    private GoogleApiClient mGoogleApiClient;
+    private static GoogleApiClient mGoogleApiClient;
     private static final String esyaShare = "IIITD's Technical Fest Esya is around the corner. Go visit : http://esya.iiitd.edu.in/ ";
     private static final String EVENT_SHARE_HASHTAG = "#Esya2015 #IIITD";
+
+    public static GoogleApiClient getGoogleApiClient()
+    {
+        return mGoogleApiClient;
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -237,24 +243,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-
         MenuItem menuItem = menu.findItem(R.id.action_share);
 
         ShareActionProvider mShareActionProvider =
                 (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
-        // Attach an intent to this ShareActionProvider.  You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
         if (mShareActionProvider != null ) {
-            mShareActionProvider.setShareIntent(createShareForecastIntent());
+            mShareActionProvider.setShareIntent(createShareEsyaIntent());
         } else {
             Log.d(TAG, "Share Action Provider is null?");
         }
-
         return super.onCreateOptionsMenu(menu);
     }
 
-    private Intent createShareForecastIntent() {
+    private Intent createShareEsyaIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");

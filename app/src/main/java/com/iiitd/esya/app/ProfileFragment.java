@@ -1,6 +1,8 @@
 package com.iiitd.esya.app;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,8 +30,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button buttonSubmit = (Button)view.findViewById(R.id.profile_submit);
-        Button buttonLogOut = (Button)view.findViewById(R.id.profile_logout);
+        Button button = (Button)view.findViewById(R.id.profile_submit);
+
         final Context context = getActivity();
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -40,20 +42,22 @@ public class ProfileFragment extends Fragment {
         ((EditText)view.findViewById(R.id.profile_phone)).
                 setText(pref.getString(context.getString(R.string.profile_phone), "Phone"));
 
-        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = ((EditText) view.findViewById(R.id.profile_name)).getText().toString();
-                String college = ((EditText) view.findViewById(R.id.profile_college)).getText().toString();
-                String phone = ((EditText) view.findViewById(R.id.profile_phone)).getText().toString();
+                String name = ((EditText)view.findViewById(R.id.profile_name)).getText().toString();
+                String college = ((EditText)view.findViewById(R.id.profile_college)).getText().toString();
+                String phone = ((EditText)view.findViewById(R.id.profile_phone)).getText().toString();
 
-                new UpdateProfile(context) {
+                new UpdateProfile(context){
                     @Override
                     protected void onPostExecute(Boolean updated) {
                         super.onPostExecute(updated);
-                        if (updated) {
+                        if (updated)
+                        {
                             Toast.makeText(getActivity(), "Profile updated.", Toast.LENGTH_SHORT).show();
-                        } else {
+                        } else
+                        {
                             Toast.makeText(getActivity(), "Unable to update profile",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -63,11 +67,25 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        buttonLogOut.setOnClickListener(new View.OnClickListener() {
-
+        ((Button)view.findViewById(R.id.profile_logout)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+                Activity activity = getActivity();
+                GoogleApiClient googleApiClient = MainActivity.getGoogleApiClient();
 
+                if (googleApiClient != null && googleApiClient.isConnected()) {
+                    Plus.AccountApi.clearDefaultAccount(googleApiClient);
+                    googleApiClient.disconnect();
+                    googleApiClient = null;
+                }
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
+                sharedPref.edit().putBoolean(getString(R.string.pref_logged_in), false).commit();
+
+                Toast.makeText(activity, "Logged out", Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(activity, LoginActivity.class));
+                activity.finish();
             }
         });
     }
