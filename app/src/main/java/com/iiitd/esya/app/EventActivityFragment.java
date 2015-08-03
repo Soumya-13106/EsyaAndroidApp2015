@@ -254,7 +254,7 @@ class EventAdapterForRecylerView extends RecyclerView.Adapter<EventAdapterForRec
         // This is the generic text box in card    //
         // you finally make.Replace the id         //
         //  //  //  //  //  //  //  //  //  //  // //
-        ((TextView)holder.mView.findViewById(R.id.list_item_event_textview)).setText(info);
+//        ((TextView)holder.mView.findViewById(R.id.list_item_event_textview)).setText(info);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

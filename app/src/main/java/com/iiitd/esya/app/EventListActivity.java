@@ -63,11 +63,11 @@ public class EventListActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_event_list, container, false);
 
             Intent intent = getActivity().getIntent();
-            if(intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+            /*if(intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
                 String eventStr = intent.getStringExtra(Intent.EXTRA_TEXT);
                 ((TextView) rootView.findViewById(R.id.list_item_event_textview))
                         .setText(eventStr);
-            }
+            }*/
             return rootView;
         }
     }

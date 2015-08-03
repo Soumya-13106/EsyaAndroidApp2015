@@ -51,7 +51,7 @@ public class EventCardListAdapter extends BaseAdapter{
             view = inflater.inflate(R.layout.changeable_list_item_event, null);
         }
 
-        ((TextView) view.findViewById(R.id.list_item_event_textview)).setText(event.name);
+//        ((TextView) view.findViewById(R.id.list_item_event_textview)).setText(event.name);
 
         Bitmap image = null;
         if (event.image_url != null)
