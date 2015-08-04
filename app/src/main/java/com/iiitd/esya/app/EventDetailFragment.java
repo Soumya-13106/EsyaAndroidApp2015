@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+
+import org.xml.sax.XMLReader;
 
 
 /**
@@ -128,7 +131,35 @@ class TestRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void updateDescription(String details_)
     {
         this.details = details_;
-        detailsTextView.setText(trimTrailingWhitespace(Html.fromHtml(details)));
+        detailsTextView.setText(trimTrailingWhitespace(Html.fromHtml(details, null, new Html.TagHandler() {
+            boolean first= true;
+            String parent=null;
+            int index=1;
+            @Override
+            public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+                if(tag.equals("ul")) parent="ul";
+                else if(tag.equals("ol")) parent="ol";
+                if(tag.equals("li")){
+                    if(parent.equals("ul")){
+                        if(first){
+                            output.append("\n•");
+                            first= false;
+                        }else{
+                            first = true;
+                        }
+                    }
+                    else{
+                        if(first){
+                            output.append("\n"+index+". ");
+                            first= false;
+                            index++;
+                        }else{
+                            first = true;
+                        }
+                    }
+                }
+            }
+        })));
         detailsTextView.setMovementMethod(LinkMovementMethod.getInstance()); // enables anchor tags
     }
 

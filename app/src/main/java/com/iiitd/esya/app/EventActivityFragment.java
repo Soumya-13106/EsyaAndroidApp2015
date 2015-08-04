@@ -10,7 +10,10 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -202,7 +205,18 @@ public class EventActivityFragment extends Fragment {
 
         MaterialViewPagerHelper.registerScrollView(getActivity(),
                 (ObservableScrollView)view.findViewById(R.id.scrollView), null);
+        Toolbar toolbar = mViewPager.getToolbar();
 
+        if (toolbar != null) {
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+            ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayUseLogoEnabled(false);
+            actionBar.setHomeButtonEnabled(false);
+        }
         return view;
     }
 }
