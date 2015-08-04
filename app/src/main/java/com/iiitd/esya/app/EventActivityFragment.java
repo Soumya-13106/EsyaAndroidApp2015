@@ -57,6 +57,7 @@ public class EventActivityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) view.
                 findViewById(R.id.materialviewpager_pagerTitleStrip);
+        pagerSlidingTabStrip.setUnderlineColor(getContrastColor(mProminentColor));
 
         if (pagerSlidingTabStrip!= null)
         {

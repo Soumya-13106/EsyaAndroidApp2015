@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class DataHolder {
     private static final String LOG_TAG = DataHolder.class.getSimpleName();
-    public static final boolean COMPRESS_IMAGES_BEFORE_SAVING = false;
+    public static final boolean COMPRESS_IMAGES_BEFORE_SAVING = true;
 
     public static final String ELIGIBILITY_RESPONSE = "eligibilty";
     public static final String JUDGING_RESPONSE =  "judging";
