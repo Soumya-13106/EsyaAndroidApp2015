@@ -90,8 +90,7 @@ public class EventListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent!=null && intent.hasExtra(Intent.EXTRA_UID)) {
             Category category = Category.resolveToCategory(intent.getIntExtra(Intent.EXTRA_UID, 0));
-            mToolbar.setTitle(category.naturalName);
-            mToolbar.setSubtitle("Events");
+            mToolbar.setTitle(category.naturalName + " Events");
         }else{
             mToolbar.setTitle("Events");
         }
