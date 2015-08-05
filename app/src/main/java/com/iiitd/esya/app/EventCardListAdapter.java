@@ -30,7 +30,7 @@ public class EventCardListAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return events.size();
+        return (events == null) ? 0 : events.size();
     }
 
     @Override
