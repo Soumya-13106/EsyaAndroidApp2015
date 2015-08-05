@@ -91,12 +91,26 @@ class InitialDataFetcher extends FetchAllEventsTask
     @Override
     protected void onPreExecute() {
         if (DataHolder.initialised == true) return;
+        for(Event e: db.getAllEvents()) database_event_ids.put(e.id, e);
         super.onPreExecute();
     }
 
     @Override
     protected Event[] doInBackground(Void... voids) {
-        for(Event e: db.getAllEvents()) database_event_ids.put(e.id, e);
+
+        // show whatever stale data possible in case network is slow
+        if (!database_event_ids.isEmpty())
+        {
+            for(Event ev: database_event_ids.values()){
+                for(Category category: ev.categories)
+                {
+                    DataHolder.CATEGORY_TO_EVENTS.get(category).add(ev);
+                }
+                DataHolder.CATEGORY_TO_EVENTS.get(Category.ALL).add(ev);
+                DataHolder.EVENTS.put(ev.id, ev);
+            }
+        }
+
         return super.doInBackground(voids);
     }
 
@@ -178,6 +192,11 @@ class InitialDataFetcher extends FetchAllEventsTask
 
         if (!database_event_ids.isEmpty())
         {
+            for(ArrayList<Event> list: DataHolder.CATEGORY_TO_EVENTS.values())
+            {
+                list.clear();
+            }
+            DataHolder.EVENTS.clear();
 
             for(Event ev: database_event_ids.values()){
                 for(Category category: ev.categories)
