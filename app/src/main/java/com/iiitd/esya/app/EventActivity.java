@@ -13,8 +13,10 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -33,6 +35,9 @@ public class EventActivity extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbar;
     private Event mEvent;
 
+    private String EVENT_SHARE_PART1 = "Hey! Go checkout ";
+    private String EVENT_SHARE_PART2 = " at http://esya.iiitd.edu.in/ ";
+    private String EVENT_SHARE_HASHTAG = "#Esya2015";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -281,7 +286,25 @@ public class EventActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_event, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_share_event);
+        ShareActionProvider mShareActionProvider =
+                (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+        if (mShareActionProvider != null ) {
+            mShareActionProvider.setShareIntent(createShareEsyaIntent(mEvent));
+        } else {
+            Log.d("LOG", "Share Action Provider is null?");
+        }
         return true;
+    }
+
+    private Intent createShareEsyaIntent(Event event) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT,
+                EVENT_SHARE_PART1 + event.name + EVENT_SHARE_PART2 + EVENT_SHARE_HASHTAG);
+        return shareIntent;
     }
 
     @Override
