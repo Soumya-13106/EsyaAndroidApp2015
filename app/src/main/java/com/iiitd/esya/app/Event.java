@@ -90,6 +90,8 @@ public class Event {
 
     public void setCacheImage(Bitmap bmp, String uri, Context context)
     {
+        DataHolder.TOTAL_DOWNLOADED_IMAGE_SIZE += bmp.getByteCount();
+
         try
         {
             if (DataHolder.COMPRESS_IMAGES_BEFORE_SAVING)

@@ -19,6 +19,8 @@ public class DataHolder {
     private static final String LOG_TAG = DataHolder.class.getSimpleName();
     public static final boolean COMPRESS_IMAGES_BEFORE_SAVING = true;
 
+    public static int TOTAL_DOWNLOADED_IMAGE_SIZE = 0;
+
     public static final String ELIGIBILITY_RESPONSE = "eligibilty";
     public static final String JUDGING_RESPONSE =  "judging";
     public static final String PRIZES_RESPONSE =  "prizes";
@@ -263,6 +265,7 @@ class InitialImagesFetcher extends FetchImagesTask
 
     @Override
     protected void onPostExecute(Bitmap[] bitmaps) {
-        Log.v(LOG_TAG, "FETCHED ALL IMAGES");
+        Log.v(LOG_TAG, "FETCHED ALL IMAGES. " + DataHolder.TOTAL_DOWNLOADED_IMAGE_SIZE +
+                " byes downloaded");
     }
 }

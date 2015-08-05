@@ -20,6 +20,7 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
+import com.viewpagerindicator.CirclePageIndicator;
 
 
 public class LoginActivity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener,
@@ -209,5 +210,9 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
         };
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.setCurrentItem(0, false);
+
+        CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.indicator);
+        indicator.setViewPager(mViewPager);
     }
 }
