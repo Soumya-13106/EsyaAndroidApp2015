@@ -60,7 +60,7 @@ public class EventCardListAdapter extends BaseAdapter{
         }
         if (image == null)
         {
-            image = BitmapFactory.decodeResource(context.getResources(), R.drawable.logo);
+            image = BitmapFactory.decodeResource(context.getResources(), R.drawable.esyalogo);
         }
 
         ((ImageView) view.findViewById(R.id.event_card_image)).setImageBitmap(image);

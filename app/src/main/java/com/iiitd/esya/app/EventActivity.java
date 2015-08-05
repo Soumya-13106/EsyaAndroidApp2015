@@ -62,7 +62,7 @@ public class EventActivity extends AppCompatActivity {
         }
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.logo);
+                    R.drawable.esyalogo);
         }
 
 //        ((ImageView)findViewById(R.id.header)).setImageBitmap(bitmap);

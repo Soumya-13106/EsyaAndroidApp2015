@@ -156,7 +156,7 @@ public class EventActivityFragment extends Fragment {
         }
         if (image == null)
         {
-            image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.logo);
+            image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.esyalogo);
         }
 
         ImageView header = ((ImageView)view.findViewById(R.id.materialviewpager_imageHeader));
