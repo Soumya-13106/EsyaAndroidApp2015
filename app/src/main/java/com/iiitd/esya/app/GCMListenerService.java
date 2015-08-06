@@ -27,16 +27,17 @@ public class GCMListenerService extends GcmListenerService {
         Set temp = data.keySet();
         Log.d(TAG, temp.toString());
 
-        String message = data.getString("message");
+        String title = data.getString("title", "Update");
+        String body = data.getString("body");
         Log.d(TAG, "From: " + from);
-        Log.d(TAG, "Message: " + message);
+        Log.d(TAG, "Message: " + title + " :: " + body);
 
-        sendNotification(message);
+        sendNotification(title, body);
     }
 
-    private void sendNotification(String message)
+    private void sendNotification(String title, String message)
     {
-        Log.d(TAG, "in sendNotification: " + message);
+        Log.d(TAG, "in sendNotification: " + title + " :: " + message);
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -44,8 +45,8 @@ public class GCMListenerService extends GcmListenerService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_template_icon_bg) // TODO: add a notification image
-                .setContentTitle("GCM Message")
+                .setSmallIcon(R.drawable.androidicon) // TODO: add a notification image
+                .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
