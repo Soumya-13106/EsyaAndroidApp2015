@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -42,10 +43,12 @@ public class EventActivityFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    public boolean show_new = true;
+
     private int mProminentColor;
     private Event mEvent;
 
-    private MaterialViewPager mViewPager;
+    public MaterialViewPager mViewPager;
     private RecyclerViewMaterialAdapter mAdapter;
 
     private static int getContrastColor(int color) {
@@ -56,6 +59,9 @@ public class EventActivityFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        DataHolder.CURRENT_EVENT_FRAGMENT = this;
+
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) view.
                 findViewById(R.id.materialviewpager_pagerTitleStrip);
         pagerSlidingTabStrip.setUnderlineColor(getContrastColor(mProminentColor));
@@ -79,6 +85,7 @@ public class EventActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        show_new = true;
         View view = inflater.inflate(R.layout.fragment_event, container, false);
         String auth_token = PreferenceManager.getDefaultSharedPreferences(getActivity())
                                 .getString(getString(R.string.api_auth_token), "nope");
@@ -98,32 +105,13 @@ public class EventActivityFragment extends Fragment {
         details_to_fragments.put("judging", EventDetailFragment.newInstance(event.judging));
         details_to_fragments.put("rules", EventDetailFragment.newInstance(event.rules));
         details_to_fragments.put("prizes", EventDetailFragment.newInstance(event.prizes));
+        if (mEvent.registered && mEvent.team_event && show_new)
+        {
+            details_to_fragments.put("team", EventDetailFragment.newInstance(generateMessageFromTeamId(event.team_id)));
+        }
 
         mViewPager.getViewPager().setAdapter(
                 new FragmentStatePagerAdapter(getActivity().getSupportFragmentManager()) {
-                    @Override
-                    public Fragment getItem(int position) {
-                        switch (position) {
-                            case 0:
-                                return details_to_fragments.get("description");
-                            case 1:
-                                return details_to_fragments.get("contact");
-                            case 2:
-                                return details_to_fragments.get("eligibility");
-                            case 3:
-                                return details_to_fragments.get("judging");
-                            case 4:
-                                return details_to_fragments.get("rules");
-                            case 5:
-                                return details_to_fragments.get("prizes");
-                        };
-                        return null;
-                    }
-
-                    @Override
-                    public int getCount() {
-                        return 6;
-                    }
 
                     @Override
                     public CharSequence getPageTitle(int position) {
@@ -140,8 +128,36 @@ public class EventActivityFragment extends Fragment {
                                 return "Rules";
                             case 5:
                                 return "Prizes";
+                            case 6:
+                                return "Team";
                         }
                         return "What!";
+                    };
+
+                    @Override
+                    public int getCount() {
+                        return mEvent.team_event && mEvent.registered && show_new ? 7 : 6;
+                    };
+
+                    @Override
+                    public Fragment getItem(int position) {
+                        switch (position) {
+                            case 0:
+                                return details_to_fragments.get("description");
+                            case 1:
+                                return details_to_fragments.get("contact");
+                            case 2:
+                                return details_to_fragments.get("eligibility");
+                            case 3:
+                                return details_to_fragments.get("judging");
+                            case 4:
+                                return details_to_fragments.get("rules");
+                            case 5:
+                                return details_to_fragments.get("prizes");
+                            case 6:
+                                return details_to_fragments.get("team");
+                        };
+                        return null;
                     }
                 });
 
@@ -188,5 +204,11 @@ public class EventActivityFragment extends Fragment {
             actionBar.setHomeButtonEnabled(false);
         }
         return view;
+    }
+
+    private String generateMessageFromTeamId(String team_id)
+    {
+        return "Your team joining code is: " + team_id +
+                ". Please share this with your other team members";
     }
 }

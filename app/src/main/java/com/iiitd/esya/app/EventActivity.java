@@ -133,6 +133,7 @@ public class EventActivity extends AppCompatActivity {
                                                         Toast.LENGTH_LONG).show();
                                             } else {
                                                 event.registered = true;
+                                                event.team_id = team_code;
                                                 new AlertDialog.Builder(activity)
                                                         .setTitle("Successfully Registered")
                                                         .setMessage("Your team code is: " + team_code + "\nDo you want to add event to calender?")
@@ -150,6 +151,7 @@ public class EventActivity extends AppCompatActivity {
                                                             }
                                                         })
                                                         .show();
+                                                DataHolder.CURRENT_EVENT_FRAGMENT.show_new = false;
                                                 Log.v("Bleh", event.name + event.event_date_time + "Registered");
                                                 Event.updateEventInDB(event, event, activity);
                                                 fab.setRippleColor(Color.RED);
@@ -196,6 +198,7 @@ public class EventActivity extends AppCompatActivity {
                                                         Toast.LENGTH_LONG).show();
                                             } else {
                                                 event.registered = true;
+                                                event.team_id = team_code;
                                                 new AlertDialog.Builder(activity)
                                                         .setTitle("Joined Team")
                                                         .setMessage("You have successfully joined the team." + "\nDo you want to add event to calender?")
@@ -213,6 +216,7 @@ public class EventActivity extends AppCompatActivity {
                                                             }
                                                         })
                                                         .show();
+                                                DataHolder.CURRENT_EVENT_FRAGMENT.show_new = false;
                                                 Event.updateEventInDB(event, event, activity);
                                                 fab.setRippleColor(Color.RED);
                                             }
