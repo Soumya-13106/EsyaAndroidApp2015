@@ -181,7 +181,7 @@ public class EventActivityFragment extends Fragment {
             ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
             ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayUseLogoEnabled(false);

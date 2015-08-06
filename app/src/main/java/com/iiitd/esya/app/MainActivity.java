@@ -265,34 +265,6 @@ public class MainActivity extends AppCompatActivity {
         return shareIntent;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.logout_settings){
-            if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-                mGoogleApiClient.disconnect();
-                mGoogleApiClient = null;
-            }
-
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            sharedPref.edit().putBoolean(getString(R.string.pref_logged_in), false).commit();
-
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
