@@ -40,14 +40,12 @@ import java.util.HashMap;
 public class EventActivityFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-//    pprivate RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private int mProminentColor;
     private Event mEvent;
 
     private MaterialViewPager mViewPager;
-//    private ViewPager viewPager;
     private RecyclerViewMaterialAdapter mAdapter;
 
     private static int getContrastColor(int color) {
@@ -81,7 +79,6 @@ public class EventActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-//        View view = inflater.inflate(R.layout.fragment_event_detail, container, false);
         View view = inflater.inflate(R.layout.fragment_event, container, false);
         String auth_token = PreferenceManager.getDefaultSharedPreferences(getActivity())
                                 .getString(getString(R.string.api_auth_token), "nope");
@@ -163,14 +160,10 @@ public class EventActivityFragment extends Fragment {
         header.setScaleType(ImageView.ScaleType.FIT_XY);
         header.setImageDrawable(new BitmapDrawable(getActivity().getResources(), image));
 
-//        mProminentColor = Bitmap.createScaledBitmap(image, 1, 1, true).getPixel(0, 0);
         Bitmap lower_end = Bitmap.createBitmap(image, 0,
                 image.getHeight() - 50, image.getWidth(), 50);
         mProminentColor = Bitmap.createScaledBitmap(lower_end, 1, 1, true).getPixel(0, 0);
 
-
-//        Palette palette = new Palette.Builder(image).generate();
-//        mProminentColor = palette.getVibrantColor(Color.BLACK);
         Log.w("Color", mProminentColor + "");
 
         mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
@@ -178,29 +171,6 @@ public class EventActivityFragment extends Fragment {
 
         mViewPager.getViewPager().setCurrentItem(1);
         mViewPager.getViewPager().setCurrentItem(0);
-
-//        mAdapter = new RecyclerViewMaterialAdapter(new EventAdapterForRecylerView(old_event.image_url));
-
-
-
-//        mRecyclerView = (RecyclerView) view.findViewById(R.id.scrollableview);
-//        mLayoutManager = new LinearLayoutManager(getActivity());
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//
-//        mRecyclerView.setAdapter(mAdapter);
-//        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
-//
-//        PagerSlidingTabStrip strip = (PagerSlidingTabStrip) view.findViewById(R.id.materialviewpager_pagerTitleStrip);
-//        strip.setViewPager(mViewPager.getViewPager());
-
-        //TODO: You'll have to create new adapters and recyclerviews for every tab,
-        // with each adapter holding the data only for 1 card with that 1 card holding
-        // data only for that one specific info of the event
-        //mAdapter = new EventAdapterForRecylerView(old_event.image_url);
-        //mRecyclerView.setAdapter(mAdapter);
-
-
-//        final TextView textView = (TextView)view.findViewById(R.id.event_text);
 
 
         MaterialViewPagerHelper.registerScrollView(getActivity(),
@@ -218,63 +188,5 @@ public class EventActivityFragment extends Fragment {
             actionBar.setHomeButtonEnabled(false);
         }
         return view;
-    }
-}
-
-class EventAdapterForRecylerView extends RecyclerView.Adapter<EventAdapterForRecylerView.ViewHolder>
-{
-    private String info;
-
-    public static class ViewHolder extends RecyclerView.ViewHolder
-    {
-        public View mView;
-        public ViewHolder(View v)
-        {
-            super(v);
-            mView = v;
-        }
-    }
-
-    public EventAdapterForRecylerView(String info)
-    {
-        this.info = info;
-    }
-
-    // Create new views (invoked by the layout manager)
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
-        // create a new view
-
-        //  //  //  //  //  //  //  //  //  //  //  //  //
-        // TODO: PALASH!!!                              //
-        // The layout below is the card layout.         //
-        // Create a new card layout and replace this    //
-        //  //  //  //  //  //  //  //  //  //  //  //  //
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.changeable_list_item_event, parent, false);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
-    }
-
-    // Replace the contents of a view (invoked by the layout manager)
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-
-
-        //  //  //  //  //  //  //  //  //  // //  //
-        // TODO: PALASH!!!                         //
-        // This is the generic text box in card    //
-        // you finally make.Replace the id         //
-        //  //  //  //  //  //  //  //  //  //  // //
-//        ((TextView)holder.mView.findViewById(R.id.list_item_event_textview)).setText(info);
-    }
-
-    // Return the size of your dataset (invoked by the layout manager)
-    @Override
-    public int getItemCount() {
-        return 1;
     }
 }

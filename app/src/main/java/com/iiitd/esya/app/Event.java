@@ -44,7 +44,6 @@ public class Event {
     public String venue;
     // Datetime registration_deadline
     public String description;
-    // TODO: set a default image
 
     public static Date parseStringToDate(String date) {
         /*SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy hh:mm:ss");

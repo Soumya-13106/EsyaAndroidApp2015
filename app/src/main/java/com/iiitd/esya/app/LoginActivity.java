@@ -53,7 +53,6 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
         mGoogleApiClient.connect();
 
         // Show a message to the user that we are signing in.
-        // TODO: check if this works
         Snackbar.make(view, "Logging you in.", Snackbar.LENGTH_LONG).show();
     }
 
@@ -93,11 +92,11 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                         super.onPostExecute(loggedin);
                         if(loggedin)
                         {
-//                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-//                                    .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
-//                            startActivity(new Intent(getApplicationContext(), MainActivity.class).
-//                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-//                            finish();
+                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                                    .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class).
+                                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            finish();
                         }
                         else
                         {
@@ -106,12 +105,6 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                     }
                 };
                 loginPingTest.execute();
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                        .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                finish();
-
             }
         };
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

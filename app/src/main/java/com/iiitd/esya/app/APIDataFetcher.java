@@ -227,8 +227,9 @@ public class APIDataFetcher {
             if (event.contact.equals("")) event.contact = DataHolder.CONTACT_DEFAULT;
 
 
-            // TODO: get this fixed in the API. It's not being sent as of now.
-//            if ((event.description != null) && event.description.equals("")) event.description = DataHolder.DESCRIPTION_DEFAULT;
+            if ((event.description == null) ||
+                    (event.description != null && event.description.equals("")))
+                event.description = DataHolder.DESCRIPTION_DEFAULT;
 
             event.registered = jsonEvent.optInt(DataHolder.REGISTERED_RESPONSE, DataHolder.REGISTERED_DEFAULT)!= 0;
             event.team_event = jsonEvent.optBoolean(DataHolder.TEAM_EVENT_RESPONSE, DataHolder.TEAM_EVENT_DEFAULT);
@@ -353,7 +354,6 @@ abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
                 int id = Integer.parseInt(url_parts[6]);
                 event = DataHolder.EVENTS.get(id);
                 String name = Event.getImageNameFromUrl(url);
-                // TODO: there was a NullPointerException here on app reinstall. Fix it.
                 if (event.isImageInCache(name, context))
                 {
                     image = event.getCacheImage(name, context);
@@ -583,7 +583,6 @@ abstract class RegisterForEventIndividual extends AsyncTask<Void, Void, Boolean>
     protected Boolean doInBackground(Void... voids) {
 
         try {
-            // TODO: verify that this api works
             String url = context.getString(R.string.URL_api_base) + "m/register/" + event.id + ".json";
             String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
                     context.getString(R.string.api_auth_token), "Nope");

@@ -53,9 +53,4 @@
     <string name="help_text_join_team_message">Enter the joining code of the team</string>
     <string name="help_text_join_team_button">Join</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="hello_world">Hello world!</string>
 </resources>
