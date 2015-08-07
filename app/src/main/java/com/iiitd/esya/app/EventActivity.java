@@ -133,6 +133,7 @@ public class EventActivity extends AppCompatActivity {
                                                         Toast.LENGTH_LONG).show();
                                             } else {
                                                 event.registered = true;
+                                                event.team_id = team_code;
                                                 new AlertDialog.Builder(activity)
                                                         .setTitle("Successfully Registered")
                                                         .setMessage("Your team code is: " + team_code + "\nDo you want to add event to calender?")
@@ -150,6 +151,7 @@ public class EventActivity extends AppCompatActivity {
                                                             }
                                                         })
                                                         .show();
+                                                DataHolder.CURRENT_EVENT_FRAGMENT.show_new = false;
                                                 Log.v("Bleh", event.name + event.event_date_time + "Registered");
                                                 Event.updateEventInDB(event, event, activity);
                                                 fab.setRippleColor(Color.RED);
@@ -196,6 +198,7 @@ public class EventActivity extends AppCompatActivity {
                                                         Toast.LENGTH_LONG).show();
                                             } else {
                                                 event.registered = true;
+                                                event.team_id = team_code;
                                                 new AlertDialog.Builder(activity)
                                                         .setTitle("Joined Team")
                                                         .setMessage("You have successfully joined the team." + "\nDo you want to add event to calender?")
@@ -213,6 +216,7 @@ public class EventActivity extends AppCompatActivity {
                                                             }
                                                         })
                                                         .show();
+                                                DataHolder.CURRENT_EVENT_FRAGMENT.show_new = false;
                                                 Event.updateEventInDB(event, event, activity);
                                                 fab.setRippleColor(Color.RED);
                                             }
@@ -285,16 +289,16 @@ public class EventActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_event, menu);
-        MenuItem menuItem = menu.findItem(R.id.action_share_event);
-        ShareActionProvider mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-
-        if (mShareActionProvider != null ) {
-            mShareActionProvider.setShareIntent(createShareEsyaIntent(mEvent));
-        } else {
-            Log.d("LOG", "Share Action Provider is null?");
-        }
+//        getMenuInflater().inflate(R.menu.menu_event, menu);
+//        MenuItem menuItem = menu.findItem(R.id.action_share_event);
+//        ShareActionProvider mShareActionProvider =
+//                (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+//
+//        if (mShareActionProvider != null ) {
+//            mShareActionProvider.setShareIntent(createShareEsyaIntent(mEvent));
+//        } else {
+//            Log.d("LOG", "Share Action Provider is null?");
+//        }
         return true;
     }
 
@@ -307,20 +311,6 @@ public class EventActivity extends AppCompatActivity {
         return shareIntent;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onBackPressed() {

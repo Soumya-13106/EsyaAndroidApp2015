@@ -37,22 +37,6 @@ public class EventListActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            //startActivity(new Intent(this, EventActivity.class).setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public static class EventListFragment extends Fragment {
 
         public EventListFragment() {

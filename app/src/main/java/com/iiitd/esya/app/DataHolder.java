@@ -50,9 +50,11 @@ public class DataHolder {
     public static final String CONTACT_DEFAULT =  "events.esya@iiitd.ac.in";
     public static final int REGISTERED_DEFAULT = 0;
     public static final boolean TEAM_EVENT_DEFAULT = false;
-    public static final int TEAM_ID_DEFAULT = 0;
+    public static final String TEAM_ID_DEFAULT = "0";
     public static final Date UPDATED_AT_DEFAULT = new Date();
     public static final Date EVENT_DATE_TIME_DEFAULT = new Date();
+
+    public static EventActivityFragment CURRENT_EVENT_FRAGMENT = null;
 
     public static final HashMap<Category, ArrayList<Event>> CATEGORY_TO_EVENTS = new HashMap<>();
 

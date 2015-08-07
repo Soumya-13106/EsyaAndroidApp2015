@@ -84,6 +84,8 @@ public class ProfileFragment extends Fragment {
 
                 Toast.makeText(activity, "Logged out", Toast.LENGTH_SHORT).show();
 
+                DBHelper.deleteDatabase(activity);
+
                 startActivity(new Intent(activity, LoginActivity.class));
                 activity.finish();
             }

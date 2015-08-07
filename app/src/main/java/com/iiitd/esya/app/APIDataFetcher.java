@@ -233,7 +233,7 @@ public class APIDataFetcher {
 
             event.registered = jsonEvent.optInt(DataHolder.REGISTERED_RESPONSE, DataHolder.REGISTERED_DEFAULT)!= 0;
             event.team_event = jsonEvent.optBoolean(DataHolder.TEAM_EVENT_RESPONSE, DataHolder.TEAM_EVENT_DEFAULT);
-            event.team_id = jsonEvent.optInt(DataHolder.TEAM_ID_RESPONSE, DataHolder.TEAM_ID_DEFAULT);
+            event.team_id = jsonEvent.optString(DataHolder.TEAM_ID_RESPONSE, DataHolder.TEAM_ID_DEFAULT);
 
             return event;
 

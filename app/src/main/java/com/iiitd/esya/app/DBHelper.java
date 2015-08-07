@@ -59,6 +59,11 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABSE_VERSION);
     };
 
+    public static void deleteDatabase(Context context)
+    {
+        context.deleteDatabase(DATABASE_NAME);
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
@@ -76,7 +81,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         COLUMN_CONTACT + " VARCHAR(2048) NOT NULL, " +
                         COLUMN_IS_REGISTERED + " INT NOT NULL DEFAULT 0, " +
                         COLUMN_IS_TEAM_EVENT + " INT NOT NULL DEFAULT 0, " +
-                        COLUMN_TEAM_ID + " INT NOT NULL, " +
+                        COLUMN_TEAM_ID + " VARCHAR(127) NOT NULL, " +
                         COLUMN_EVENT_ELIGIBILITY + " VARCHAR(5000) NOT NULL, " +
                         COLUMN_EVENT_JUDGING + " VARCHAR(5000) NOT NULL, " +
                         COLUMN_EVENT_PRIZES + " VARCHAR(5000) NOT NULL, " +
@@ -203,7 +208,7 @@ public class DBHelper extends SQLiteOpenHelper {
         event.contact = c.getString(c.getColumnIndexOrThrow(COLUMN_CONTACT));
         event.registered = returnBooleanFromInt(c.getInt(c.getColumnIndexOrThrow(COLUMN_IS_REGISTERED)));
         event.team_event = returnBooleanFromInt(c.getInt(c.getColumnIndexOrThrow(COLUMN_IS_TEAM_EVENT)));
-        event.team_id = c.getInt(c.getColumnIndexOrThrow(COLUMN_TEAM_ID));
+        event.team_id = c.getString(c.getColumnIndexOrThrow(COLUMN_TEAM_ID));
         event.eligibility = c.getString(c.getColumnIndexOrThrow(COLUMN_EVENT_ELIGIBILITY));
         event.judging = c.getString(c.getColumnIndexOrThrow(COLUMN_EVENT_JUDGING));
         event.prizes = c.getString(c.getColumnIndexOrThrow(COLUMN_EVENT_PRIZES));
