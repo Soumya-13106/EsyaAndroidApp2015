@@ -178,6 +178,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
         setContentView(R.layout.fragment_login_container);
 
         mFragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+            Fragment landingpage = new LandingPage();
             Fragment aboutus = new AboutUsFragment();
             Fragment aboutesya = new AboutEsyaFragment();
             Fragment login = new LoginActivityFragment();
@@ -186,10 +187,12 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
             public Fragment getItem(int position) {
                 switch (position){
                     case 0:
-                        return aboutesya;
+                        return landingpage;
                     case 1:
-                        return aboutus;
+                        return aboutesya;
                     case 2:
+                        return aboutus;
+                    case 3:
                         return login;
                     default:
                         return login;
@@ -198,7 +201,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
 
             @Override
             public int getCount() {
-                return 3;
+                return 4;
             }
         };
         mViewPager = (ViewPager) findViewById(R.id.pager);

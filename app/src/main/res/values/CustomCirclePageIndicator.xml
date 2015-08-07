@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="CustomCirclePageIndicator">
-        <item name="fillColor">@color/blue</item>
-        <item name="unselectedColor">@android:color/white</item>
+        <item name="fillColor">@color/colorEsya</item>
+        <item name="unselectedColor">@android:color/darker_gray</item>
         <item name="centered">true</item>
-        <item name="strokeColor">@android:color/black</item>
+        <!--<item name="strokeColor">@android:color/black</item>-->
         <item name="pageColor">@null</item>
     </style>
 </resources>

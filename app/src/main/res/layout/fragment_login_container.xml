@@ -17,7 +17,7 @@
     <com.viewpagerindicator.CirclePageIndicator
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/indicator"
-        app:radius="12dp"
+        app:radius="6dp"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         style="@style/CustomCirclePageIndicator"

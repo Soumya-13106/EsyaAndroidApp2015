@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,14 +59,9 @@ public class ContactUsFragment extends Fragment{
                 .title("IIIT Delhi")
                 .icon(BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.getUiSettings().setMapToolbarEnabled(true);
-        googleMap.getUiSettings().setAllGesturesEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
 
-        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMapToolbarEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -104,5 +98,4 @@ public class ContactUsFragment extends Fragment{
         super.onLowMemory();
         mMapView.onLowMemory();
     }
-
 }
