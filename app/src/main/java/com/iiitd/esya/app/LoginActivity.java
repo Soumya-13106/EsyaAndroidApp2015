@@ -179,7 +179,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
 
         mFragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             Fragment landingpage = new LandingPage();
-            Fragment aboutus = new AboutUsFragment();
+            Fragment aboutiiitd = new AboutIIITDFragment();
             Fragment aboutesya = new AboutEsyaFragment();
             Fragment login = new LoginActivityFragment();
 
@@ -191,7 +191,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                     case 1:
                         return aboutesya;
                     case 2:
-                        return aboutus;
+                        return aboutiiitd;
                     case 3:
                         return login;
                     default:

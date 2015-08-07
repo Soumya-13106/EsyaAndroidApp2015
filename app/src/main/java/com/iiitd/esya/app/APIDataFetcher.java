@@ -160,13 +160,16 @@ public class APIDataFetcher {
                 {
                     categories.add(Category.resolveToCategory(((JSONObject)json_categories.get(j)).getInt("id")));
                 }
-                events.add(new Event(
+                Event event = new Event(
                         jsonEvent.getInt("id"),
                         jsonEvent.getString("name"),
                         categories.toArray(new Category[categories.size()]),
                         temp_image_url.equals("null") ? null : temp_image_url,
                         jsonEvent.getString(DataHolder.UPDATED_AT_RESPONSE)
-                ));
+                );
+                event.registered = jsonEvent.optInt(DataHolder.REGISTERED_RESPONSE, DataHolder.REGISTERED_DEFAULT)!= 0;
+                event.team_id = jsonEvent.optString(DataHolder.TEAM_ID_RESPONSE, DataHolder.TEAM_ID_DEFAULT);
+                events.add(event);
             }
 
             return events.toArray(new Event[events.size()]);
@@ -414,7 +417,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
             Log.e(TAG, "Error retrieving ID token.", e);
             return null;
         }
-
+        String auth_token = "";
         try
         {
             Log.v(TAG, "Sending accesstoken to server: " + idToken);
@@ -444,7 +447,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
             if (session_cookie_temp == null) throw new JSONException("Set-Cookie header not found");
 
             session_cookie_temp = session_cookie_temp.split("; ")[0];
-            String auth_token = session_cookie_temp.split("=")[1];
+            auth_token = session_cookie_temp.split("=")[1];
 
             sharedPref.edit().putString(activity.getString(R.string.api_auth_token), auth_token).commit();
 

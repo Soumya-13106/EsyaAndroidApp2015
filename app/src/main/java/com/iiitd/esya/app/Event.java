@@ -32,7 +32,7 @@ public class Event {
     public String contact;
     public boolean registered;
     public boolean team_event;
-    public String team_id;
+    public String team_id = "";
     Date event_date_time;
     Date updated_at;
 

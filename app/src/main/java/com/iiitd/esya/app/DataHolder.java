@@ -19,6 +19,8 @@ public class DataHolder {
     private static final String LOG_TAG = DataHolder.class.getSimpleName();
     public static final boolean COMPRESS_IMAGES_BEFORE_SAVING = true;
 
+    public static boolean EVENT_UPDATED_AFTER_LOGIN = false;
+
     public static int TOTAL_DOWNLOADED_IMAGE_SIZE = 0;
 
     public static final String ELIGIBILITY_RESPONSE = "eligibilty";

@@ -76,9 +76,6 @@
             android:value="AIzaSyDJaDg5x3X5t86eZbv5ngtSbFtB5CRsYkU"/>
 
 
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAGwCUgBGZk5w7F6OX-TVYoqcHYOcdqIPk"/>
-
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

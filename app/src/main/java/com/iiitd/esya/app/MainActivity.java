@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 objFragment = new ProfileFragment();
                 break;
             case 2:
-                objFragment = new AboutUsFragment();
+                objFragment = new AboutIIITDFragment();
                 break;
             case 3:
                 objFragment = new AboutEsyaFragment();
