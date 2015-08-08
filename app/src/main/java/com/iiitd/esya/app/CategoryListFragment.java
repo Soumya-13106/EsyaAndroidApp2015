@@ -54,6 +54,7 @@ public class CategoryListFragment extends Fragment{
                 for(Event e: events)
                 {
                     Event original = DataHolder.EVENTS.get(e.id);
+                    if (original == null || original.team_id == null) continue;
                     if (original.team_id.equals(e.team_id)) continue;
                     original.team_id = e.team_id;
                     dbHelper.updateEvent(original);

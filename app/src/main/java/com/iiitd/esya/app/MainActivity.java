@@ -35,6 +35,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
@@ -155,20 +157,24 @@ public class MainActivity extends AppCompatActivity {
                         mCurrentSelectedPosition = 0;
                         break;
                     case R.id.navigation_item_1:
-                        Snackbar.make(mContentFrame, "Profile", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mContentFrame, "Registered Events", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 1;
                         break;
                     case R.id.navigation_item_2:
-                        Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mContentFrame, "Profile", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 2;
                         break;
                     case R.id.navigation_item_3:
-                        Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 3;
                         break;
                     case R.id.navigation_item_4:
-                        Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 4;
+                        break;
+                    case R.id.navigation_item_5:
+                        Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                        mCurrentSelectedPosition = 5;
                         break;
                 }
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -213,26 +219,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private final int PROFILE_FRAGMENT_POSITION = 1;
+    private final int PROFILE_FRAGMENT_POSITION = 2;
 
     public boolean changeFragment (int position) {
         Fragment objFragment = null;
-        switch (position) {
+        switch (position)
+        {
             case 0:
-                objFragment = new CategoryListFragment();
-                break;
-            case PROFILE_FRAGMENT_POSITION:
-                objFragment = new ProfileFragment();
-                break;
+                objFragment = new CategoryListFragment(); break;
+            case 1:
+                objFragment = new RegisteredEventsFragment(); break;
             case 2:
-                objFragment = new AboutIIITDFragment();
-                break;
+                objFragment = new ProfileFragment(); break;
             case 3:
-                objFragment = new AboutEsyaFragment();
-                break;
+                objFragment = new AboutIIITDFragment(); break;
             case 4:
-                objFragment = new ContactUsFragment();
-                break;
+                objFragment = new AboutEsyaFragment(); break;
+            case 5:
+                objFragment = new ContactUsFragment(); break;
         }
         FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.nav_contentframe, objFragment);
@@ -271,15 +275,18 @@ public class MainActivity extends AppCompatActivity {
                 mTitle = getString(R.string.title_section1);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = "Registered Events";
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                mTitle = getString(R.string.title_section2);
                 break;
             case 4:
-                mTitle = getString(R.string.title_section4);
+                mTitle = getString(R.string.title_section3);
                 break;
             case 5:
+                mTitle = getString(R.string.title_section4);
+                break;
+            case 6:
                 mTitle = getString(R.string.title_section5);
                 break;
         }

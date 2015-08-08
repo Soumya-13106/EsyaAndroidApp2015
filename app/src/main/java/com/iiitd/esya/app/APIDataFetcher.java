@@ -94,7 +94,6 @@ public class APIDataFetcher {
         }
     }
 
-
     private static String fetchAllEventsJsonNetworkWorker(String api_token)
     {
         final String LOG_TAG = "FETCH_ALL_EVENTS_WRK";
@@ -106,7 +105,7 @@ public class APIDataFetcher {
             final String format = "json";
 
             Uri callableUri = Uri.parse(API_URL).buildUpon().appendPath(resource + "." + format).build();
-            eventsJsonResponse = getSimpleGetResponse(callableUri.toString());
+            eventsJsonResponse = getSimpleSignedResponse(callableUri.toString(), api_token);
 
         } catch (IOException e) {
             Log.e(LOG_TAG, e.toString());
@@ -129,7 +128,7 @@ public class APIDataFetcher {
                     appendPath(resource).
                     appendPath(Integer.toString(pk) + "." + format).
                     build();
-            eventJsonResponse = getSimpleGetResponse(callableUri.toString());
+            eventJsonResponse = getSimpleSignedResponse(callableUri.toString(), api_token);
 
         } catch (IOException e){
             Log.e(LOG_TAG, e.toString());
