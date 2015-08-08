@@ -39,16 +39,16 @@ public class RegisteredEventsFragment extends Fragment{
             }
         }
 
-//        final HashMap<String, Event> map = new HashMap<>();
+        final HashMap<String, Event> map = new HashMap<>();
 
         ListView listView = (ListView) rootView.findViewById(R.id.events_list);
-//
-//        final String[] names = new String[events.size()];
-//        for(int i = 0; i < events.size(); i++)
-//        {
-//            names[i] = events.get(i).name;
-//            map.put(events.get(i).name, events.get(i));
-//        }
+
+        final String[] names = new String[events.size()];
+        for(int i = 0; i < events.size(); i++)
+        {
+            names[i] = events.get(i).name;
+            map.put(events.get(i).name, events.get(i));
+        }
 
 //        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
 //                R.layout.list_item_registered_event, R.id.event_name, names);
