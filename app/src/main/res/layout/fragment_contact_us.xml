@@ -1,20 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:text="Contact Us"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp" />
 
     <com.google.android.gms.maps.MapView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_margin="16dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="8dp" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="8dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="0dp"
+        app:cardUseCompatPadding="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:padding="12dp"
+            android:gravity="center_vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp"
+                >
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_home_black_24dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:textColor="#555"
+                    android:text="Taruvar Aggarwal : +91 8826500500\nSanchit Aggarwal : +91 9015249868\nE-Mail : esya@iiitd.ac.in"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp"
+                >
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_phone_black_24dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="0dp"
+                    android:textColor="#555"
+                    android:text="IIIT Delhi, Okla Phase III (Near Govindpuri Metro Station), New Delhi - 110020"
+                    />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000"
+                android:layout_marginLeft="36dp"
+                android:layout_marginRight="36dp"
+                android:layout_marginBottom="8dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal|center_vertical"
+                android:padding="2dp"
+                >
+
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/facebook"
+                    android:background="@drawable/circle_back"
+                    android:layout_marginRight="8dp"
+                    android:padding="4dp"
+                    android:elevation="2dp"
+                    />
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/twitter"
+                    android:background="@drawable/circle_back"
+                    android:layout_marginRight="8dp"
+                    android:padding="6dp"
+                    android:elevation="2dp"
+                    />
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/ic_forward_black_24dp"
+                    android:background="@drawable/circle_back"
+                    android:layout_marginRight="8dp"
+                    android:padding="6dp"
+                    android:elevation="2dp"
+                    />
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/ic_forward_black_24dp"
+                    android:background="@drawable/circle_back"
+                    android:padding="6dp"
+                    android:elevation="2dp"
+                    />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
 </LinearLayout>
