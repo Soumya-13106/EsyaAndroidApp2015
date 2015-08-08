@@ -19,6 +19,8 @@ import java.util.HashMap;
  */
 public class RegisteredEventsFragment extends Fragment{
 
+    RegisteredEventCardListAdapter mEventsAdapter;
+
     public RegisteredEventsFragment() {
 
     }
@@ -37,26 +39,28 @@ public class RegisteredEventsFragment extends Fragment{
             }
         }
 
-        final HashMap<String, Event> map = new HashMap<>();
+//        final HashMap<String, Event> map = new HashMap<>();
 
         ListView listView = (ListView) rootView.findViewById(R.id.events_list);
+//
+//        final String[] names = new String[events.size()];
+//        for(int i = 0; i < events.size(); i++)
+//        {
+//            names[i] = events.get(i).name;
+//            map.put(events.get(i).name, events.get(i));
+//        }
 
-        final String[] names = new String[events.size()];
-        for(int i = 0; i < events.size(); i++)
-        {
-            names[i] = events.get(i).name;
-            map.put(events.get(i).name, events.get(i));
-        }
+//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
+//                R.layout.list_item_registered_event, R.id.event_name, names);
+//        listView.setAdapter(arrayAdapter);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.list_item_registered_event, R.id.event_name, names);
-        listView.setAdapter(arrayAdapter);
+        mEventsAdapter = new RegisteredEventCardListAdapter(getActivity(), events);
+        listView.setAdapter(mEventsAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Event event = map.get(names[i]);
-
                 Intent intent = new Intent(getActivity(), EventActivity.class).
                         putExtra(Intent.EXTRA_UID, event.id).
                         setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
