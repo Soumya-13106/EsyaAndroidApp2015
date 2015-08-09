@@ -36,6 +36,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
     private GoogleApiClient mGoogleApiClient;
     private boolean mIsResolving = false;
     private boolean mShouldResolve = false;
+    private View loading;
 
     @Override
     protected void onDestroy() {
@@ -47,11 +48,13 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
         super.onDestroy();
     }
 
-    public void onSignInClicked(View view) {
+    public void onSignInClicked(View view, View loading) {
         // User clicked the sign-in button, so begin the sign-in process and automatically
         // attempt to resolve any errors that occur.
         mShouldResolve = true;
+        this.loading = loading;
         mGoogleApiClient.connect();
+        loading.setVisibility(View.VISIBLE);
 
         // Show a message to the user that we are signing in.
         Snackbar.make(view, "Logging you in.", Snackbar.LENGTH_LONG).show();
@@ -91,6 +94,8 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                     @Override
                     protected void onPostExecute(Boolean loggedin) {
                         super.onPostExecute(loggedin);
+                        loading.setVisibility(View.GONE);
+
                         if(loggedin)
                         {
                             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
@@ -140,6 +145,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                     connectionResult.startResolutionForResult(this, RC_SIGN_IN);
                     mIsResolving = true;
                 } catch (IntentSender.SendIntentException e) {
+                    loading.setVisibility(View.GONE);
                     Log.e(TAG, "Could not resolve ConnectionResult.", e);
                     mIsResolving = false;
                     mGoogleApiClient.connect();

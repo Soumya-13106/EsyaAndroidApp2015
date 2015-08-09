@@ -44,6 +44,7 @@ public class CategoryListFragment extends Fragment{
             @Override
             protected Event[] doInBackground(Void... voids) {
                 if (DataHolder.initialised && DataHolder.EVENT_UPDATED_AFTER_LOGIN) return null;
+                Log.v("UpdateTeamID", "starting network call");
                 return super.doInBackground(voids);
             }
 

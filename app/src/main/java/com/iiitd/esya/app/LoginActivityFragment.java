@@ -18,10 +18,12 @@ public class LoginActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+        final View loading = view.findViewById(R.id.loadingPanel);
+        loading.setVisibility(View.GONE);
         ((SignInButton) view.findViewById(R.id.login_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((LoginActivity) getActivity()).onSignInClicked(view);
+                ((LoginActivity) getActivity()).onSignInClicked(view, loading);
             }
         });
         return view;
