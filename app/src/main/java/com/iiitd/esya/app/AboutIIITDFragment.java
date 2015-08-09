@@ -11,12 +11,15 @@ import android.view.ViewGroup;
  */
 public class AboutIIITDFragment extends Fragment{
 
-    public AboutIIITDFragment() {
+    private static View view;
 
+    public AboutIIITDFragment() {
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (view != null) return view;
         View rootView = inflater.inflate(R.layout.fragment_about_iiitd, container, false);
+        view = rootView;
         return rootView;
     }
 }
