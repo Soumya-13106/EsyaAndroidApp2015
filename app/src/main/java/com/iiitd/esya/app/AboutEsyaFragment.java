@@ -11,13 +11,17 @@ import android.view.ViewGroup;
  */
 public class AboutEsyaFragment extends Fragment {
 
+    private static View view;
+
     public AboutEsyaFragment() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (view != null) return view;
         View rootView = inflater.inflate(R.layout.fragment_about_esya, container, false);
+        view = rootView;
         return rootView;
     }
 

@@ -43,7 +43,7 @@ public class CategoryListFragment extends Fragment{
 
             @Override
             protected Event[] doInBackground(Void... voids) {
-                if (DataHolder.EVENT_UPDATED_AFTER_LOGIN) return null;
+                if (DataHolder.initialised && DataHolder.EVENT_UPDATED_AFTER_LOGIN) return null;
                 return super.doInBackground(voids);
             }
 
@@ -51,19 +51,22 @@ public class CategoryListFragment extends Fragment{
             protected void onPostExecute(Event[] events) {
                 super.onPostExecute(events);
                 if (events == null) return;
+                Log.v("UpdateTeamID", "Found " + events.length + " events");
                 for(Event e: events)
                 {
                     Event original = DataHolder.EVENTS.get(e.id);
                     if (original == null || original.team_id == null) continue;
                     if (original.team_id.equals(e.team_id)) continue;
+                    Log.v("UpdatingTeamID", "Found change in: " + original.toString() + ":" + e.team_id);
                     original.team_id = e.team_id;
+                    original.registered = true;
                     dbHelper.updateEvent(original);
                     Log.v(LOG_TAG, "Updated" + original.id + "");
                 }
                 DataHolder.EVENT_UPDATED_AFTER_LOGIN = true;
             }
         };
-        fetchAllEventsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        fetchAllEventsTask.execute();
     }
 
     @Override

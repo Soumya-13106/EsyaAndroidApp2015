@@ -14,6 +14,9 @@ public class LandingPage extends Fragment {
         // Required empty public constructor
     }
 
+    private static View view;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +26,9 @@ public class LandingPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_landing_page, container, false);
+        if(view != null) return view;
+
+        view = inflater.inflate(R.layout.fragment_landing_page, container, false);
+        return view;
     }
 }

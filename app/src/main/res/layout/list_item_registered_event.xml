@@ -27,7 +27,6 @@
             android:adjustViewBounds="true"
             android:id="@+id/event_card_image"
             android:layout_centerInParent="true"
-            android:src="@drawable/logo"
             />
 
     </RelativeLayout>
