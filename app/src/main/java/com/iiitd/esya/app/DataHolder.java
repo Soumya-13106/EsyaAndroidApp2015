@@ -21,6 +21,8 @@ public class DataHolder {
 
     public static boolean EVENT_UPDATED_AFTER_LOGIN = false;
 
+    public static String ONE_TIME_AUTH_TOKEN = null;
+
     public static int TOTAL_DOWNLOADED_IMAGE_SIZE = 0;
 
     public static final String ELIGIBILITY_RESPONSE = "eligibilty";
@@ -241,7 +243,7 @@ class InitialDataFetcher extends FetchAllEventsTask
                 }
                 if(first_time_app_launch_ever)
                 {
-                    imagesFetcherTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, event_image_urls);
+                    imagesFetcherTask.execute(event_image_urls);
                 }
             }
         };
@@ -250,7 +252,7 @@ class InitialDataFetcher extends FetchAllEventsTask
 
         if (!first_time_app_launch_ever)
         {
-            imagesFetcherTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, event_image_urls);
+            imagesFetcherTask.execute(event_image_urls);
         }
 
 

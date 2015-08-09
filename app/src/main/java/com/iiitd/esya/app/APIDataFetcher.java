@@ -329,7 +329,6 @@ abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
     @Override
     protected Bitmap[] doInBackground(String[]... strings_temp) {
         String[] strings = strings_temp[0];
-        Log.v(LOG_TAG, "Starting FetchImagesTask with args: " + Arrays.deepToString(strings));
 
         if(strings.length == 0) return null;
         Bitmap[] result = new Bitmap[strings.length];
@@ -364,14 +363,14 @@ abstract class FetchImagesTask extends AsyncTask<String[], Void, Bitmap[]>
                 else{
                     image = APIDataFetcher.getImageFromURL(url);
                     if (image != null) event.setCacheImage(image, name, context);
-                    Log.v(LOG_TAG, "fetched image for: " + event.name);
+                    Log.v(LOG_TAG, "fetched image from: " + url);
                 }
             }
             else
             {
                 image = APIDataFetcher.getImageFromURL(url);
             }
-            Log.v(LOG_TAG, "fetched image from: " + url);
+            Log.v(LOG_TAG, "fetched image for: " + event.name);
             result[i] = image;
         }
         return result;
@@ -402,7 +401,15 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
         String idToken;
 
         try {
-            idToken =  GoogleAuthUtil.getToken(activity, accountName, scopes);
+            if (DataHolder.ONE_TIME_AUTH_TOKEN != null)
+            {
+                idToken = DataHolder.ONE_TIME_AUTH_TOKEN;
+            }
+            else
+            {
+                idToken =  GoogleAuthUtil.getToken(activity, account, scopes);
+                DataHolder.ONE_TIME_AUTH_TOKEN = idToken;
+            }
             sharedPref.edit().putString(
                     activity.getString(R.string.login_user_id), idToken).apply();
 
@@ -482,7 +489,7 @@ class LoginPingTest extends AsyncTask<Void, Void, Boolean>
     protected Boolean doInBackground(Void... voids) {
         String resp = null;
         try {
-            Log.v("PingTest", "starting");
+//            Log.v("PingTest", "starting");
             URL url = new URL(API_URL);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -589,7 +596,7 @@ abstract class RegisterForEventIndividual extends AsyncTask<Void, Void, Boolean>
             String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
                     context.getString(R.string.api_auth_token), "Nope");
             String response = APIDataFetcher.getSimpleSignedResponse(url, token);
-            Log.v(TAG, response);
+//            Log.v(TAG, response);
 
             return (new JSONObject(response).getString("data").equals("Success"));
 
@@ -638,7 +645,7 @@ abstract class RegisterForEventTeam extends AsyncTask<Void, Void, String>
             Log.d(TAG, "UnsupportedEncodingException: " + team_name + " " + e.toString());
             return response;
         }
-        Log.v(TAG, "Connecting to "+ url);
+//        Log.v(TAG, "Connecting to "+ url);
 
         String token = PreferenceManager.getDefaultSharedPreferences(context).getString(
                 context.getString(R.string.api_auth_token), "Nope");
@@ -647,7 +654,7 @@ abstract class RegisterForEventTeam extends AsyncTask<Void, Void, String>
 
         try {
             response = APIDataFetcher.getSimpleSignedResponse(url, token);
-            if (response != null) Log.v(TAG, response.toString());
+//            if (response != null) Log.v(TAG, response.toString());
         } catch (IOException e) {
             Log.d(TAG, e.toString());
             return response;
@@ -715,14 +722,6 @@ class UpdateProfile extends AsyncTask<String, Void, Boolean>
                         return;
                     }
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-                    Log.v("ProfileAfterUpdate", "completed: " + pref.getBoolean(
-                            context.getString(R.string.pref_profile_complete), false));
-                    Log.v("ProfileAfterUpdate", "name: " + pref.getString(
-                            context.getString(R.string.profile_name), "DefaultName"));
-                    Log.v("ProfileAfterUpdate", "college: " + pref.getString(
-                            context.getString(R.string.profile_college), "DefaultCollege"));
-                    Log.v("ProfileAfterUpdate", "phone: " + pref.getString(
-                            context.getString(R.string.profile_phone), "DefaultPhone"));
                 }
             };
             loginPingTestAndUpdate.execute();

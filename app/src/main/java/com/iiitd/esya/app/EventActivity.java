@@ -127,7 +127,7 @@ public class EventActivity extends AppCompatActivity {
                                             activity, mEvent, input.getText().toString(), true) {
                                         @Override
                                         protected void onPostExecute(String team_code) {
-                                            Log.v("RegisterNewTeam", "Team code: " + team_code);
+//                                            Log.v("RegisterNewTeam", "Team code: " + team_code);
                                             if (team_code.equals("Failed")) {
                                                 Toast.makeText(activity, "Unable to register team",
                                                         Toast.LENGTH_LONG).show();
@@ -152,13 +152,13 @@ public class EventActivity extends AppCompatActivity {
                                                         })
                                                         .show();
                                                 DataHolder.CURRENT_EVENT_FRAGMENT.show_new = false;
-                                                Log.v("Bleh", event.name + event.event_date_time + "Registered");
+//                                                Log.v("Bleh", event.name + event.event_date_time + "Registered");
                                                 Event.updateEventInDB(event, event, activity);
                                                 fab.setRippleColor(Color.RED);
                                             }
                                         }
                                     };
-                                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    task.execute();
                                 }
                             });
                             ask.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -192,7 +192,7 @@ public class EventActivity extends AppCompatActivity {
 
                                         @Override
                                         protected void onPostExecute(String team_code) {
-                                            Log.v("RegisterJoinTeam", "Team code: " + team_code);
+//                                            Log.v("RegisterJoinTeam", "Team code: " + team_code);
                                             if (team_code.equals("Failed")) {
                                                 Toast.makeText(activity, "Unable to join team",
                                                         Toast.LENGTH_LONG).show();
@@ -222,7 +222,7 @@ public class EventActivity extends AppCompatActivity {
                                             }
                                         }
                                     };
-                                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    task.execute();
                                 }
                             });
                             ask.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -242,7 +242,7 @@ public class EventActivity extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Boolean success) {
                     super.onPostExecute(success);
-                    Log.v("RegisterIndividual", success + "");
+//                    Log.v("RegisterIndividual", success + "");
                     if (success) {
                         event.registered = true;
                         new AlertDialog.Builder(activity)
@@ -270,11 +270,11 @@ public class EventActivity extends AppCompatActivity {
                     }
                 }
             };
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            task.execute();
         }
     }
     public void addEvent(String title, String location, Date begin, Date end) {
-        Log.v("Bleh", title + location + begin.getTime() + "Registered");
+//        Log.v("Bleh", title + location + begin.getTime() + "Registered");
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.Events.TITLE, title)

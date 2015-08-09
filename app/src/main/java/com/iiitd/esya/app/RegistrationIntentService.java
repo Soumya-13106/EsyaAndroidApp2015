@@ -72,6 +72,6 @@ public class RegistrationIntentService extends IntentService {
         } catch (IOException e){
             Log.d(TAG, "Could not send token to server: " + e.toString());
         }
-        Log.d(TAG, "Sent token " + token + " to server");
+        Log.v(TAG, "Sent token " + token + " to server");
     }
 }

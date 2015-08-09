@@ -68,7 +68,7 @@ public class EventActivityFragment extends Fragment {
 
         if (pagerSlidingTabStrip!= null)
         {
-            Log.v("Setting Color to", getContrastColor(mProminentColor) + "");
+//            Log.v("Setting Color to", getContrastColor(mProminentColor) + "");
             pagerSlidingTabStrip.setTextColor(getContrastColor(mProminentColor));
         }
 
@@ -180,7 +180,7 @@ public class EventActivityFragment extends Fragment {
                 image.getHeight() - 50, image.getWidth(), 50);
         mProminentColor = Bitmap.createScaledBitmap(lower_end, 1, 1, true).getPixel(0, 0);
 
-        Log.w("Color", mProminentColor + "");
+//        Log.w("Color", mProminentColor + "");
 
         mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());

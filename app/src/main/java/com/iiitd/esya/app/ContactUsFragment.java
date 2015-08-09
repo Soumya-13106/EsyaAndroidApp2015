@@ -43,12 +43,12 @@ public class ContactUsFragment extends Fragment{
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
-        Log.v("LOG","Entered onCreateView");
+//        Log.v("LOG","Entered onCreateView");
         mMapView.onResume();
-        Log.v("LOG", "onResume Called");
+//        Log.v("LOG", "onResume Called");
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
-            Log.v("LOG","MapsInitialized");
+//            Log.v("LOG","MapsInitialized");
         } catch (Exception e) {
             e.printStackTrace();
         }

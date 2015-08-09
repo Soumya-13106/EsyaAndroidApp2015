@@ -64,6 +64,19 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult:" + requestCode + ":" + resultCode + ":" + data);
         super.onActivityResult(requestCode, resultCode, data);
+        int AUTH_CODE_REQUEST_CODE = 23619;
+
+        if(requestCode == AUTH_CODE_REQUEST_CODE && resultCode == RESULT_OK)
+        {
+            Bundle extra = data.getExtras();
+            if (extra.containsKey("authtoken"))
+            {
+                String oneTimeToken = extra.getString("authtoken");
+                DataHolder.ONE_TIME_AUTH_TOKEN = oneTimeToken;
+                Log.v("AUTH_TOKEN", "Setting one time token.");
+            }
+        }
+
 
         if (requestCode == RC_SIGN_IN) {
             // If the error resolution was not successful we should not resolve further.
@@ -89,12 +102,20 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                if (DataHolder.ONE_TIME_AUTH_TOKEN == null)
+                {
+                    Toast.makeText(context, "Please try again", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 LoginPingTest loginPingTest = new LoginPingTest(context){
                     @Override
                     protected void onPostExecute(Boolean loggedin) {
                         super.onPostExecute(loggedin);
-                        loading.setVisibility(View.GONE);
+                        if (loading != null)
+                        {
+                            loading.setVisibility(View.GONE);
+                        }
 
                         if(loggedin)
                         {
@@ -154,6 +175,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                 // Could not resolve the connection result, show the user an
                 // error dialog.
                 Toast.makeText(this, "Connection error.", Toast.LENGTH_SHORT).show();
+                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
             }
         } else {
             // Show the signed-out UI

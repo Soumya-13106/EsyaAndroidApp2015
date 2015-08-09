@@ -52,7 +52,7 @@ public class Event {
         try {
             return serverFormat.parse(date);
         } catch (ParseException e) {
-            Log.v("Date parsed", e.toString());
+//            Log.v("Date parsed", e.toString());
             return new Date();
         }
     }
@@ -113,7 +113,7 @@ public class Event {
             bmp.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
             fileOutputStream.flush();
             fileOutputStream.close();
-            Log.v("saveImage", "Saved image of " + this.name + ": " + uri);
+//            Log.v("saveImage", "Saved image of " + this.name + ": " + uri);
         } catch (IOException e)
         {
             Log.e("saveImage", "Error writing while saving image of " + this.name + ": " + e.toString());

@@ -53,7 +53,7 @@ public class CategoryListFragment extends Fragment{
                 super.onPostExecute(events);
                 boolean should_flag = true;
                 if (events == null) return;
-                Log.v("UpdateTeamID", "Found " + events.length + " events");
+//                Log.v("UpdateTeamID", "Found " + events.length + " events");
                 for(Event e: events)
                 {
                     if (!DataHolder.EVENTS.containsKey(e.id))
@@ -72,7 +72,7 @@ public class CategoryListFragment extends Fragment{
                     original.team_id = e.team_id;
                     original.registered = true;
                     dbHelper.updateEvent(original);
-                    Log.v(LOG_TAG, "Updated" + original.id + "");
+//                    Log.v(LOG_TAG, "Updated" + original.id + "");
                 }
                 if(should_flag)DataHolder.EVENT_UPDATED_AFTER_LOGIN = true;
             }
