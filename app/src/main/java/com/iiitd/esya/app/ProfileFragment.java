@@ -87,6 +87,13 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(activity, "Logged out", Toast.LENGTH_SHORT).show();
 
                 DBHelper.deleteDatabase(activity);
+                if (DataHolder.EVENTS.values() != null) {
+
+                    for (Event e : DataHolder.EVENTS.values()) {
+                        e.registered = false;
+                        e.team_id = DataHolder.TEAM_ID_DEFAULT;
+                    }
+                }
 
                 startActivity(new Intent(activity, LoginActivity.class));
                 activity.finish();
