@@ -40,7 +40,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/skipButton"
-        android:text="Skip"/>
+        android:text="Login as guest"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_below="@+id/login_button"
+        android:layout_alignLeft="@+id/login_button"
+        android:layout_alignRight="@+id/login_button"
+        android:layout_marginTop="30dp"
+        android:textStyle="bold|normal"
+        android:alpha="1" />
 
     <RelativeLayout
         android:id="@+id/loadingPanel"

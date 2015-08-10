@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         return mGoogleApiClient;
     }
 
-
     @Override
     protected void onDestroy() {
         if (mGoogleApiClient !=null && mGoogleApiClient.isConnected())
@@ -105,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         mGoogleApiClient.connect();
     }
 
+    private boolean checkLoggedIn()
+    {
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_logged_in), false);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,55 +150,71 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mContentFrame = (FrameLayout) findViewById(R.id.nav_contentframe);
 
+        if (!checkLoggedIn())
+        {
+            mNavigationView.inflateMenu(R.menu.drawer_logged_out);
+        }
+        else
+        {
+            mNavigationView.inflateMenu(R.menu.drawer);
+        }
+
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
-                boolean logged_in = PreferenceManager.getDefaultSharedPreferences(
-                        getApplicationContext()).getBoolean(getString(R.string.pref_logged_in), false);
-                switch (menuItem.getItemId()) {
-                    case R.id.navigation_item_0:
-                        Snackbar.make(mContentFrame, "Events", Snackbar.LENGTH_SHORT).show();
-                        mCurrentSelectedPosition = 0;
-                        break;
-                    case R.id.navigation_item_1:
-                        if(!logged_in)
-                        {
-                            Toast.makeText(getApplicationContext(), "Please login first", Toast.LENGTH_LONG).show();
-                            DataHolder.FORCE_LOGIN_FRAGMENT_TO_SHOW = true;
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                            finish();
-                            return false;
-                        }
-                        Snackbar.make(mContentFrame, "Registered Events", Snackbar.LENGTH_SHORT).show();
-                        mCurrentSelectedPosition = 1;
-                        break;
-                    case R.id.navigation_item_2:
-                        if (!logged_in)
-                        {
-                            Toast.makeText(getApplicationContext(), "Please login first", Toast.LENGTH_LONG).show();
-                            DataHolder.FORCE_LOGIN_FRAGMENT_TO_SHOW = true;
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                            finish();
-                            return false;
-                        }
-                        Snackbar.make(mContentFrame, "Profile", Snackbar.LENGTH_SHORT).show();
-                        mCurrentSelectedPosition = 2;
-                        break;
-                    case R.id.navigation_item_3:
-                        Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
-                        mCurrentSelectedPosition = 3;
-                        break;
-                    case R.id.navigation_item_4:
-                        Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
-                        mCurrentSelectedPosition = 4;
-                        break;
-                    case R.id.navigation_item_5:
-                        Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
-                        mCurrentSelectedPosition = 5;
-                        break;
+                if(checkLoggedIn())
+                {
+                    switch (menuItem.getItemId()) {
+                        case R.id.navigation_item_0:
+                            Snackbar.make(mContentFrame, "Events", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 0;
+                            break;
+                        case R.id.navigation_item_1:
+                            Snackbar.make(mContentFrame, "Registered Events", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 1;
+                            break;
+                        case R.id.navigation_item_2:
+                            Snackbar.make(mContentFrame, "Profile", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 2;
+                            break;
+                        case R.id.navigation_item_3:
+                            Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 3;
+                            break;
+                        case R.id.navigation_item_4:
+                            Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 4;
+                            break;
+                        case R.id.navigation_item_5:
+                            Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 5;
+                            break;
+                    }
                 }
+                else
+                {
+                    switch (menuItem.getItemId()) {
+                        case R.id.navigation_item_0:
+                            Snackbar.make(mContentFrame, "Events", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 0;
+                            break;
+                        case R.id.navigation_item_3:
+                            Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 1;
+                            break;
+                        case R.id.navigation_item_4:
+                            Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 2;
+                            break;
+                        case R.id.navigation_item_5:
+                            Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 3;
+                            break;
+                    }
+                }
+
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 return changeFragment(mCurrentSelectedPosition);
             }
@@ -241,20 +261,37 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean changeFragment (int position) {
         Fragment objFragment = null;
-        switch (position)
+        if(checkLoggedIn())
         {
-            case 0:
-                objFragment = new CategoryListFragment(); break;
-            case 1:
-                objFragment = new RegisteredEventsFragment(); break;
-            case 2:
-                objFragment = new ProfileFragment(); break;
-            case 3:
-                objFragment = new AboutIIITDFragment(); break;
-            case 4:
-                objFragment = new AboutEsyaFragment(); break;
-            case 5:
-                objFragment = new ContactUsFragment(); break;
+            switch (position)
+            {
+                case 0:
+                    objFragment = new CategoryListFragment(); break;
+                case 1:
+                    objFragment = new RegisteredEventsFragment(); break;
+                case 2:
+                    objFragment = new ProfileFragment(); break;
+                case 3:
+                    objFragment = new AboutIIITDFragment(); break;
+                case 4:
+                    objFragment = new AboutEsyaFragment(); break;
+                case 5:
+                    objFragment = new ContactUsFragment(); break;
+            }
+        }
+        else
+        {
+            switch (position)
+            {
+                case 0:
+                    objFragment = new CategoryListFragment(); break;
+                case 1:
+                    objFragment = new AboutIIITDFragment(); break;
+                case 2:
+                    objFragment = new AboutEsyaFragment(); break;
+                case 3:
+                    objFragment = new ContactUsFragment(); break;
+            }
         }
         FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.nav_contentframe, objFragment);
@@ -288,25 +325,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = "Registered Events";
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 4:
-                mTitle = getString(R.string.title_section3);
-                break;
-            case 5:
-                mTitle = getString(R.string.title_section4);
-                break;
-            case 6:
-                mTitle = getString(R.string.title_section5);
-                break;
+        if (checkLoggedIn())
+        {
+            switch (number) {
+                case 1:
+                    mTitle = getString(R.string.title_section1);
+                    break;
+                case 2:
+                    mTitle = "Registered Events";
+                    break;
+                case 3:
+                    mTitle = getString(R.string.title_section2);
+                    break;
+                case 4:
+                    mTitle = getString(R.string.title_section3);
+                    break;
+                case 5:
+                    mTitle = getString(R.string.title_section4);
+                    break;
+                case 6:
+                    mTitle = getString(R.string.title_section5);
+                    break;
+            }
+        }
+        else {
+            switch (number) {
+                case 1:
+                    mTitle = getString(R.string.title_section1);
+                    break;
+                case 2:
+                    mTitle = getString(R.string.title_section3);
+                    break;
+                case 3:
+                    mTitle = getString(R.string.title_section4);
+                    break;
+                case 4:
+                    mTitle = getString(R.string.title_section5);
+                    break;
+
+            }
         }
     }
 
