@@ -5,37 +5,38 @@
     android:orientation="vertical"
     android:layout_centerHorizontal="true"
     android:padding="8dp"
-    android:gravity="top|center_vertical|center_horizontal">
+    android:gravity="top|center_vertical|center_horizontal"
+    android:weightSum="1">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="388dp"
+        android:layout_height="110dp"
+        android:adjustViewBounds="true"
         android:id="@+id/displayPicLogo"
+        android:padding="4dp"
         android:src="@drawable/esyalogopng"
-        android:layout_weight="1"
         android:layout_below="@+id/displayPic"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
-        android:layout_gravity="center" />
+        />
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="334dp"
+        android:layout_height="277dp"
+        android:adjustViewBounds="true"
         android:id="@+id/displayPic"
         android:src="@drawable/image2"
         android:layout_gravity="center"
-        android:layout_weight="3"
-        android:adjustViewBounds="true"
-        />
+        android:layout_margin="15dp"
+        android:layout_weight="0.12" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#555"
         android:textSize="@dimen/abc_text_size_subhead_material"
         android:text="The two-day long festival aims to bring together the best from all over the country, as we go nationwide this year, and accord a prodigious platform to compete, perform and collaborate on (mind-blowing) ideas."
-        android:id="@+id/about_iiit"
+        android:id="@+id/about_esya"
         android:layout_gravity="center_horizontal"
+        android:textStyle="normal"
+        android:textColor="#555"
         android:layout_marginBottom="32dp"
         android:gravity="center_horizontal" />
 

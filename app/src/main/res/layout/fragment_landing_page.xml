@@ -66,6 +66,7 @@
                 android:id="@+id/imageViewMicromax"
                 android:layout_gravity="right"
                 android:layout_margin="4dp" />
+
         </LinearLayout>
         <TextView
             android:text="present"
