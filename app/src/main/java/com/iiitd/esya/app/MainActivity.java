@@ -109,18 +109,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         DataHolder.init(this);
 
         attachToGoogleLoginApiClient();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean logged_in = prefs.getBoolean(getString(R.string.pref_logged_in), false);
-        if (!logged_in){
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        }
 
+//        if (!logged_in){
+//            startActivity(new Intent(this, LoginActivity.class));
+//            finish();
+//        }
 
         LoginPingTest test = new LoginPingTest(this);
         test.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

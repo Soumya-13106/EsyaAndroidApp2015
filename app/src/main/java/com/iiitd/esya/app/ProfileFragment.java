@@ -33,9 +33,9 @@ public class ProfileFragment extends Fragment {
         Button button = (Button)view.findViewById(R.id.profile_submit);
 
         final Context context = getActivity();
-
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        ((EditText)view.findViewById(R.id.profile_name)).
+
+        ((EditText) view.findViewById(R.id.profile_name)).
                 setText(pref.getString(context.getString(R.string.profile_name), "Name"));
         ((EditText)view.findViewById(R.id.profile_college)).
                 setText(pref.getString(context.getString(R.string.profile_college), "College"));

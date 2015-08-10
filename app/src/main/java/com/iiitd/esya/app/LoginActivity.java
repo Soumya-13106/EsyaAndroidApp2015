@@ -60,6 +60,12 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
         Snackbar.make(view, "Logging you in.", Snackbar.LENGTH_LONG).show();
     }
 
+    public void onSkipButtonClicked(View view) {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+        Snackbar.make(view, "Entering Activity", Snackbar.LENGTH_LONG).show();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult:" + requestCode + ":" + resultCode + ":" + data);

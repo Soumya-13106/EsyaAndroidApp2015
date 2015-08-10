@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -91,6 +92,14 @@ public class EventActivity extends AppCompatActivity {
         boolean completed_profile = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
                 getString(R.string.pref_profile_complete), false);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean logged_in = prefs.getBoolean(getString(R.string.pref_logged_in), false);
+        if (!logged_in){
+            Toast.makeText(this, "Please login first", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
         if (!completed_profile) {
             Toast.makeText(this, "Please update your profile before registering",
                     Toast.LENGTH_LONG).show();
