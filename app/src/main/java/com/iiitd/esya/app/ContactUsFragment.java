@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -97,5 +98,43 @@ public class ContactUsFragment extends Fragment{
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    private void startIntent(String url)
+    {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+        ((ImageView)view.findViewById(R.id.click_facebook)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIntent("https://www.facebook.com/EsyaIIITD");
+            }
+        });
+        ((ImageView)view.findViewById(R.id.click_blogger)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIntent("http://esya.iiitd.edu.in/blog/");
+            }
+        });
+        ((ImageView)view.findViewById(R.id.click_instagram)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIntent("https://instagram.com/esya_iiitd");
+            }
+        });
+        ((ImageView)view.findViewById(R.id.click_twitter)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIntent("https://twitter.com/EsyaIIITD");
+            }
+        });
     }
 }
