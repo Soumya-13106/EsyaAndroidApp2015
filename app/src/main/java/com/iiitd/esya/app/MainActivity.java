@@ -293,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
                     objFragment = new ContactUsFragment(); break;
             }
         }
+        getSupportFragmentManager().popBackStack();
         FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.nav_contentframe, objFragment);
         fragmentTransaction.commit();
