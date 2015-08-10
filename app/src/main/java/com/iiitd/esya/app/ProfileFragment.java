@@ -82,6 +82,7 @@ public class ProfileFragment extends Fragment {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity);
                 sharedPref.edit().putBoolean(getString(R.string.pref_logged_in), false).commit();
                 sharedPref.edit().putBoolean(getString(R.string.pref_login_skipped), false).commit();
+                sharedPref.edit().putString(getString(R.string.api_auth_token), "Nope").commit();
                 DataHolder.EVENT_UPDATED_AFTER_LOGIN = 0;
 
                 Toast.makeText(activity, "Logged out", Toast.LENGTH_SHORT).show();
