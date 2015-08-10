@@ -61,6 +61,7 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
     }
 
     public void onSkipButtonClicked(View view) {
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(getString(R.string.pref_login_skipped), true).commit();
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
         Snackbar.make(view, "Entering Activity", Snackbar.LENGTH_LONG).show();
@@ -127,6 +128,8 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                         {
                             PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                                     .edit().putBoolean(getString(R.string.pref_logged_in), true).commit();
+                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).
+                                    edit().putBoolean(getString(R.string.pref_login_skipped), false).commit();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class).
                                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
                             finish();
@@ -192,12 +195,18 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-                getString(R.string.pref_logged_in), false
-        )){
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+        if(!DataHolder.FORCE_LOGIN_FRAGMENT_TO_SHOW) {
+
+            if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+                    getString(R.string.pref_logged_in), false
+            ) || (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+                    getString(R.string.pref_login_skipped), false
+            ))) {
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            }
         }
+        DataHolder.FORCE_LOGIN_FRAGMENT_TO_SHOW = false;
 
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)

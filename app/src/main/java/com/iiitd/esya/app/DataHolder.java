@@ -19,7 +19,7 @@ public class DataHolder {
     private static final String LOG_TAG = DataHolder.class.getSimpleName();
     public static final boolean COMPRESS_IMAGES_BEFORE_SAVING = true;
 
-    public static boolean EVENT_UPDATED_AFTER_LOGIN = false;
+    public static int EVENT_UPDATED_AFTER_LOGIN = 0;
 
     public static String ONE_TIME_AUTH_TOKEN = null;
 
@@ -57,6 +57,8 @@ public class DataHolder {
     public static final String TEAM_ID_DEFAULT = "0";
     public static final Date UPDATED_AT_DEFAULT = new Date();
     public static final Date EVENT_DATE_TIME_DEFAULT = new Date();
+
+    public static boolean FORCE_LOGIN_FRAGMENT_TO_SHOW = false;
 
     public static EventActivityFragment CURRENT_EVENT_FRAGMENT = null;
 

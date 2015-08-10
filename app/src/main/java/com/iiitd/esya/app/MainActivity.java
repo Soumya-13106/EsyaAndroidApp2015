@@ -115,11 +115,12 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean logged_in = prefs.getBoolean(getString(R.string.pref_logged_in), false);
+        boolean login_skipped = prefs.getBoolean(getString(R.string.pref_login_skipped), false);
 
-//        if (!logged_in){
-//            startActivity(new Intent(this, LoginActivity.class));
-//            finish();
-//        }
+        if (!logged_in && !login_skipped){
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
 
         LoginPingTest test = new LoginPingTest(this);
         test.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -150,16 +151,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
+                boolean logged_in = PreferenceManager.getDefaultSharedPreferences(
+                        getApplicationContext()).getBoolean(getString(R.string.pref_logged_in), false);
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_item_0:
                         Snackbar.make(mContentFrame, "Events", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 0;
                         break;
                     case R.id.navigation_item_1:
+                        if(!logged_in)
+                        {
+                            Toast.makeText(getApplicationContext(), "Please login first", Toast.LENGTH_LONG).show();
+                            DataHolder.FORCE_LOGIN_FRAGMENT_TO_SHOW = true;
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            finish();
+                            return false;
+                        }
                         Snackbar.make(mContentFrame, "Registered Events", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 1;
                         break;
                     case R.id.navigation_item_2:
+                        if (!logged_in)
+                        {
+                            Toast.makeText(getApplicationContext(), "Please login first", Toast.LENGTH_LONG).show();
+                            DataHolder.FORCE_LOGIN_FRAGMENT_TO_SHOW = true;
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            finish();
+                            return false;
+                        }
                         Snackbar.make(mContentFrame, "Profile", Snackbar.LENGTH_SHORT).show();
                         mCurrentSelectedPosition = 2;
                         break;

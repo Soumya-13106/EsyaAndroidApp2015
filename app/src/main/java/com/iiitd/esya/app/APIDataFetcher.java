@@ -396,6 +396,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+        sharedPref.edit().putString("email", accountName).commit();
         Account account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
         String scopes = "oauth2:" + Scopes.PLUS_ME + " " + Scopes.PLUS_LOGIN + " " + Scopes.PROFILE + " https://www.googleapis.com/auth/plus.profile.emails.read";
         String idToken;
@@ -412,6 +413,7 @@ abstract class GetAndSendIdTokenTask extends AsyncTask<Void, Void, Void> {
             }
             sharedPref.edit().putString(
                     activity.getString(R.string.login_user_id), idToken).apply();
+            DataHolder.EVENT_UPDATED_AFTER_LOGIN = 0;
 
         } catch(UserRecoverableAuthException e){
             activity.startActivityForResult(e.getIntent(), AUTH_CODE_REQUEST_CODE);
@@ -721,7 +723,6 @@ class UpdateProfile extends AsyncTask<String, Void, Boolean>
                         Log.d("ProfileAfterUpdate: ", "Not done:" + aBoolean);
                         return;
                     }
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
                 }
             };
             loginPingTestAndUpdate.execute();

@@ -96,6 +96,7 @@ public class EventActivity extends AppCompatActivity {
         boolean logged_in = prefs.getBoolean(getString(R.string.pref_logged_in), false);
         if (!logged_in){
             Toast.makeText(this, "Please login first", Toast.LENGTH_LONG).show();
+            DataHolder.FORCE_LOGIN_FRAGMENT_TO_SHOW = true;
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;

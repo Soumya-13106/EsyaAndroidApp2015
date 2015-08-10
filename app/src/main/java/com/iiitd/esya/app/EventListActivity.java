@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class EventListActivity extends AppCompatActivity {
@@ -20,6 +21,8 @@ public class EventListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_event_list);
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -79,4 +82,5 @@ public class EventListActivity extends AppCompatActivity {
             mToolbar.setTitle("Events");
         }
     }
+    
 }
