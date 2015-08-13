@@ -44,7 +44,7 @@ public class RegistrationIntentService extends IntentService {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             sharedPref.edit().putString(getString(R.string.pref_GCM_token), token).apply();
 
-            sendGCMTokenToServer(token);
+            if (!DataHolder.GCM_SENT) sendGCMTokenToServer(token);
 
         } catch (Exception e){
             Log.d(TAG, "Failed to complete token refresh", e);
@@ -61,7 +61,7 @@ public class RegistrationIntentService extends IntentService {
         {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(API_URL);
-            httppost.addHeader("Cookie",  "_esya2015_backend_session=" + api_token);
+            httppost.addHeader("Cookie", "_esya2015_backend_session=" + api_token);
 
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 
@@ -69,6 +69,7 @@ public class RegistrationIntentService extends IntentService {
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
             HttpResponse response = httpclient.execute(httppost);
 
+            DataHolder.GCM_SENT = true;
         } catch (IOException e){
             Log.d(TAG, "Could not send token to server: " + e.toString());
         }

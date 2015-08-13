@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -56,6 +57,21 @@ public class MainActivity extends AppCompatActivity {
         return mGoogleApiClient;
     }
 
+    public void start_GCM_service()
+    {
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(getApplicationContext(),
+                    RegistrationIntentService.class);
+            startService(intent);
+        } else {
+            Log.d(TAG, "Playservices not available.");
+            Toast.makeText(getApplicationContext(),
+                    "Could not register with services", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     @Override
     protected void onDestroy() {
         if (mGoogleApiClient !=null && mGoogleApiClient.isConnected())
@@ -77,16 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(Bundle bundle) {
-                        if (checkPlayServices()) {
-                            // Start IntentService to register this application with GCM.
-                            Intent intent = new Intent(getApplicationContext(),
-                                    RegistrationIntentService.class);
-                            startService(intent);
-                        } else {
-                            Log.d(TAG, "Playservices not available.");
-                            Toast.makeText(getApplicationContext(),
-                                    "Could not register with services", Toast.LENGTH_SHORT).show();
-                        }
+                        if (!DataHolder.GCM_SENT) start_GCM_service();
                     }
 
                     @Override
@@ -125,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
+
+        if(!DataHolder.GCM_SENT) start_GCM_service();
 
         LoginPingTest test = new LoginPingTest(this);
         test.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -293,8 +302,12 @@ public class MainActivity extends AppCompatActivity {
                     objFragment = new ContactUsFragment(); break;
             }
         }
-        getSupportFragmentManager().popBackStack();
-        FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
+        FragmentManager fm = getSupportFragmentManager();
+        for(int i = 0; i < fm.getBackStackEntryCount(); i++)
+        {
+            fm.popBackStack();
+        }
+        FragmentTransaction fragmentTransaction= fm.beginTransaction();
         fragmentTransaction.replace(R.id.nav_contentframe, objFragment);
         fragmentTransaction.commit();
         return true;

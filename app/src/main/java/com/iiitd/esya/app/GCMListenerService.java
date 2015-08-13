@@ -1,5 +1,6 @@
 package com.iiitd.esya.app;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -44,18 +45,21 @@ public class GCMListenerService extends GcmListenerService {
                 PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.androidicon)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+        Notification.Builder notificationBuilder = new Notification.Builder(this).
+                setSmallIcon(R.drawable.androidicon).
+                setContentText(message).
+                setContentTitle(title).
+                setAutoCancel(true).
+                setSound(defaultSoundUri).
+                setContentIntent(pendingIntent);
+
+        Notification notification = new Notification.BigTextStyle(notificationBuilder).
+                                        bigText(message).build();
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, notificationBuilder.build());
+        notificationManager.notify(0, notification);
 
     }
 }

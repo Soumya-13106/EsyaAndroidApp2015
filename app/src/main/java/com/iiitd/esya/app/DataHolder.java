@@ -25,6 +25,8 @@ public class DataHolder {
 
     public static int TOTAL_DOWNLOADED_IMAGE_SIZE = 0;
 
+    public static boolean GCM_SENT = false;
+
     public static final String ELIGIBILITY_RESPONSE = "eligibilty";
     public static final String JUDGING_RESPONSE =  "judging";
     public static final String PRIZES_RESPONSE =  "prizes";

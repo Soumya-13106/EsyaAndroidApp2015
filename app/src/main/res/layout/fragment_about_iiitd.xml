@@ -36,7 +36,7 @@
         android:layout_gravity="center_horizontal"
         android:textStyle="normal"
         android:textColor="#555"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center_horizontal" />
 
 </LinearLayout>
