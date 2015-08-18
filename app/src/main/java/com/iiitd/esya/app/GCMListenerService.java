@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -53,8 +54,17 @@ public class GCMListenerService extends GcmListenerService {
                 setSound(defaultSoundUri).
                 setContentIntent(pendingIntent);
 
-        Notification notification = new Notification.BigTextStyle(notificationBuilder).
-                                        bigText(message).build();
+
+        Notification notification = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        {
+            notification = new Notification.BigTextStyle(notificationBuilder).
+                    bigText(message).build();
+        }
+        else
+        {
+            notification = notificationBuilder.build();
+        }
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
