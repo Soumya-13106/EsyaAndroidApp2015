@@ -184,7 +184,10 @@ public class LoginActivity extends FragmentActivity implements GoogleApiClient.O
                 // Could not resolve the connection result, show the user an
                 // error dialog.
                 Toast.makeText(this, "Connection error.", Toast.LENGTH_SHORT).show();
-                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+                {
+                    Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+                }
             }
         } else {
             // Show the signed-out UI

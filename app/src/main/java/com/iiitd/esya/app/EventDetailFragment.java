@@ -131,6 +131,11 @@ class TestRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void updateDescription(String details_)
     {
         this.details = details_;
+        if (this.details == null || this.details.trim().isEmpty())
+        {
+            detailsTextView.setText("");
+            return;
+        }
         detailsTextView.setText(trimTrailingWhitespace(Html.fromHtml(details, null, new Html.TagHandler() {
             boolean first= true;
             String parent=null;
