@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -28,6 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,6 +41,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -258,6 +266,21 @@ public class APIDataFetcher {
             Log.e(LOG_TAG, e.toString());
         }
         return null;
+    }
+
+    public static String get_last_modified_header(String url_)
+    {
+        try
+        {
+            URL url = new URL(url_);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("HEAD");
+            return urlConnection.getHeaderField("Last-Modified");
+        } catch (IOException e)
+        {
+            Log.d("LMHeader", url_ + e.toString());
+            return null;
+        }
     }
 }
 
@@ -734,5 +757,167 @@ class UpdateProfile extends AsyncTask<String, Void, Boolean>
             Log.d("UpdateProfile", "JSON Exception: " + e.toString());
         }
         return false;
+    }
+}
+
+class FetchScheduleImagesTask extends AsyncTask<Void, Void, Bitmap[]>
+{
+    private final String OLDEST_LAST_MODIFIED = "Wed, 09 Apr 2008 23:55:38 GMT";
+    private final String NEWEST_LAST_MODIFIED = "Sat, 05 Sep 2015 23:55:38 GMT";
+    private final SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+    private final String day1_file_name = "schedule__day1.png";
+    private final String day2_file_name = "schedule__day2.png";
+
+
+
+    protected Context context;
+    public FetchScheduleImagesTask(Context context)
+    {
+        this.context = context;
+    }
+
+    private String LOG_TAG = FetchScheduleImagesTask.class.getSimpleName();
+
+    @Override
+    protected Bitmap[] doInBackground(Void... voids) {
+        String day1_url = context.getString(R.string.URL_schedule_image_base) + "Day1.png";
+        String day2_url = context.getString(R.string.URL_schedule_image_base) + "Day2.png";
+
+        boolean download1 = false;
+        boolean download2 = false;
+
+        // first see if images are in cache
+        boolean day1_old_present = Arrays.asList(context.fileList()).contains(day1_file_name);
+        boolean day2_old_present = Arrays.asList(context.fileList()).contains(day2_file_name);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String known_last_modified_1 = prefs.getString("schedule__1__last_modified", OLDEST_LAST_MODIFIED);
+        String known_last_modified_2 = prefs.getString("schedule__2__last_modified", OLDEST_LAST_MODIFIED);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // for the images that are present, send a head request to find when they were changed.
+        Log.v(LOG_TAG, "1 already present: " + day1_old_present);
+        if (day1_old_present)
+        {
+            String new_last_modified = APIDataFetcher.get_last_modified_header(day1_url);
+            Log.v(LOG_TAG, "new_last_modified_1" + new_last_modified);
+            if (new_last_modified == null) new_last_modified = NEWEST_LAST_MODIFIED;
+            Log.v(LOG_TAG, "new_last_modified_1" + new_last_modified);
+            try {
+                if (format.parse(new_last_modified).after(format.parse(known_last_modified_1))
+                        && !format.parse(new_last_modified).equals(format.parse(known_last_modified_1)))
+                {
+                    known_last_modified_1 = new_last_modified;
+                    download1 = true;
+                }
+            } catch (ParseException e) {
+                Log.i(LOG_TAG, e.toString());
+                download1 = true;
+            }
+        }
+        else
+        {
+            download1 = true;
+        }
+        Log.v(LOG_TAG, "1 should download" + download1);
+
+        Log.v(LOG_TAG, "2 already present" + day2_old_present);
+        if (day2_old_present)
+        {
+            String new_last_modified = APIDataFetcher.get_last_modified_header(day2_url);
+            Log.v(LOG_TAG, "new_last_modified_2" + new_last_modified);
+            if (new_last_modified == null) new_last_modified = NEWEST_LAST_MODIFIED;
+            Log.v(LOG_TAG, "new_last_modified_2" + new_last_modified);
+
+            try {
+                if (format.parse(new_last_modified).after(format.parse(known_last_modified_2))
+                        && !format.parse(new_last_modified).equals(format.parse(known_last_modified_1)))
+                {
+                    known_last_modified_2 = new_last_modified;
+                    download2 = true;
+                }
+            } catch (ParseException e) {
+                Log.i(LOG_TAG, e.toString());
+                download2 = true;
+            }
+        }
+        else
+        {
+            download2 = true;
+        }
+        Log.v(LOG_TAG, "2 should download" + download2);
+
+        Bitmap[] result = new Bitmap[2];
+        Bitmap image;
+        if (download1) {
+            Log.v(LOG_TAG, "Downloading 1");
+            image = APIDataFetcher.getImageFromURL(day1_url);
+            //save image
+            if (image != null)
+            {
+                Log.v(LOG_TAG, "downloaded");
+                try
+                {
+                    FileOutputStream fileOutputStream = context.openFileOutput(day1_file_name,
+                            Context.MODE_PRIVATE);
+
+                    image.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                    editor.putString("schedule__1__last_modified", known_last_modified_1).commit();
+                    Log.v(LOG_TAG, "Saved 1.: " + known_last_modified_1);
+                } catch (IOException e)
+                {
+                    Log.e("saveImage", "Error writing while saving image of " + day1_file_name + ": " + e.toString());
+                }
+            }else Log.v(LOG_TAG, "Could not download 1");
+        }
+        try
+        {
+            result[0] = BitmapFactory.decodeStream(new FileInputStream(context.getFileStreamPath(day1_file_name)));
+            DataHolder.DAY1_SCHEDULE = result[0];
+            Log.v(LOG_TAG, "DAY1" + DataHolder.DAY1_SCHEDULE);
+        } catch (FileNotFoundException e)
+        {
+            Log.v(LOG_TAG, "File not downloaded");
+            DataHolder.DAY1_SCHEDULE = null;
+        }
+
+        if (download2) {
+            Log.v(LOG_TAG, "Downloading 2");
+            image = APIDataFetcher.getImageFromURL(day2_url);
+            //save image
+
+            if (image != null)
+            {
+                Log.v(LOG_TAG, "Downloaded 2");
+                try
+                {
+                    FileOutputStream fileOutputStream = context.openFileOutput(day2_file_name,
+                            Context.MODE_PRIVATE);
+
+                    image.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                    editor.putString("schedule__2__last_modified", known_last_modified_2).commit();
+                    Log.v(LOG_TAG, "Saved 2:: " + known_last_modified_2);
+                } catch (IOException e)
+                {
+                    Log.e("saveImage", "Error writing while saving image of " + day2_file_name + ": " + e.toString());
+                }
+            }
+            else Log.d(LOG_TAG, "Could not download 2");
+        }
+        try
+        {
+            result[1] = BitmapFactory.decodeStream(new FileInputStream(context.getFileStreamPath(day2_file_name)));
+            DataHolder.DAY2_SCHEDULE = result[1];
+            Log.v(LOG_TAG, "DAY2" + DataHolder.DAY2_SCHEDULE);
+        } catch (FileNotFoundException e)
+        {
+            Log.v(LOG_TAG, "File not downloaded");
+            DataHolder.DAY2_SCHEDULE = null;
+        }
+        return result;
     }
 }

@@ -60,6 +60,9 @@ public class DataHolder {
     public static final Date UPDATED_AT_DEFAULT = new Date();
     public static final Date EVENT_DATE_TIME_DEFAULT = new Date();
 
+    public static Bitmap DAY1_SCHEDULE = null;
+    public static Bitmap DAY2_SCHEDULE = null;
+
     public static boolean FORCE_LOGIN_FRAGMENT_TO_SHOW = false;
 
     public static EventActivityFragment CURRENT_EVENT_FRAGMENT = null;
@@ -254,6 +257,9 @@ class InitialDataFetcher extends FetchAllEventsTask
         };
         fetchSpecificEventTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 eventIdsToUpdate.toArray(new Integer[eventIdsToUpdate.size()]));
+
+        FetchScheduleImagesTask fetchScheduleImagesTask = new FetchScheduleImagesTask(context);
+         fetchScheduleImagesTask.execute();
 
         if (!first_time_app_launch_ever)
         {
