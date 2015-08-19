@@ -67,8 +67,8 @@ public class EventListActivity extends AppCompatActivity {
 
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setToolbarTitle();
         if (mToolbar != null) {
+            setToolbarTitle();
             setSupportActionBar(mToolbar);
         }
     }

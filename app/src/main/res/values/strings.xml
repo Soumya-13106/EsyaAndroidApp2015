@@ -12,6 +12,10 @@
 
     <string name="action_share">Share</string>
 
+    <string name="no_elem_notifications">No notifications till now.</string>
+    <string name="no_elem_reg_events">You haven\'t registered for any events.</string>
+    <string name="no_elem_events">Event data download not complete.</string>
+
     <string name="pref_logged_in">pref_logged_in</string>
     <string name="pref_GCM_token">PREF_GCM_TOKEN</string>
     <string name="pref_login_skipped">skipped</string>

@@ -34,6 +34,15 @@ public class NotificationsFragment extends Fragment {
 
         ArrayList<Notification> notifications;
         notifications = new ArrayList<>(Arrays.asList(Notification.getAllNotifications(getActivity())));
+
+        if (notifications.size() == 0)
+        {
+            view = inflater.inflate(R.layout.no_elements_layout, container, false);
+            ((TextView)view.findViewById(R.id.message)).setText(R.string.no_elem_notifications);
+            view.findViewById(R.id.toolbar).setVisibility(View.GONE);
+            return view;
+        }
+
         listView.setAdapter(new NotificationAdapter(getActivity(), R.layout.notification_detailed_layout, notifications));
 
         return view;

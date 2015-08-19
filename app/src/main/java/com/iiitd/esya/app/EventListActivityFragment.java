@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -32,6 +33,14 @@ public class EventListActivityFragment extends Fragment {
 
         ArrayList<Event> category_events = DataHolder.CATEGORY_TO_EVENTS.get(category);
         ArrayList<String> event_names = new ArrayList<>();
+
+
+        if (category_events.size() == 0)
+        {
+            rootView= inflater.inflate(R.layout.no_elements_layout, container, false);
+            ((TextView)rootView.findViewById(R.id.message)).setText(R.string.no_elem_events);
+            return rootView;
+        }
 
         mEventsAdapter = new EventCardListAdapter(getActivity(), category_events);
 

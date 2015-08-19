@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,15 @@ public class RegisteredEventsFragment extends Fragment{
                 if (e.registered) events.add(e);
             }
         }
+
+        if(events.size() == 0)
+        {
+            rootView = inflater.inflate(R.layout.no_elements_layout, container, false);
+            ((TextView)rootView.findViewById(R.id.message)).setText(R.string.no_elem_reg_events);
+            rootView.findViewById(R.id.toolbar).setVisibility(View.GONE);
+            return rootView;
+        }
+
 
         final HashMap<String, Event> map = new HashMap<>();
 
