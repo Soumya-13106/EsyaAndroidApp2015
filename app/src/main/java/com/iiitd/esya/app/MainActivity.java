@@ -177,28 +177,44 @@ public class MainActivity extends AppCompatActivity {
                 {
                     switch (menuItem.getItemId()) {
                         case R.id.navigation_item_0:
+                            setTitle("Esya");
                             Snackbar.make(mContentFrame, "Events", Snackbar.LENGTH_SHORT).show();
                             mCurrentSelectedPosition = 0;
                             break;
                         case R.id.navigation_item_1:
                             Snackbar.make(mContentFrame, "Registered Events", Snackbar.LENGTH_SHORT).show();
+                            setTitle("Registered Events");
                             mCurrentSelectedPosition = 1;
                             break;
                         case R.id.navigation_item_2:
                             Snackbar.make(mContentFrame, "Profile", Snackbar.LENGTH_SHORT).show();
+                            setTitle("Profile");
                             mCurrentSelectedPosition = 2;
                             break;
                         case R.id.navigation_item_3:
-                            Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
+                            setTitle("Notifications");
+                            Snackbar.make(mContentFrame, "Notifications", Snackbar.LENGTH_SHORT).show();
                             mCurrentSelectedPosition = 3;
                             break;
                         case R.id.navigation_item_4:
-                            Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
+                            setTitle("Schedule");
+                            Snackbar.make(mContentFrame, "Schedule", Snackbar.LENGTH_SHORT).show();
                             mCurrentSelectedPosition = 4;
                             break;
                         case R.id.navigation_item_5:
-                            Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                            setTitle("About IIITD");
+                            Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
                             mCurrentSelectedPosition = 5;
+                            break;
+                        case R.id.navigation_item_6:
+                            setTitle("About Esya");
+                            Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 6;
+                            break;
+                        case R.id.navigation_item_7:
+                            setTitle("Contact Us");
+                            Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 7;
                             break;
                     }
                 }
@@ -208,18 +224,27 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.navigation_item_0:
                             Snackbar.make(mContentFrame, "Events", Snackbar.LENGTH_SHORT).show();
                             mCurrentSelectedPosition = 0;
-                            break;
-                        case R.id.navigation_item_3:
-                            Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
-                            mCurrentSelectedPosition = 1;
+                            setTitle("Esya");
                             break;
                         case R.id.navigation_item_4:
-                            Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
-                            mCurrentSelectedPosition = 2;
+                            setTitle("Schedule");
+                            Snackbar.make(mContentFrame, "Schedule", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 1;
                             break;
                         case R.id.navigation_item_5:
-                            Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                            setTitle("About IIITD");
+                            Snackbar.make(mContentFrame, "About IIITD", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 2;
+                            break;
+                        case R.id.navigation_item_6:
+                            setTitle("About Esya");
+                            Snackbar.make(mContentFrame, "About Esya", Snackbar.LENGTH_SHORT).show();
                             mCurrentSelectedPosition = 3;
+                            break;
+                        case R.id.navigation_item_7:
+                            setTitle("Contact Us");
+                            Snackbar.make(mContentFrame, "Contact Us", Snackbar.LENGTH_SHORT).show();
+                            mCurrentSelectedPosition = 4;
                             break;
                     }
                 }
@@ -281,10 +306,14 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
                     objFragment = new ProfileFragment(); break;
                 case 3:
-                    objFragment = new AboutIIITDFragment(); break;
+                    objFragment = new NotificationsFragment(); break;
                 case 4:
-                    objFragment = new AboutEsyaFragment(); break;
+                    objFragment = new ScheduleFragment(); break;
                 case 5:
+                    objFragment = new AboutIIITDFragment(); break;
+                case 6:
+                    objFragment = new AboutEsyaFragment(); break;
+                case 7:
                     objFragment = new ContactUsFragment(); break;
             }
         }
@@ -295,10 +324,12 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     objFragment = new CategoryListFragment(); break;
                 case 1:
-                    objFragment = new AboutIIITDFragment(); break;
+                    objFragment = new ScheduleFragment(); break;
                 case 2:
-                    objFragment = new AboutEsyaFragment(); break;
+                    objFragment = new AboutIIITDFragment(); break;
                 case 3:
+                    objFragment = new AboutEsyaFragment(); break;
+                case 4:
                     objFragment = new ContactUsFragment(); break;
             }
         }
@@ -379,6 +410,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+        setTitle(mTitle);
     }
 
     private boolean checkPlayServices()

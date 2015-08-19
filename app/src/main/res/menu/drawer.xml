@@ -18,14 +18,22 @@
             />
         <item
             android:id="@+id/navigation_item_3"
-            android:title="@string/title_section3"
+            android:title="Notifications"
             />
         <item
             android:id="@+id/navigation_item_4"
-            android:title="@string/title_section4"
+            android:title="Schedule"
             />
         <item
             android:id="@+id/navigation_item_5"
+            android:title="@string/title_section3"
+            />
+        <item
+            android:id="@+id/navigation_item_6"
+            android:title="@string/title_section4"
+            />
+        <item
+            android:id="@+id/navigation_item_7"
             android:title="@string/title_section5"
             />
     </group>

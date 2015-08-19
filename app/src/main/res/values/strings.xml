@@ -21,6 +21,9 @@
     <string name="profile_college">college</string>
     <string name="profile_phone">phone</string>
 
+    <string name="pref_count_notifications">notifications_count</string>
+    <string name="notification_save_prefix">notification_</string>
+
     <string name="login_user_id">login_user_id</string>
     <string name="api_auth_token">api_auth_token</string>
     <string name="GCM_app_server_sender_id">1061233994676</string>

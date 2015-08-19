@@ -14,6 +14,8 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -40,6 +42,12 @@ public class GCMListenerService extends GcmListenerService {
     private void sendNotification(String title, String message)
     {
         Log.d(TAG, "in sendNotification: " + title + " :: " + message);
+
+        com.iiitd.esya.app.Notification.addNotification(new com.iiitd.esya.app.Notification(
+                title, message, new Date()
+        ), getApplicationContext());
+
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -70,6 +78,5 @@ public class GCMListenerService extends GcmListenerService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, notification);
-
     }
 }

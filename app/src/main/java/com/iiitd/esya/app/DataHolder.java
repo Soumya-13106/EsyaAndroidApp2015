@@ -81,6 +81,7 @@ public class DataHolder {
     }
 
     public static HashMap<Integer, Event> EVENTS = new HashMap<>();
+
 }
 
 class InitialDataFetcher extends FetchAllEventsTask
@@ -256,7 +257,7 @@ class InitialDataFetcher extends FetchAllEventsTask
 
         if (!first_time_app_launch_ever)
         {
-            imagesFetcherTask.execute(event_image_urls);
+            imagesFetcherTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, event_image_urls);
         }
 
 
