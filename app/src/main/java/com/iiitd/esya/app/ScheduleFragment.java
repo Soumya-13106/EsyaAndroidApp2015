@@ -9,8 +9,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.SignInButton;
@@ -31,8 +34,8 @@ public class ScheduleFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
 
-        Bitmap day1 = DataHolder.DAY1_SCHEDULE;
-        Bitmap day2 = DataHolder.DAY2_SCHEDULE;
+        final Bitmap day1 = DataHolder.DAY1_SCHEDULE;
+        final Bitmap day2 = DataHolder.DAY2_SCHEDULE;
 
         if (day1 == null || day2 == null)
         {
@@ -42,11 +45,36 @@ public class ScheduleFragment extends Fragment {
             return view;
         }
 
-        final ImageView imgview1 = ((ImageView) view.findViewById(R.id.day1));
-        final ImageView imgview2 = ((ImageView) view.findViewById(R.id.day2));
+        ListView listView = (ListView) view.findViewById(R.id.schedule_list);
+        listView.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return 2;
+            }
 
-        imgview1.setImageBitmap(day1);
-        imgview2.setImageBitmap(day2);
+            @Override
+            public Object getItem(int position) {
+                return (position == 0 ? day1 : day2);
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                Bitmap image = (position == 0) ? day1 : day2;
+
+                if (convertView== null){
+                    convertView= LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_element, null);
+                }
+
+                ((ImageView)convertView.findViewById(R.id.image_schedule_element)).setImageBitmap(image);
+
+                return convertView;
+            }
+        });
 
         return view;
     }

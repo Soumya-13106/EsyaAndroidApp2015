@@ -3,32 +3,12 @@
     android:orientation="vertical"
     android:layout_height="wrap_content" tools:context="com.iiitd.esya.app.ScheduleFragment">
 
-    <HorizontalScrollView
+    <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="center"
-                android:id="@+id/day1"/>
-        </ScrollView>
-    </HorizontalScrollView>
-
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="center"
-                android:id="@+id/day2"/>
-        </ScrollView>
-    </HorizontalScrollView>
+        android:layout_height="wrap_content"
+        android:id="@+id/schedule_list"
+        android:divider="@android:color/black"
+        android:dividerHeight="4px">
+    </ListView>
 
 </LinearLayout>
